@@ -1,25 +1,25 @@
-// 29 de ENero 2019
 import java.net.*;
 import java.io.*;
 
+// Socket bloqueante: atiende uno por uno
 public class SHM {
-	public static void main(String [] args) {
+	public static void main(String[] args) {
 		try {
+
 			ServerSocket s = new ServerSocket(9999);
 			s.setReuseAddress(true);
-			s.setSoLinger(true, s);
-			System.out.printl("Servicio iniciado... esperando cliente...");
-
-			// Como no sabemos cuantos van a llegar, entoces
-			// Como es socket bloqueante solo atiende uno por uno
-			for(;;) {
-				// Devuelve una instancia de tipo socket, representa la conexión
+			System.out.println("Servidor iniciado ... Esperando cliente");
+			
+			// No sabemos cuantos van a llegar, entonces:
+			for( ; ; ) {
+				// Representa la conexión, devuelve una instancia de tipo socket
 				Socket cl = s.accept();
-				// Desde que dirección y que puerto se conecto el cliente
-				System.out.println("Cliente conectado " + cl.getInetAddresss() + ":" + cl.getPort());
+				System.out.println("Cliente conectado desde: " + cl.getInetAddress() + " " + cl.getPort());
 				String msj = "Un mensaje de saludo";
+				
+				// getOutputStream() es un flujo orientado a byte para escribir
 				PrintWriter pw = new PrintWriter(new OutputStreamWriter(cl.getOutputStream()));
-				// Usar println, lee hasta el salto de linea.
+				// Usar println, lee hasta el salto de linea
 				pw.println(msj);
 				//pw.close();
 				/*
@@ -31,11 +31,9 @@ public class SHM {
 				pw.flush();
 				pw.close();
 				cl.close();
-			}
-			catch(Exception e) {
-				e.printStackTrace();
-			}
-		}
-	}
-}
-
+			} // For
+		}catch(Exception e) {
+			e.printStackTrace();
+		} // catch
+	} // main
+} // class

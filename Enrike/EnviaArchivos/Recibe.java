@@ -1,3 +1,4 @@
+// SERVIDOR
 import java.net.*;
 import java.io.*;
 
@@ -24,7 +25,6 @@ public class Recibe
 
 				DataOutputStream dos = new DataOutputStream(new FileOutputStream(nombre)); // OutputStream
 				
-
 				long recibidos = 0;
 				int n = 0, porciento = 0;
 				byte[] b = new byte[2000];
@@ -36,15 +36,13 @@ public class Recibe
 					dos.flush();
 					recibidos += n;
 					porciento = (int)((recibidos * 100) / tam);
-					System.out.println("\r Recibiendo el " + porciento + "%");
+					System.out.println("\r Recibiendo el " + porciento + "% --- " + recibidos + "/" + tam + " bytes");
 				}//while
-
 
 				dis.close();
 				dos.close();
 				cl.close();
-
-				System.out.println("Archivo recibido.");
+				System.out.println("Archivo " + nombre + " recibido.");
 
 			}//for
 		}catch(Exception e){

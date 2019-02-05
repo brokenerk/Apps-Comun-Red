@@ -10,7 +10,6 @@ public class Recibe
 		{
 			ServerSocket s = new ServerSocket(1234);
 			s.setReuseAddress(true);
-			//s.setSoLinger(true, s);
 			System.out.println("Servidor de archivos iniciado, esperando cliente...");
 
 			for( ; ; )
@@ -22,6 +21,8 @@ public class Recibe
 
 				String nombre = dis.readUTF();
 				long tam = dis.readLong();
+
+				System.out.println("\nSe recibe el archivo " + nombre + " con " + tam + " bytes");
 
 				DataOutputStream dos = new DataOutputStream(new FileOutputStream(nombre)); // OutputStream
 				

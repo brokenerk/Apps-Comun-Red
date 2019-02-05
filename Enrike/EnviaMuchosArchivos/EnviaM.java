@@ -20,21 +20,19 @@ public class EnviaM
 
 				int pto = 4321;
 				String host = "10.0.0.4";
-				Socket cl = new Socket(host, pto);
-				DataOutputStream dos = new DataOutputStream(cl.getOutputStream()); //OutputStream
 				int numArchivos = files.length;
-
-				dos.writeInt(numArchivos);
-				dos.flush();
 
 				System.out.println("\nSe envian " + numArchivos + " archivos");
 
-				for(int i = 0; i < numArchivos; i++)
+				for(File f : files)
 				{
-					String nombre = files[i].getName();
-					long tam = files[i].length();
-					String path = files[i].getAbsolutePath();
-					
+					String nombre = f.getName();
+					long tam = f.length();
+					String path = f.getAbsolutePath();
+
+					Socket cl = new Socket(host, pto);
+					DataOutputStream dos = new DataOutputStream(cl.getOutputStream()); //OutputStream
+				
 					System.out.println("\nSe envia el archivo " + path + " con " + tam + " bytes");
 					DataInputStream dis = new DataInputStream(new FileInputStream(path)); // InputStream
 
@@ -56,12 +54,11 @@ public class EnviaM
 						porciento = (int)((enviados * 100) / tam);
 						System.out.println("\r Enviando el " + porciento + "% --- " + enviados + "/" + tam + " bytes");
 					}//while
-
 					dis.close();
+					dos.close();
+					cl.close();
 					System.out.println("Archivo " + nombre + " enviado.");
-				}//for
-				dos.close();
-				cl.close();
+				}//for	
 			}//if
 		}catch(Exception e){
 			e.printStackTrace();

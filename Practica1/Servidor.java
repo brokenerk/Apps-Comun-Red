@@ -23,6 +23,15 @@ public class Servidor
 				long tam = dis.readLong();
 
 				System.out.println("\nSe recibe el archivo " + nombre + " con " + tam + " bytes");
+				
+				/*Creamos la carpeta predeterminada del servidor para guardar los archivos*/
+				String rutaDefault = System.getProperty("user.home") + "\\Desktop\\serverP1\\";
+				File carpetaServer = new File(rutaDefault);
+
+				if(!carpetaServer.exists()){
+					carpetaServer.mkdir();
+				}
+				nombre = rutaDefault + nombre;
 
 				DataOutputStream dos = new DataOutputStream(new FileOutputStream(nombre)); // OutputStream
 				

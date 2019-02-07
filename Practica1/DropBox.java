@@ -64,12 +64,12 @@ public class DropBox extends JFrame implements ActionListener {
 			System.out.println("DESCARGA");
  			// Get the selected values.
 			// Object[] selections = archivos.getSelectedValues();
-     		for (Object value : archivos.getSelectedValues()) {
+     		/*for (Object value : archivos.getSelectedValues()) {
 		        System.out.println("DESCARGA: " + value.toString());
 		        // Enviar el nombre del archivo al servidor, para
 		        // que el servidor me mande el archivo que yo quiero
 		        // descargar.
-		    }
+		    }*/
 		}
 	}
 

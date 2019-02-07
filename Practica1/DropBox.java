@@ -7,18 +7,15 @@ public class DropBox extends JFrame implements ActionListener{
 	JButton BtnSubir, BtnActualizar;
 	JList<String> archivos;
 	DefaultListModel<String> modelo;
-	JPanel p, panelBotones;
+	JPanel panelBotones;
 	JProgressBar BarraProgreso;
+	JScrollPane scroll;
 	File list[];
 	static String rutaServer = System.getProperty("user.home") + "\\Desktop\\serverP1\\";
 
 	public DropBox(){
 		Container c = getContentPane();
 		c.setLayout(new BoxLayout(c, BoxLayout.Y_AXIS));
-
-		p = new JPanel();
-		p.setLayout(new GridLayout(5,10));
-		//p.setAlignmentX(Component.CENTER_ALIGNMENT);
 
 		archivos = new JList<>();
         archivos.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
@@ -27,16 +24,13 @@ public class DropBox extends JFrame implements ActionListener{
 		VerArchivos(rutaServer);
 
 		archivos.setModel(modelo);
-        p.add(archivos);
-        p.add(new JScrollPane(archivos));
-		
+        scroll = new JScrollPane(archivos);
+        scroll.setMinimumSize(new Dimension(100, 200));
 
-		//scroll.setViewportView(archivos);
-		c.add(p);
+		c.add(scroll);
 
 		panelBotones = new JPanel();
 		panelBotones.setLayout(new BoxLayout(panelBotones, BoxLayout.X_AXIS));
-		//botones=new JButton[40];
 
 		BarraProgreso = new JProgressBar(0, 100);
 		BarraProgreso.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -93,9 +87,8 @@ public class DropBox extends JFrame implements ActionListener{
 		DropBox f = new DropBox();
 		f.setTitle("Practica 1: DropBox " + rutaServer);
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		f.setSize(1000,500);
+		f.setSize(700,500);
 		f.setVisible(true);
 		f.setLocationRelativeTo(null);
 	}
-
 }

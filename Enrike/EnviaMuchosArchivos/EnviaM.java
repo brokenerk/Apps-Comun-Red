@@ -19,7 +19,7 @@ public class EnviaM
 				File[] files = jf.getSelectedFiles();
 
 				int pto = 4321;
-				String host = "10.0.0.4";
+				String host = "127.0.0.1";
 				int numArchivos = files.length;
 
 				System.out.println("\nSe envian " + numArchivos + " archivos");

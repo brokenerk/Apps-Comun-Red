@@ -2,30 +2,29 @@ import javax.swing.JFileChooser;
 import java.io.*;
 import java.net.*;
 
-public class Cliente{
+public class Cliente {
 
-	//Funcion envia muchos archivos al servidor
-	public static void EnviarArchivo(){
-		try{
-	        //Socket cliente para enviar muchos archivos a la vez
+	// Funcion envia muchos archivos al servidor
+	public static void EnviarArchivo() {
+		try {
+	        
+	        // Socket cliente para enviar muchos archivos a la vez
 	        JFileChooser jf = new JFileChooser();
 	        jf.setMultiSelectionEnabled(true);
-	        //Permite seleccionar carpetas y archivos
+	        // Permite seleccionar carpetas y archivos
 	        jf.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 	        int r = jf.showOpenDialog(null);
 	        
 	        int pto = 4321;
 	        String host = "127.0.0.1";
 
-	        if(r == JFileChooser.APPROVE_OPTION)
-	        {
+	        if(r == JFileChooser.APPROVE_OPTION) {
 	            File[] files = jf.getSelectedFiles();
 
 	            //int numArchivos = files.length;
 	            //System.out.println("\nSe envian " + numArchivos + " archivos");
 
-	            for(File f : files)
-	            {
+	            for(File f : files)	{
 	                String nombre = f.getName();
 		            long tam = f.length();
 		            String path = f.getAbsolutePath();
@@ -45,15 +44,14 @@ public class Cliente{
 		            int n = 0, porciento = 0;
 		            byte[] b = new byte[2000];
 
-		            while(enviados < tam)
-		            {
+		            while(enviados < tam) {
 		                n = dis.read(b);
 		                dos.write(b, 0, n);
 		                dos.flush();
 		                enviados += n;
 		                porciento = (int)((enviados * 100) / tam);
 		                System.out.println("\r Enviando el " + porciento + "% --- " + enviados + "/" + tam + " bytes");
-		            }//while
+		            } //while
 		            
 		            dis.close();
 		            dos.close();
@@ -61,7 +59,8 @@ public class Cliente{
 		            System.out.println("Archivo " + nombre + " enviado.");
 	        	}//for	
 	        }//if   
-        }catch(Exception e){
+        }
+        catch(Exception e) {
             e.printStackTrace();
         }//catch
     }

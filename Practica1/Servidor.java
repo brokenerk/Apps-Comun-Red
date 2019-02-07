@@ -2,18 +2,15 @@
 import java.net.*;
 import java.io.*;
 
-public class Servidor
-{
-	public static void main(String[] args)
-	{
-		try
-		{
+public class Servidor {
+	public static void main(String[] args) {
+		try {
 			ServerSocket s = new ServerSocket(4321);
 			s.setReuseAddress(true);
 			System.out.println("Servidor de archivos iniciado, esperando cliente...");
 
-			for( ; ; )
-			{
+			// Espera clientes
+			for( ; ; ) {
 				Socket cl = s.accept();
 				System.out.println("\n\nCliente conectado desde " + cl.getInetAddress() + " " + cl.getPort());
 			
@@ -24,11 +21,11 @@ public class Servidor
 
 				System.out.println("\nSe recibe el archivo " + nombre + " con " + tam + " bytes");
 				
-				/*Creamos la carpeta predeterminada del servidor para guardar los archivos*/
+				/* Creamos la carpeta predeterminada del servidor para guardar los archivos */
 				String rutaDefault = System.getProperty("user.home") + "\\Desktop\\serverP1\\";
 				File carpetaServer = new File(rutaDefault);
 
-				if(!carpetaServer.exists()){
+				if(!carpetaServer.exists()) {
 					carpetaServer.mkdir();
 				}
 				nombre = rutaDefault + nombre;
@@ -39,15 +36,14 @@ public class Servidor
 				int n = 0, porciento = 0;
 				byte[] b = new byte[2000];
 
-				while(recibidos < tam)
-				{
+				while(recibidos < tam) {
 					n = dis.read(b);
 					dos.write(b, 0, n);
 					dos.flush();
 					recibidos += n;
 					porciento = (int)((recibidos * 100) / tam);
 					System.out.println("\r Recibiendo el " + porciento + "% --- " + recibidos + "/" + tam + " bytes");
-				}//while
+				} //while
 
 				dis.close();
 				dos.close();
@@ -55,7 +51,8 @@ public class Servidor
 
 				System.out.println("Archivo " + nombre + " recibido.");
 			}//for
-		}catch(Exception e){
+		}
+		catch(Exception e) {
 			e.printStackTrace();
 		}
 	}

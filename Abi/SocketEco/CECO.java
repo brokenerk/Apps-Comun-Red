@@ -1,12 +1,9 @@
 import java.net.*;
 import java.io.*;
 
-public class CECO
-{
-	public static void main(String[] args)
-	{
-		try
-		{
+public class CECO {
+	public static void main(String[] args) {
+		try {
 			// Asocio un flujo de lectura
 			// InputStreamreader es como un puente, así puedo leer parrafos 
 			// Convierte un flujo orientado a byte a caracter
@@ -21,19 +18,16 @@ public class CECO
 			PrintWriter pw = new PrintWriter(new OutputStreamWriter(cl.getOutputStream()));
 			BufferedReader br2 = new BufferedReader(new InputStreamReader(cl.getInputStream()));
 
-			for( ; ; )
-			{
+			for( ; ; ) {
 				System.out.println("\nNuevo mensaje: ");
 				String msj = br.readLine();
 				pw.println(msj);
 				pw.flush();
 
-				if(msj.compareToIgnoreCase("salir") == 0)
-				{
+				if(msj.compareToIgnoreCase("salir") == 0) {
 					break;
 				}
-				else
-				{
+				else {
 					String respuesta = br2.readLine();
 					System.out.println("Respuesta: " + respuesta);
 					//continue

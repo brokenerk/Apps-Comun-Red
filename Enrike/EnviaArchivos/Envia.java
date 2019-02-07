@@ -1,3 +1,4 @@
+// CLIENTE
 import javax.swing.JFileChooser;
 import java.io.*;
 import java.net.*;
@@ -44,14 +45,14 @@ public class Envia
 					dos.flush();
 					enviados += n;
 					porciento = (int)((enviados * 100) / tam);
-					System.out.println("\r Enviando el " + porciento + "%");
+					System.out.println("\r Enviando el " + porciento + "% --- " + enviados + "/" + tam + " bytes");
 				}//while
 
 				dis.close();
 				dos.close();
 				cl.close();
 
-				System.out.println("Archivo enviado.");
+				System.out.println("Archivo " + nombre + " enviado.");
 
 			}//if
 		}catch(Exception e){

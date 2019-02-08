@@ -2,27 +2,24 @@ import javax.swing.JFileChooser;
 import java.io.*;
 import java.net.*;
 
+/*Funciones del cliente que haran las peticiones que se requieran al servidor*/
+
 public class Cliente {
+	private static int pto = 4321;
+	private static String host = "127.0.0.1";
 
 	// Funcion envia muchos archivos al servidor
-	public static void EnviarArchivo() {
+	public static void EnviarArchivos() {
 		try {
-	        
 	        // Socket cliente para enviar muchos archivos a la vez
 	        JFileChooser jf = new JFileChooser();
 	        jf.setMultiSelectionEnabled(true);
 	        // Permite seleccionar carpetas y archivos
 	        jf.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 	        int r = jf.showOpenDialog(null);
-	        
-	        int pto = 4321;
-	        String host = "127.0.0.1";
 
 	        if(r == JFileChooser.APPROVE_OPTION) {
 	            File[] files = jf.getSelectedFiles();
-
-	            //int numArchivos = files.length;
-	            //System.out.println("\nSe envian " + numArchivos + " archivos");
 
 	            for(File f : files)	{
 	                String nombre = f.getName();
@@ -35,6 +32,11 @@ public class Cliente {
 		            System.out.println("\nSe envia el archivo " + path + " con " + tam + " bytes");
 		            DataInputStream dis = new DataInputStream(new FileInputStream(path)); // InputStream
 
+		            //La bandera tiene el valor de 0 = Subir archivo
+		            dos.writeInt(0);
+		            dos.flush();
+
+					//Se envia info de los archivos
 		            dos.writeUTF(nombre);
 		            dos.flush();
 		            dos.writeLong(tam);
@@ -50,7 +52,7 @@ public class Cliente {
 		                dos.flush();
 		                enviados += n;
 		                porciento = (int)((enviados * 100) / tam);
-		                System.out.println("\r Enviando el " + porciento + "% --- " + enviados + "/" + tam + " bytes");
+		                //System.out.println("\r Enviando el " + porciento + "% --- " + enviados + "/" + tam + " bytes");
 		            } //while
 		            
 		            dis.close();
@@ -63,5 +65,33 @@ public class Cliente {
         catch(Exception e) {
             e.printStackTrace();
         }//catch
-    }
+    }//EnviarArchivos
+
+    public static void Actualizar(){
+    	try{
+    		Socket cl = new Socket(host, pto);
+			DataOutputStream dos = new DataOutputStream(cl.getOutputStream()); //OutputStream
+			
+			//La bandera tiene el valor de 1 = Actualizar 
+			dos.writeInt(1);
+			dos.flush();
+
+			DataInputStream dis = new DataInputStream(cl.getInputStream()); // InputStream
+
+			int numArchivos = dis.readInt();
+
+			for(int i = 0; i < numArchivos; i++){
+				String archivoRecibido = dis.readUTF();
+				DropBox.modelo.addElement(archivoRecibido);
+				//System.out.println("" + archivoRecibido);
+			}//for
+
+			dis.close();
+			dos.close();
+			cl.close();
+			System.out.println("Carpeta del cliente actualizada: Request recibido.");
+    	}catch(Exception e){
+    		e.printStackTrace();
+    	}//catch
+    }//Actualizar
 }

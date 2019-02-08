@@ -6,13 +6,11 @@ import java.io.*;
 public class DropBox extends JFrame implements ActionListener {
 	JButton BtnSubir, BtnActualizar, BtnDescargar;
 	JList<String> archivos;
-	DefaultListModel<String> modelo;
+	static DefaultListModel<String> modelo;
 	JPanel panelBotones;
-	public JProgressBar BarraProgreso;
+	JProgressBar BarraProgreso;
 	JScrollPane scroll;
-	File list[];
-
-	static String rutaServer = System.getProperty("user.home") + "\\Desktop\\serverP1\\";
+	//File list[];
 
 	public DropBox() {
 		Container c = getContentPane();
@@ -23,7 +21,7 @@ public class DropBox extends JFrame implements ActionListener {
 
         modelo = new DefaultListModel<>();
 
-		VerArchivos(rutaServer);
+		Cliente.Actualizar();
 
 		archivos.setModel(modelo);
 		
@@ -57,53 +55,27 @@ public class DropBox extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		JButton b = (JButton) e.getSource();
 		    
-		if(b == BtnSubir) Cliente.EnviarArchivo();
-		else if(b == BtnActualizar) VerArchivos(rutaServer);
+		if(b == BtnSubir) {
+			Cliente.EnviarArchivos();
+			//Actualizamos el cliente despues de la subida de archivos
+			modelo.clear();
+			Cliente.Actualizar();
+		}
+		else if(b == BtnActualizar) {
+			modelo.clear();
+			Cliente.Actualizar();
+		}
 		
 		else if(b == BtnDescargar) {
-			System.out.println("DESCARGA");
- 			// Get the selected values.
-			// Object[] selections = archivos.getSelectedValues();
-     		/*for (Object value : archivos.getSelectedValues()) {
-		        System.out.println("DESCARGA: " + value.toString());
-		        // Enviar el nombre del archivo al servidor, para
-		        // que el servidor me mande el archivo que yo quiero
-		        // descargar.
-		    }*/
+
 		}
 	}
 
-	public void VerArchivos(String path) {
-		// Leemos la carpeta
-		modelo.clear();
-		File serverPath = new File(path);
-
-		//Revisamos si existe la carpeta, sino la creamos
-		if(!serverPath.exists()) {
-			serverPath.mkdir();
-		}
-
-        list = serverPath.listFiles();
-        
-        String info = "";
-        for (File f : list) {
-            if (f.isDirectory()) { 
-                
-                //walk( f.getAbsolutePath() ); 
-                info = "" + f.getAbsoluteFile();
-                System.out.println("Dir: " + f.getAbsoluteFile()); 
-            } 
-            else { 
-            	info = f.getName() + " ---- " + f.length();
-                System.out.println("File: " + f.getAbsoluteFile()); 
-            } 
-            modelo.addElement(info);
-        } 
-	}
+	
 
 	public static void main(String s[]) {
 		DropBox f = new DropBox();
-		f.setTitle("Practica 1: DropBox " + rutaServer);
+		f.setTitle("Practica 1: DropBox ");
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.setSize(700,500);
 		f.setVisible(true);

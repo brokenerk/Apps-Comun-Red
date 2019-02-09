@@ -5,8 +5,9 @@ import java.io.*;
 
 public class DropBox extends JFrame implements ActionListener {
 	JButton BtnSubir, BtnActualizar, BtnDescargar;
-	JList<String> archivos;
+	static JList<String> archivos;
 	static DefaultListModel<String> modelo;
+	MouseListener mouseListener;
 	JPanel panelBotones;
 	JProgressBar BarraProgreso;
 	JScrollPane scroll;
@@ -16,8 +17,27 @@ public class DropBox extends JFrame implements ActionListener {
 		Container c = getContentPane();
 		c.setLayout(new BoxLayout(c, BoxLayout.Y_AXIS));
 
-		archivos = new JList<>();
+		archivos = new JList<String>();
         archivos.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+
+        /*Añadimos la funcionalidad de doble clic para navegar por directorios*/
+        mouseListener = new MouseAdapter() {
+		    public void mouseClicked(MouseEvent e) {
+
+		        if (e.getClickCount() == 2) {
+		            int index = archivos.locationToIndex(e.getPoint());
+		            String nombreSeleccion = modelo.getElementAt(index);
+
+		            if (nombreSeleccion.indexOf("/./") != -1) {
+			            modelo.clear();
+			            Cliente.AbrirCarpeta(index);
+			        }
+		        }
+
+		    }
+		};
+
+		archivos.addMouseListener(mouseListener);
 
         modelo = new DefaultListModel<>();
 
@@ -38,8 +58,8 @@ public class DropBox extends JFrame implements ActionListener {
 		c.add(BarraProgreso);
 
 		BtnSubir = new JButton("Subir Archivo");
-		BtnActualizar = new JButton("Actualizar");
-		BtnDescargar = new JButton("Descargar");
+		BtnActualizar = new JButton("Actualizar - Inicio");
+		BtnDescargar = new JButton("Descargar Archivos");
 
 		panelBotones.add(BtnSubir);
 		panelBotones.add(BtnActualizar);
@@ -70,8 +90,6 @@ public class DropBox extends JFrame implements ActionListener {
 
 		}
 	}
-
-	
 
 	public static void main(String s[]) {
 		DropBox f = new DropBox();

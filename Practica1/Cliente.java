@@ -8,6 +8,40 @@ public class Cliente {
 	private static int pto = 4321;
 	private static String host = "127.0.0.1";
 
+	// Funcion abrir carpetas del servidor en el cliente
+	public static void AbrirCarpeta(int indice){
+		try {
+    		Socket cl = new Socket(host, pto);
+			DataOutputStream dos = new DataOutputStream(cl.getOutputStream()); //OutputStream
+			
+			//La bandera tiene el valor de 3 = AbrirCarpeta
+			dos.writeInt(3);
+			dos.flush();
+
+			//Enviamos el indice en donde se encuentra la carpeta dentro del arreglo de Files[]
+			dos.writeInt(indice);
+			dos.flush();
+
+			DataInputStream dis = new DataInputStream(cl.getInputStream()); // InputStream
+
+			int numArchivos = dis.readInt();
+
+			for(int i = 0; i < numArchivos; i++) {
+				String archivoRecibido = dis.readUTF();
+				DropBox.modelo.addElement(archivoRecibido);
+				//System.out.println("" + archivoRecibido);
+			}//for
+
+			dis.close();
+			dos.close();
+			cl.close();
+			System.out.println("Nueva carpeta abierta: Request recibido.");
+
+    	}catch(Exception e) {
+    		e.printStackTrace();
+    	}//catch
+	}
+
 	// Funcion envia muchos archivos al servidor
 	public static void EnviarArchivos() {
 		try {
@@ -19,15 +53,17 @@ public class Cliente {
 	        int r = jf.showOpenDialog(null);
 
 	        if(r == JFileChooser.APPROVE_OPTION) {
+	        	
+	        	Socket cl = new Socket(host, pto);
+		        DataOutputStream dos = new DataOutputStream(cl.getOutputStream()); //OutputStream
+
 	            File[] files = jf.getSelectedFiles();
 
 	            for(File f : files)	{
+
 	                String nombre = f.getName();
 		            long tam = f.length();
 		            String path = f.getAbsolutePath();
-
-		            Socket cl = new Socket(host, pto);
-		            DataOutputStream dos = new DataOutputStream(cl.getOutputStream()); //OutputStream
 
 		            System.out.println("\nSe envia el archivo " + path + " con " + tam + " bytes");
 		            DataInputStream dis = new DataInputStream(new FileInputStream(path)); // InputStream
@@ -68,7 +104,7 @@ public class Cliente {
     }//EnviarArchivos
 
     public static void Actualizar(){
-    	try{
+    	try {
     		Socket cl = new Socket(host, pto);
 			DataOutputStream dos = new DataOutputStream(cl.getOutputStream()); //OutputStream
 			
@@ -80,7 +116,7 @@ public class Cliente {
 
 			int numArchivos = dis.readInt();
 
-			for(int i = 0; i < numArchivos; i++){
+			for(int i = 0; i < numArchivos; i++) {
 				String archivoRecibido = dis.readUTF();
 				DropBox.modelo.addElement(archivoRecibido);
 				//System.out.println("" + archivoRecibido);
@@ -90,7 +126,8 @@ public class Cliente {
 			dos.close();
 			cl.close();
 			System.out.println("Carpeta del cliente actualizada: Request recibido.");
-    	}catch(Exception e){
+
+    	}catch(Exception e) {
     		e.printStackTrace();
     	}//catch
     }//Actualizar

@@ -12,13 +12,6 @@ public class Servidor {
 		long tam = dis.readLong();
 
 		System.out.println("\nSe recibe el archivo " + nombre + " con " + tam + " bytes");
-		
-		/* Creamos la carpeta predeterminada del servidor para guardar los archivos */
-		File carpetaServer = new File(rutaServer);
-
-		if(!carpetaServer.exists()) {
-			carpetaServer.mkdir();
-		}
 
 		nombre = rutaServer + nombre;
 
@@ -39,15 +32,15 @@ public class Servidor {
 
 		System.out.println("Archivo " + nombre + " recibido.");
 		dos.close();
-	}
+	}//Recibir
 
 	//Valor de la bandera = 1
-	public static void ActualizarCliente(Socket cl, DataInputStream dis) throws IOException {
-		File archivosRuta = new File(rutaServer);
+	public static void ActualizarCliente(Socket cl, DataInputStream dis, String path) throws IOException {
+		File archivosRuta = new File(path);
 		
 		if(!archivosRuta.exists()) {
 			archivosRuta.mkdir();
-		}
+		}//if
 
 		list = archivosRuta.listFiles();
 
@@ -62,17 +55,17 @@ public class Servidor {
                 //walk( f.getAbsolutePath() ); 
                 info = "" + f.getAbsoluteFile();
                 System.out.println("Dir: " + f.getAbsoluteFile()); 
-            } 
+            }//if
             else { 
-            	info = f.getName() + " ---- " + f.length();
+            	info = f.getName() + "  -------  " + f.length() + " bytes";
                 System.out.println("File: " + f.getAbsoluteFile()); 
-            } 
+            }//else
             dos.writeUTF(info);
             dos.flush();   
-        } 
+        }//for
         dos.close();
         System.out.println("Informacion enviada al cliente: Request atendido."); 
-	}
+	}//Actualizar
 
 	public static void main(String[] args) {
 		try {
@@ -95,11 +88,17 @@ public class Servidor {
 				}
 				else if (bandera == 1) {
 					//Ver archivos / Actualizar -> El servidor envia los nombres de los archivos
-					ActualizarCliente(cl, dis);
+					ActualizarCliente(cl, dis, rutaServer);
 				}
 				else if (bandera == 2) {
 					//Descargar archivos -> El servidor prepara y envia archivos
 
+				}
+				else if (bandera == 3) {
+					//Abrir carpeta -> El servidor envia los nombres de los contenidos de la carpeta seleccionada
+					int ubicacionRuta = dis.readInt();
+					String nuevaRuta = "" + list[ubicacionRuta].getAbsoluteFile();
+					ActualizarCliente(cl, dis, nuevaRuta);
 				}
 				else {
 					System.out.println("Error al atender la solicitud del cliente.");
@@ -108,9 +107,8 @@ public class Servidor {
 				dis.close();
 				cl.close();
 			}//for
-		}
-		catch(Exception e) {
+		}catch(Exception e) {
 			e.printStackTrace();
-		}
-	}
+		}//catch
+	}//main
 }

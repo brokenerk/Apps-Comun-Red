@@ -118,31 +118,14 @@ public class Servidor {
 					String rutaDirectorio = dis.readUTF();
 					String path = rutaServer + rutaDirectorio;
 					File archivosRuta = new File(path);
-					System.out.println("\n\nYo recibo: " + rutaDirectorio);
 					if(!archivosRuta.exists()) {
 						archivosRuta.mkdir();
 					}
-					
-					//RecibirArchivos(dis, nombre);
-					/*File nombreDir = new File(rutaServer);
-					//String nombreDir = dis.readUTF();
-					String n = ".\\Documents"
-
-					File[] files = jf.listFiles();
-		            for(File file : files)	{
-		            	if((f.getName()).equals("") )
-		            	String ruta = file.getAbsolutePath();
-		            	EnviarArchivo(file, ruta);
-		        	}//for
-					System.out.println("Directorio que quiero crear: " +  nombreDir + " Directorio en el que esta: ");
-					//if*/
 				}
 				else {
 					System.out.println("Error al atender la solicitud del cliente.");
 				}
-
-				dis.close();
-				cl.close();
+				dis.close(); cl.close();
 			}//for
 		}catch(Exception e) {
 			e.printStackTrace();

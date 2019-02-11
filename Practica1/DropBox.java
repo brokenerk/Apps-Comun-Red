@@ -28,15 +28,12 @@ public class DropBox extends JFrame implements ActionListener {
 		            int index = archivos.locationToIndex(e.getPoint());
 		            String nombreSeleccion = modelo.getElementAt(index);
 
-		            if (nombreSeleccion.indexOf("\\.\\") != -1) {
+		            //Revisamos que la seleccion sea un directorio
+		            if (Cliente.tipoFile[index] == 1) {
 			            modelo.clear();
 			            Cliente.AbrirCarpeta(index);
 			        }
-/*		            if (nombreSeleccion.indexOf("/./") != -1) {
-			            modelo.clear();
-			            Cliente.AbrirCarpeta(index);
-			        }
-*/		        }
+		        }
 
 		    }
 		};

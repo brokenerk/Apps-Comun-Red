@@ -5,8 +5,10 @@ import java.util.zip.*;
 
 public class Servidor {
 //	private static String rutaServer = ".\\serverP1\\";
-	private static String rutaServer = "./serverP1/";
+	public static String sep = System.getProperty("file.separator");
+	private static String rutaServer = "." + sep + "serverP1" + sep;
 	private static File[] list;
+	private static String rutaActual = "";
 
 /*********************************************************************************************
 									0. RECIBIR ARCHIVOS
@@ -42,12 +44,17 @@ public class Servidor {
 								1. ACTUALIZAR CLIENTES
 *********************************************************************************************/
 	//Valor de la bandera = 1
-	public static void ActualizarCliente(Socket cl, DataInputStream dis, String path) throws IOException {
+	public static void ActualizarCliente(Socket cl, DataInputStream dis, String path, int bandera) throws IOException {
 		File archivosRuta = new File(path);
 		
 		if(!archivosRuta.exists()) {
 			archivosRuta.mkdir();
 		}//if
+
+		if(bandera == 1) {
+			rutaActual = rutaActual + sep + archivosRuta.getName();
+			System.out.println("Ubicacion: "+rutaActual);
+		}
 
 		list = archivosRuta.listFiles();
 
@@ -57,18 +64,34 @@ public class Servidor {
 		dos.flush();
 
 		String info = "";
+		int tipo = 0;
+
         for (File f : list) {
             if (f.isDirectory()) { 
                 //walk( f.getAbsolutePath() ); 
-                info = "" + f.getAbsoluteFile();
-                //System.out.println("Dir: " + f.getAbsoluteFile()); 
+                tipo = 1;
+                if(bandera == 0) {//Ruta raiz - Inicio
+                	info = "." + sep + f.getName();
+                }
+                else {//Abrir ruta y concatenar
+                	info = "." + rutaActual + sep + f.getName();
+                }
             }//if
             else { 
-            	info = f.getName() + "  -------  " + f.length() + " bytes";
-                //System.out.println("File: " + f.getAbsoluteFile()); 
+            	tipo = 2;
+            	if(bandera == 0){//Ruta raiz - Inicio
+            		info = f.getName() + "  -------  " + f.length() + " bytes";
+            	}
+            	else {//Abrir ruta y concatenar
+            		info = "." + rutaActual + sep + f.getName() + "  -------  " + f.length() + " bytes";
+            	}
             }//else
             dos.writeUTF(info);
             dos.flush();   
+            dos.writeInt(tipo);
+            dos.flush();
+
+            tipo = 0;
         }//for
         dos.close();
         //System.out.println("Informacion enviada al cliente: Request atendido."); 
@@ -83,8 +106,8 @@ public class Servidor {
 				System.out.println("\nSe recibe el archivo " + ind[i] + " ,en total son: " + tam );
 			}
 
-		    for (int i = 0; i < ind.length; i++) {
-		    	Object sel = archivos.getModel().getElementAt(ind[i]);
+		    for (i = 0; i < ind.length; i++) {
+		    	//Object sel = archivos.getModel().getElementAt(ind[i]);
 		        System.out.println(" " + ind[i]);
 		    }		
 		    // AQUÍ ME QUEDE
@@ -105,16 +128,16 @@ public class Servidor {
             return;
         }
         if (fileToZip.isDirectory()) {
-            if (fileName.endsWith("/")) {
+            if (fileName.endsWith(sep)) {
                 zipOut.putNextEntry(new ZipEntry(fileName));
                 zipOut.closeEntry();
             } else {
-                zipOut.putNextEntry(new ZipEntry(fileName + "/"));
+                zipOut.putNextEntry(new ZipEntry(fileName + sep));
                 zipOut.closeEntry();
             }
             File[] children = fileToZip.listFiles();
             for (File childFile : children) {
-                zipFile(childFile, fileName + "/" + childFile.getName(), zipOut);
+                zipFile(childFile, fileName + sep + childFile.getName(), zipOut);
             }
             return;
         }
@@ -155,7 +178,10 @@ public class Servidor {
 				}
 				else if (bandera == 1) {
 					//Ver archivos / Actualizar -> El servidor envia los nombres de los archivos
-					ActualizarCliente(cl, dis, rutaServer);
+					//Bandera = 0. Se actualiza la carpeta raiz
+					rutaActual = "";
+					ActualizarCliente(cl, dis, rutaServer, 0);
+
 				}
 				else if (bandera == 2) {
 					//Descargar archivos -> El servidor prepara y envia archivos
@@ -166,8 +192,9 @@ public class Servidor {
 				else if (bandera == 3) {
 					//Abrir carpeta -> El servidor envia los nombres de los contenidos de la carpeta seleccionada
 					int ubicacionRuta = dis.readInt();
+					//Banadera = 1. Se navega dentro de una carpeta
 					String nuevaRuta = "" + list[ubicacionRuta].getAbsoluteFile();
-					ActualizarCliente(cl, dis, nuevaRuta);
+					ActualizarCliente(cl, dis, nuevaRuta, 1);
 				}
 				else if(bandera == 4) {
 					//Subir archivos -> El servidor recibe

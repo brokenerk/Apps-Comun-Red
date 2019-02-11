@@ -7,6 +7,8 @@ public class Cliente {
 	private static int pto = 4321;
 	private static String host = "127.0.0.1";
 	private static String rutaDirectorios = "";
+	public static String sep = System.getProperty("file.separator");
+	public static int[] tipoFile;
 
 /*********************************************************************************************
 									ABRIR CARPETA
@@ -29,10 +31,12 @@ public class Cliente {
 			DataInputStream dis = new DataInputStream(cl.getInputStream()); // InputStream
 
 			int numArchivos = dis.readInt();
+			tipoFile = new int[numArchivos];
 
 			for(int i = 0; i < numArchivos; i++) {
 				String archivoRecibido = dis.readUTF();
 				DropBox.modelo.addElement(archivoRecibido);
+				tipoFile[i] = dis.readInt();
 				//System.out.println("" + archivoRecibido);
 			}//for
 
@@ -97,7 +101,7 @@ public class Cliente {
 				String ruta = f.getAbsolutePath();
 				System.out.println("Mi nombre: " + nombre + " Mi ruta: " + ruta);
 				String aux = rutaDirectorios;
-				rutaDirectorios = rutaDirectorios + "\\" + nombre;
+				rutaDirectorios = rutaDirectorios + sep + nombre;
 				//La bandera tiene el valor de 4 = Subir Carpeta
 	            dos.writeInt(4);
 	            dos.flush();
@@ -108,7 +112,7 @@ public class Cliente {
 			    File folder = new File(ruta);
 			    File[] files = folder.listFiles();
 			    for(File file : files)	{
-	            	String path = rutaDirectorios + "\\" + file.getName();
+	            	String path = rutaDirectorios + sep + file.getName();
 	            	System.out.println("Ruta destin en el servidor:" + path);
 	            	EnviarArchivo(file, file.getAbsolutePath(), path);
 	        	}// for
@@ -166,10 +170,12 @@ public class Cliente {
 			DataInputStream dis = new DataInputStream(cl.getInputStream()); // InputStream
 
 			int numArchivos = dis.readInt();
+			tipoFile = new int[numArchivos];
 
 			for(int i = 0; i < numArchivos; i++) {
 				String archivoRecibido = dis.readUTF();
 				DropBox.modelo.addElement(archivoRecibido);
+				tipoFile[i] = dis.readInt();
 				//System.out.println("" + archivoRecibido);
 			}//for
 
@@ -202,10 +208,10 @@ public class Cliente {
 				dos.flush();
 			}
 			// AQUÍ ME QUEDE
-			if(index.length > 0)
-				String path = index[i]
+			//if(index.length > 0)
+				//String path = index[i];
 			// Enviamos la path de los archivos
-			dos.writeUTF()		
+			//dos.writeUTF();
 			/* Recibimos el archivo ZIP
 			DataInputStream dis = new DataInputStream(cl.getInputStream()); // InputStream
 			long tam = dis.readLong();

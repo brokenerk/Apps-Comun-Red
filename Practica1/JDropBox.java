@@ -2,15 +2,22 @@ import java.awt.event.*;
 import java.awt.*;
 import javax.swing.*;	
 import java.io.*;
+import javax.swing.JFrame;
+import javax.swing.JScrollPane;
+import javax.swing.JTree;
+import javax.swing.WindowConstants;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+
 
 public class DropBox extends JFrame implements ActionListener {
 	JButton BtnSubir, BtnActualizar, BtnDescargar;
 	static JList<String> archivos;
-	static DefaultListModel<String> modelo;
 	MouseListener mouseListener;
 	JPanel panelBotones;
 	JProgressBar BarraProgreso;
 	JScrollPane scroll;
+ 	JTree tree;
 	//File list[];
 
 	public DropBox() {
@@ -18,39 +25,17 @@ public class DropBox extends JFrame implements ActionListener {
 		c.setLayout(new BoxLayout(c, BoxLayout.Y_AXIS));
 
 		archivos = new JList<String>();
-        archivos.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 
-        /*Añadimos la funcionalidad de doble clic para navegar por directorios*/
-        mouseListener = new MouseAdapter() {
-		    public void mouseClicked(MouseEvent e) {
-
-		        if (e.getClickCount() == 2) {
-		            int index = archivos.locationToIndex(e.getPoint());
-		            String nombreSeleccion = modelo.getElementAt(index);
-
-		            if (nombreSeleccion.indexOf("\\.\\") != -1) {
-			            modelo.clear();
-			            Cliente.AbrirCarpeta(index);
-			        }
-/*		            if (nombreSeleccion.indexOf("/./") != -1) {
-			            modelo.clear();
-			            Cliente.AbrirCarpeta(index);
-			        }
-*/		        }
-
-		    }
-		};
-
-		archivos.addMouseListener(mouseListener);
-
-        modelo = new DefaultListModel<>();
-
+		DefaultMutableTreeNode abuelo = new DefaultMutableTreeNode("abuelo");
+        DefaultTreeModel modelo = new DefaultTreeModel(abuelo);
+	    tree = new JTree(modelo);
 		Cliente.Actualizar();
 
-		archivos.setModel(modelo);
+
 		
-        scroll = new JScrollPane(archivos);
+        scroll = new JScrollPane(tree);
         scroll.setMinimumSize(new Dimension(100, 200));
+
 
 		c.add(scroll);
 
@@ -80,18 +65,18 @@ public class DropBox extends JFrame implements ActionListener {
 		JButton b = (JButton) e.getSource();
 		    
 		if(b == BtnSubir) {
-			Cliente.SeleccionarArchivos();
+			Cliente.EnviarArchivos();
 			//Actualizamos el cliente despues de la subida de archivos
-			modelo.clear();
+			//modelo.clear();
 			Cliente.Actualizar();
 		}
 		else if(b == BtnActualizar) {
-			modelo.clear();
+			//modelo.clear();
 			Cliente.Actualizar();
 		}
 		
 		else if(b == BtnDescargar) {
-			// Aquí descarga
+
 		}
 	}
 

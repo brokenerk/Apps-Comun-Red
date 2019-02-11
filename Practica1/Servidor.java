@@ -1,20 +1,23 @@
 // SERVIDOR
 import java.net.*;
 import java.io.*;
+import java.util.zip.*;
 
 public class Servidor {
-	private static String rutaServer = "./serverP1/";
+	private static String rutaServer = ".\\serverP1\\";
+//	private static String rutaServer = "./serverP1/";
 	private static File[] list;
 
-	//Valor de la bandera = 0
-	public static void RecibirArchivos(DataInputStream dis) throws IOException {
-		String nombre = dis.readUTF();
+/*********************************************************************************************
+									0. RECIBIR ARCHIVOS
+*********************************************************************************************/
+	// Valor de la bandera = 0
+	public static void RecibirArchivos(DataInputStream dis, String nombre) throws IOException {
 		long tam = dis.readLong();
-
-		System.out.println("\nSe recibe el archivo " + nombre + " con " + tam + " bytes");
-
-		nombre = rutaServer + nombre;
-
+		String pathDestino = dis.readUTF();
+		nombre = rutaServer + pathDestino;
+		
+		System.out.println("\nSe recibe el archivo " + nombre + " con " + tam + "bytes");
 		DataOutputStream dos = new DataOutputStream(new FileOutputStream(nombre)); // OutputStream
 		
 		long recibidos = 0;
@@ -28,12 +31,16 @@ public class Servidor {
 			recibidos += n;
 			porciento = (int)((recibidos * 100) / tam);
 			//System.out.println("\r Recibiendo el " + porciento + "% --- " + recibidos + "/" + tam + " bytes");
-		} //while
+		} // while
 
 		System.out.println("Archivo " + nombre + " recibido.");
 		dos.close();
-	}//Recibir
+		dis.close();
+	} // RecibirArchivos
 
+/*********************************************************************************************
+								1. ACTUALIZAR CLIENTES
+*********************************************************************************************/
 	//Valor de la bandera = 1
 	public static void ActualizarCliente(Socket cl, DataInputStream dis, String path) throws IOException {
 		File archivosRuta = new File(path);
@@ -54,18 +61,22 @@ public class Servidor {
             if (f.isDirectory()) { 
                 //walk( f.getAbsolutePath() ); 
                 info = "" + f.getAbsoluteFile();
-                System.out.println("Dir: " + f.getAbsoluteFile()); 
+                //System.out.println("Dir: " + f.getAbsoluteFile()); 
             }//if
             else { 
             	info = f.getName() + "  -------  " + f.length() + " bytes";
-                System.out.println("File: " + f.getAbsoluteFile()); 
+                //System.out.println("File: " + f.getAbsoluteFile()); 
             }//else
             dos.writeUTF(info);
             dos.flush();   
         }//for
         dos.close();
-        System.out.println("Informacion enviada al cliente: Request atendido."); 
+        //System.out.println("Informacion enviada al cliente: Request atendido."); 
 	}//Actualizar
+
+/*********************************************************************************************
+										MAIN
+*********************************************************************************************/
 
 	public static void main(String[] args) {
 		try {
@@ -83,8 +94,10 @@ public class Servidor {
 				int bandera = dis.readInt();
 
 				if(bandera == 0) {
-					//Subir archivos -> El servidor recibe
-					RecibirArchivos(dis);
+					//Subir un archivo -> El servidor recibe
+					String nombre = dis.readUTF();
+					System.out.println("Recibi ... " + nombre);
+					RecibirArchivos(dis, nombre);
 				}
 				else if (bandera == 1) {
 					//Ver archivos / Actualizar -> El servidor envia los nombres de los archivos
@@ -99,6 +112,30 @@ public class Servidor {
 					int ubicacionRuta = dis.readInt();
 					String nuevaRuta = "" + list[ubicacionRuta].getAbsoluteFile();
 					ActualizarCliente(cl, dis, nuevaRuta);
+				}
+				else if(bandera == 4) {
+					//Subir archivos -> El servidor recibe
+					String rutaDirectorio = dis.readUTF();
+					String path = rutaServer + rutaDirectorio;
+					File archivosRuta = new File(path);
+					System.out.println("\n\nYo recibo: " + rutaDirectorio);
+					if(!archivosRuta.exists()) {
+						archivosRuta.mkdir();
+					}
+					
+					//RecibirArchivos(dis, nombre);
+					/*File nombreDir = new File(rutaServer);
+					//String nombreDir = dis.readUTF();
+					String n = ".\\Documents"
+
+					File[] files = jf.listFiles();
+		            for(File file : files)	{
+		            	if((f.getName()).equals("") )
+		            	String ruta = file.getAbsolutePath();
+		            	EnviarArchivo(file, ruta);
+		        	}//for
+					System.out.println("Directorio que quiero crear: " +  nombreDir + " Directorio en el que esta: ");
+					//if*/
 				}
 				else {
 					System.out.println("Error al atender la solicitud del cliente.");

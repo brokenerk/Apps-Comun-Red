@@ -207,7 +207,7 @@ public class Cliente {
 				dos.writeInt(index[i]);
 				dos.flush();
 			}
-			// AQUÍ ME QUEDE
+			// AQUI ME QUEDE
 			//if(index.length > 0)
 				//String path = index[i];
 			// Enviamos la path de los archivos

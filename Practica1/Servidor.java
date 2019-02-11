@@ -110,7 +110,7 @@ public class Servidor {
 		    	//Object sel = archivos.getModel().getElementAt(ind[i]);
 		        System.out.println(" " + ind[i]);
 		    }		
-		    // AQUÍ ME QUEDE
+		    // AQUI ME QUEDE
 	//		DataOutputStream dos = new DataOutputStream(new FileOutputStream(nombre)); // OutputStream
 		}
 		catch(Exception e) {

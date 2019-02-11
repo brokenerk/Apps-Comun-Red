@@ -4,8 +4,8 @@ import java.io.*;
 import java.util.zip.*;
 
 public class Servidor {
-	private static String rutaServer = ".\\serverP1\\";
-//	private static String rutaServer = "./serverP1/";
+//	private static String rutaServer = ".\\serverP1\\";
+	private static String rutaServer = "./serverP1/";
 	private static File[] list;
 
 /*********************************************************************************************

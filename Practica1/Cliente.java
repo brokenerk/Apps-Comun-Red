@@ -122,7 +122,6 @@ public class Cliente {
 		}
 	} // Enviar archivo
 
-
 /*********************************************************************************************
 									SELECCIONAR ARCHIVOS
 *********************************************************************************************/
@@ -150,7 +149,6 @@ public class Cliente {
             e.printStackTrace();
         }
     }
-
 
 /*********************************************************************************************
 									ACTUALIZAR
@@ -184,6 +182,59 @@ public class Cliente {
     		e.printStackTrace();
     	}//catch
     }//Actualizar
+
+/*********************************************************************************************
+									DESCARGAR
+*********************************************************************************************/
+	public static void Descargar(int[] index) {
+		try {
+    		Socket cl = new Socket(host, pto);
+			DataOutputStream dos = new DataOutputStream(cl.getOutputStream()); //OutputStream
+			int i;
+			//La bandera tiene el valor de 2 = Descargar seleccion
+			dos.writeInt(2); dos.flush();
+
+			dos.writeInt(index.length); dos.flush();
+			
+			//Enviamos los indices de los archivos seleccionados
+			for(i = 0; i < index.length ; i++) {
+				dos.writeInt(index[i]);
+				dos.flush();
+			}
+			// AQUÍ ME QUEDE
+			if(index.length > 0)
+				String path = index[i]
+			// Enviamos la path de los archivos
+			dos.writeUTF()		
+			/* Recibimos el archivo ZIP
+			DataInputStream dis = new DataInputStream(cl.getInputStream()); // InputStream
+			long tam = dis.readLong();
+			String nombre = dis.readUTF();
+			String destino = ".\\Escritorio\\" + nombre;
+			System.out.println("\nSe recibe el archivo " + nombre + " con " + tam + "bytes");
+
+			DataOutputStream dos = new DataOutputStream(new FileOutputStream(destino)); // OutputStream
+			long recibidos = 0;
+			int n = 0, porciento = 0;
+			byte[] b = new byte[2000];
+
+			while(recibidos < tam) {
+				n = dis.read(b);
+				dos.write(b, 0, n);
+				dos.flush();
+				recibidos += n;
+				porciento = (int)((recibidos * 100) / tam);
+				//System.out.println("\r Recibiendo el " + porciento + "% --- " + recibidos + "/" + tam + " bytes");
+			} // while
+			System.out.println("Archivo " + nombre + " recibido.");
+			dos.close();
+			dis.close();*/
+
+    	}catch(Exception e) {
+    		e.printStackTrace();
+    	}//catch
+	}
+
 }
 
 

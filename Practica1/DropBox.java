@@ -40,11 +40,9 @@ public class DropBox extends JFrame implements ActionListener {
 
 		    }
 		};
-
 		archivos.addMouseListener(mouseListener);
 
         modelo = new DefaultListModel<>();
-
 		Cliente.Actualizar();
 
 		archivos.setModel(modelo);
@@ -89,9 +87,9 @@ public class DropBox extends JFrame implements ActionListener {
 			modelo.clear();
 			Cliente.Actualizar();
 		}
-		
 		else if(b == BtnDescargar) {
-			// Aquí descarga
+			int[] indices = archivos.getSelectedIndices();	
+			Cliente.Descargar(indices);
 		}
 	}
 

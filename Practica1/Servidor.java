@@ -74,6 +74,60 @@ public class Servidor {
         //System.out.println("Informacion enviada al cliente: Request atendido."); 
 	}//Actualizar
 
+	public static void DescargarArchivos(DataInputStream dis, int tam) {
+		try {
+			int i; 
+			int[] ind = new int[tam];
+			for(i = 0; i < tam; i++) {
+				ind[i] = dis.readInt();
+				System.out.println("\nSe recibe el archivo " + ind[i] + " ,en total son: " + tam );
+			}
+
+		    for (int i = 0; i < ind.length; i++) {
+		    	Object sel = archivos.getModel().getElementAt(ind[i]);
+		        System.out.println(" " + ind[i]);
+		    }		
+		    // AQUÍ ME QUEDE
+	//		DataOutputStream dos = new DataOutputStream(new FileOutputStream(nombre)); // OutputStream
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+
+/*********************************************************************************************
+										ZIP
+*********************************************************************************************/
+
+	public static void zipFile(File fileToZip, String fileName, ZipOutputStream zipOut) throws IOException {
+        if (fileToZip.isHidden()) {
+            return;
+        }
+        if (fileToZip.isDirectory()) {
+            if (fileName.endsWith("/")) {
+                zipOut.putNextEntry(new ZipEntry(fileName));
+                zipOut.closeEntry();
+            } else {
+                zipOut.putNextEntry(new ZipEntry(fileName + "/"));
+                zipOut.closeEntry();
+            }
+            File[] children = fileToZip.listFiles();
+            for (File childFile : children) {
+                zipFile(childFile, fileName + "/" + childFile.getName(), zipOut);
+            }
+            return;
+        }
+        FileInputStream fis = new FileInputStream(fileToZip);
+        ZipEntry zipEntry = new ZipEntry(fileName);
+        zipOut.putNextEntry(zipEntry);
+        byte[] bytes = new byte[1024];
+        int length;
+        while ((length = fis.read(bytes)) >= 0) {
+            zipOut.write(bytes, 0, length);
+        }
+        fis.close();
+    }
 /*********************************************************************************************
 										MAIN
 *********************************************************************************************/
@@ -105,6 +159,8 @@ public class Servidor {
 				}
 				else if (bandera == 2) {
 					//Descargar archivos -> El servidor prepara y envia archivos
+				int tam = dis.readInt();
+					DescargarArchivos(dis, tam);
 
 				}
 				else if (bandera == 3) {

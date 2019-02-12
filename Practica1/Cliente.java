@@ -215,7 +215,17 @@ public class Cliente {
 				dos.writeUTF(aux);
 				dos.flush();
 			}
+<<<<<<< HEAD
 
+=======
+			// AQUI ME QUEDE
+			//if(index.length > 0)
+				//String path = index[i];
+			// Enviamos la path de los archivos
+			//dos.writeUTF();
+			/* Recibimos el archivo ZIP
+			DataInputStream dis = new DataInputStream(cl.getInputStream()); // InputStream
+>>>>>>> f09a416b63b5b503ac7b88473c5d38fa16a3a05e
 			long tam = dis.readLong();
 			System.out.println("\nSe recibe el archivo " + nombre + " con " + tam + "bytes");
 			

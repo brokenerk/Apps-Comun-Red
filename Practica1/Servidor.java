@@ -113,6 +113,7 @@ public class Servidor {
 				nombreArchivos[i] = dis.readUTF();
 				System.out.println("\nRecibi el nombre: " + nombreArchivos[i]);
 			}
+<<<<<<< HEAD
 			dis.close();
 			// Quito ./ al nombre del directorio
 			char aux1 = ' ', aux2 = ' ';
@@ -139,6 +140,15 @@ public class Servidor {
 			}
 			zipOut.close();
 		    fos.close();
+=======
+
+		    for (i = 0; i < ind.length; i++) {
+		    	//Object sel = archivos.getModel().getElementAt(ind[i]);
+		        System.out.println(" " + ind[i]);
+		    }		
+		    // AQUI ME QUEDE
+	//		DataOutputStream dos = new DataOutputStream(new FileOutputStream(nombre)); // OutputStream
+>>>>>>> f09a416b63b5b503ac7b88473c5d38fa16a3a05e
 		}
 		catch(Exception e) {
 			e.printStackTrace();

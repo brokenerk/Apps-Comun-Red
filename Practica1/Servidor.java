@@ -4,11 +4,11 @@ import java.io.*;
 import java.util.zip.*;
 
 public class Servidor {
-//	private static String rutaServer = ".\\serverP1\\";
 	public static String sep = System.getProperty("file.separator");
 	private static String rutaServer = "." + sep + "serverP1" + sep;
 	private static File[] list;
 	private static String rutaActual = "";
+	private static int numVeces = 0;
 
 /*********************************************************************************************
 									0. RECIBIR ARCHIVOS
@@ -32,10 +32,10 @@ public class Servidor {
 			dos.flush();
 			recibidos += n;
 			porciento = (int)((recibidos * 100) / tam);
-			//System.out.println("\r Recibiendo el " + porciento + "% --- " + recibidos + "/" + tam + " bytes");
+			System.out.println("\r Recibiendo el " + porciento + "% --- " + recibidos + "/" + tam + " bytes");
 		} // while
 
-		System.out.println("Archivo " + nombre + " recibido.");
+		System.out.println("\nArchivo " + nombre + " de tamanio: " + tam + " recibido.");
 		dos.close();
 		dis.close();
 	} // RecibirArchivos
@@ -68,7 +68,6 @@ public class Servidor {
 
         for (File f : list) {
             if (f.isDirectory()) { 
-                //walk( f.getAbsolutePath() ); 
                 tipo = 1;
                 if(bandera == 0) {//Ruta raiz - Inicio
                 	info = "." + sep + f.getName();
@@ -96,7 +95,7 @@ public class Servidor {
             tipo = 0;
         }//for
         dos.close();
-        //System.out.println("Informacion enviada al cliente: Request atendido."); 
+        System.out.println("Informacion enviada al cliente: Carpeta actualizada."); 
 	}//Actualizar
 
 /*********************************************************************************************
@@ -111,10 +110,9 @@ public class Servidor {
 			int i, j;
 			for(i = 0; i < tam; i++) {
 				nombreArchivos[i] = dis.readUTF();
-				System.out.println("\nRecibi el nombre: " + nombreArchivos[i]);
+				System.out.println("\nArchivo: " + nombreArchivos[i]);
 			}
-<<<<<<< HEAD
-			dis.close();
+
 			// Quito ./ al nombre del directorio
 			char aux1 = ' ', aux2 = ' ';
 			String nombre = ""; 
@@ -127,7 +125,7 @@ public class Servidor {
 					nombre = "";
 				}
 			}
-		    String destino = rutaServer + "DropBox.zip";
+		    String destino = rutaServer + "Download" + numVeces + ".zip";
 		    FileOutputStream fos = new FileOutputStream(destino);
 		    ZipOutputStream zipOut = new ZipOutputStream(fos);
 			String sourceFile = "";
@@ -140,15 +138,6 @@ public class Servidor {
 			}
 			zipOut.close();
 		    fos.close();
-=======
-
-		    for (i = 0; i < ind.length; i++) {
-		    	//Object sel = archivos.getModel().getElementAt(ind[i]);
-		        System.out.println(" " + ind[i]);
-		    }		
-		    // AQUI ME QUEDE
-	//		DataOutputStream dos = new DataOutputStream(new FileOutputStream(nombre)); // OutputStream
->>>>>>> f09a416b63b5b503ac7b88473c5d38fa16a3a05e
 		}
 		catch(Exception e) {
 			e.printStackTrace();
@@ -158,16 +147,17 @@ public class Servidor {
 /*********************************************************************************************
 										ZIP
 *********************************************************************************************/
-
 	public static void zipFile(File fileToZip, String fileName, ZipOutputStream zipOut) throws IOException {
         if (fileToZip.isHidden()) {
             return;
         }
+
         if (fileToZip.isDirectory()) {
             if (fileName.endsWith(sep)) {
                 zipOut.putNextEntry(new ZipEntry(fileName));
                 zipOut.closeEntry();
-            } else {
+            } 
+            else {
                 zipOut.putNextEntry(new ZipEntry(fileName + sep));
                 zipOut.closeEntry();
             }
@@ -177,45 +167,55 @@ public class Servidor {
             }
             return;
         }
+
         FileInputStream fis = new FileInputStream(fileToZip);
         ZipEntry zipEntry = new ZipEntry(fileName);
         zipOut.putNextEntry(zipEntry);
         byte[] bytes = new byte[1024];
         int length;
+
         while ((length = fis.read(bytes)) >= 0) {
             zipOut.write(bytes, 0, length);
         }
+
         fis.close();
-        System.out.println("TERMINE DE COMPRIMIR LOS ARCHIVOS");
+        System.out.println("Archivos comprimidos en un ZIP. Listo para enviar...");
     }
 
 /*********************************************************************************************
 									EnviarArchivo
 *********************************************************************************************/
-    public static void EnviarArchivo(DataInputStream dis, DataOutputStream dos, File f, String pathOrigen) {
+    public static void EnviarArchivo(DataOutputStream dos, File f) {
 		try {
     		String nombre = f.getName();
             long tam = f.length();
+            String path = f.getAbsolutePath();
             System.out.println("\nSe envia el archivo " + nombre + " con " + tam + " bytes");
+            DataInputStream disArchivo = new DataInputStream(new FileInputStream(path)); // InputStream
 
 			//Se envia info de los archivos
-            //dos.writeUTF(nombre); dos.flush();
-            dos.writeLong(tam);	dos.flush();
+            dos.writeUTF(nombre); 
+            dos.flush();
+            dos.writeLong(tam);	
+            dos.flush();
 
             long enviados = 0;
             int n = 0, porciento = 0;
             byte[] b = new byte[2000];
 
             while(enviados < tam) {
-                n = dis.read(b);
+                n = disArchivo.read(b);
                 dos.write(b, 0, n);
                 dos.flush();
                 enviados += n;
                 porciento = (int)((enviados * 100) / tam);
                 System.out.println("\r Enviando el " + porciento + "% --- " + enviados + "/" + tam + " bytes");
             } //while
-            
-            dis.close(); dos.close();
+
+            System.out.println("\nArchivo " + nombre + " de tamanio: " + tam + " enviado.");
+
+            disArchivo.close();
+            dos.close();
 		} // try
 		catch(Exception e) {
 			e.printStackTrace();
@@ -244,7 +244,6 @@ public class Servidor {
 				if(bandera == 0) {
 					//Subir un archivo -> El servidor recibe
 					String nombre = dis.readUTF();
-					System.out.println("Recibi ... " + nombre);
 					RecibirArchivos(dis, nombre);
 				}
 				else if (bandera == 1) {
@@ -257,30 +256,31 @@ public class Servidor {
 				else if (bandera == 2) {
 					//Descargar archivos -> El servidor prepara y envia archivos
 					//Subir archivos -> El servidor recibe
-
-					System.out.println("ENTRE A DESCARGAR\n");
 					int tam = dis.readInt();
-					String path = "DropBox.zip";
-					String pathOrigen = rutaServer + path;
+					String path = "Download" + numVeces + ".zip";
+					path = rutaServer + path;
+					System.out.println(""+path);
 					File archivoZip = new File(path);
+					System.out.println(""+archivoZip.getAbsoluteFile());
+					
 					crearZIP(dis, tam);
-					if(!archivoZip.exists()) {
+
+					if(archivoZip.exists()) {
 						//System.out.println("Si existeee");
-						System.out.println("La path del archivo esta en: " + pathOrigen + "Con nombre: " + archivoZip.getName());
-						/* Se supone que EnviarArchivo debe hacer eso XDD, entonces yo le paso esos parametros para que envie
-							Declare dos en la linea 219, le envio el archivo y la path de donde esta en mi servidor
-						*/
-						EnviarArchivo(dis, dos, archivoZip, pathOrigen);
+						System.out.println("La path del archivo esta en: " + path + " Con nombre: " + archivoZip.getName());
+						EnviarArchivo(dos, archivoZip);
 						// Lo elimino porque no debe estar en el servidor, solo lo hice temporalmente
 						if(archivoZip.delete()) 
-							System.out.println("Elimine el DropBox.zip")
+							System.out.println("Archivo temporal Download" + numVeces + ".zip eliminado");
 					}
+
+					numVeces++;
 
 				}
 				else if (bandera == 3) {
 					//Abrir carpeta -> El servidor envia los nombres de los contenidos de la carpeta seleccionada
 					int ubicacionRuta = dis.readInt();
-					//Banadera = 1. Se navega dentro de una carpeta
+					//Bandera = 1. Se navega dentro de una carpeta
 					String nuevaRuta = "" + list[ubicacionRuta].getAbsoluteFile();
 					ActualizarCliente(cl, dis, nuevaRuta, 1);
 				}
@@ -296,7 +296,8 @@ public class Servidor {
 				else {
 					System.out.println("Error al atender la solicitud del cliente.");
 				}
-				dis.close(); cl.close();
+				dis.close(); 
+				cl.close();
 			}//for
 		}catch(Exception e) {
 			e.printStackTrace();

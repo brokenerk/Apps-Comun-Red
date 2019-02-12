@@ -1,0 +1,12 @@
+//TOMCAT FOLDER: /opt/tomcat/apache-tomcat/webapps/
+//START TOMCAT: sudo $CATALINA_HOME/bin/startup.sh
+
+<tomcat-users>
+  <role rolename="admin-gui"/>
+  <role rolename="admin-script"/>
+  <role rolename="manager-gui"/>
+  <role rolename="manager-status"/>
+  <role rolename="manager-script"/>
+  <role rolename="manager-jmx"/>
+  <user username="admin" password="1234" roles="standard,manager-gui,manager-status,manager-script,manager-jmx,admin-gui,admin-script" />
+</tomcat-users>

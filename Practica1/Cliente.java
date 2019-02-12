@@ -1,6 +1,7 @@
 import javax.swing.JFileChooser;
 import java.io.*;
 import java.net.*;
+import javax.swing.JOptionPane;
 
 /*Funciones del cliente que haran las peticiones que se requieran al servidor*/
 public class Cliente {
@@ -13,7 +14,6 @@ public class Cliente {
 /*********************************************************************************************
 									ABRIR CARPETA
 *********************************************************************************************/
-
 	// Funcion abrir carpetas del servidor en el cliente
 	public static void AbrirCarpeta(int indice){
 		try {
@@ -37,13 +37,12 @@ public class Cliente {
 				String archivoRecibido = dis.readUTF();
 				DropBox.modelo.addElement(archivoRecibido);
 				tipoFile[i] = dis.readInt();
-				//System.out.println("" + archivoRecibido);
 			}//for
 
 			dis.close();
 			dos.close();
 			cl.close();
-			//System.out.println("Nueva carpeta abierta: Request recibido.");
+			System.out.println("Nueva carpeta abierta: Request recibido.");
 
     	}catch(Exception e) {
     		e.printStackTrace();
@@ -53,7 +52,6 @@ public class Cliente {
 /*********************************************************************************************
 									ENVIAR ARCHIVO
 *********************************************************************************************/
-
 	/*
 		Descripción: La función permite enviar un archivo o directorio.
 		Parametros: Archivo a enviar, Ruta de dónde se encuentra ese archivo
@@ -80,6 +78,7 @@ public class Cliente {
 	            dos.writeUTF(pathDestino); dos.flush();
 
 	            long enviados = 0;
+	            int pb = 0;
 	            int n = 0, porciento = 0;
 	            byte[] b = new byte[2000];
 
@@ -89,33 +88,43 @@ public class Cliente {
 	                dos.flush();
 	                enviados += n;
 	                porciento = (int)((enviados * 100) / tam);
-	                //System.out.println("\r Enviando el " + porciento + "% --- " + enviados + "/" + tam + " bytes");
+	                System.out.println("\r Enviando el " + porciento + "% --- " + enviados + "/" + tam + " bytes");
 	            } //while
-	            
-	            dis.close(); dos.close(); cl.close();
+
+	            JOptionPane.showMessageDialog(null, "Se ha subido el archivo " + nombre + " con tamanio: " + tam);
+	            dis.close(); 
+	            dos.close(); 
+	            cl.close();
 			} // If
 			else {
 				Socket cl = new Socket(host, pto);
 				DataOutputStream dos = new DataOutputStream(cl.getOutputStream());
+
 				String nombre = f.getName();
 				String ruta = f.getAbsolutePath();
-				System.out.println("Mi nombre: " + nombre + " Mi ruta: " + ruta);
+				System.out.println("Nombre: " + nombre + " Ruta: " + ruta);
+
 				String aux = rutaDirectorios;
 				rutaDirectorios = rutaDirectorios + sep + nombre;
+
 				//La bandera tiene el valor de 4 = Subir Carpeta
 	            dos.writeInt(4);
 	            dos.flush();
+
 				//Se envia info de los archivos
 	            dos.writeUTF(rutaDirectorios);
 	            dos.flush();
+
 	            // Envio los archivos que pertenecen al directorio creado
 			    File folder = new File(ruta);
 			    File[] files = folder.listFiles();
+
 			    for(File file : files)	{
 	            	String path = rutaDirectorios + sep + file.getName();
-	            	System.out.println("Ruta destin en el servidor:" + path);
+	            	System.out.println("Ruta destino en el servidor:" + path);
 	            	EnviarArchivo(file, file.getAbsolutePath(), path);
 	        	}// for
+
 	        	rutaDirectorios = aux;
 	            dos.close();
 				cl.close();
@@ -129,8 +138,7 @@ public class Cliente {
 /*********************************************************************************************
 									SELECCIONAR ARCHIVOS
 *********************************************************************************************/
-
-	// Ennvia muchos archivos al servidor
+	// Envia muchos archivos al servidor
 	public static void SeleccionarArchivos() {
 		try {
 	        JFileChooser jf = new JFileChooser();
@@ -147,6 +155,8 @@ public class Cliente {
 	            	// Siempre estará en la raíz del servidor
 	            	EnviarArchivo(file, rutaOrigen, file.getName());
 	        	}//for
+	        	DropBox.modelo.clear();
+				Actualizar();
 	        }//if   
         }
         catch(Exception e) {
@@ -157,7 +167,6 @@ public class Cliente {
 /*********************************************************************************************
 									ACTUALIZAR
 *********************************************************************************************/
-
     public static void Actualizar(){
     	try {
     		Socket cl = new Socket(host, pto);
@@ -176,13 +185,12 @@ public class Cliente {
 				String archivoRecibido = dis.readUTF();
 				DropBox.modelo.addElement(archivoRecibido);
 				tipoFile[i] = dis.readInt();
-				//System.out.println("" + archivoRecibido);
 			}//for
 
 			dis.close();
 			dos.close();
 			cl.close();
-			//System.out.println("Carpeta del cliente actualizada: Request recibido.");
+			System.out.println("Carpeta del cliente actualizada.");
 
     	}catch(Exception e) {
     		e.printStackTrace();
@@ -194,40 +202,44 @@ public class Cliente {
 *********************************************************************************************/
 	public static void RecibirArchivos(String[] nombresArchivos, int tama) {
 		try {
-			System.out.println("Estoy del lado del cliente\n");
-			String nombre = "." + sep + "Escritorio";
     		Socket cl = new Socket(host, pto);
 			DataOutputStream dos = new DataOutputStream(cl.getOutputStream()); //OutputStream
-			DataOutputStream dosArchivo = new DataOutputStream(new FileOutputStream(nombre)); // OutputStream
-
 			DataInputStream dis = new DataInputStream(cl.getInputStream()); // InputStream
 
 			//La bandera tiene el valor de 2 = Descargar seleccion
-			dos.writeInt(2); dos.flush();
+			dos.writeInt(2); 
+			dos.flush();
 
-			dos.writeInt(tama); dos.flush();
+			dos.writeInt(tama); 
+			dos.flush();
 			
 			//Enviamos los indices de los archivos seleccionados
 			String aux = "";
-			int i;
-			for(i = 0; i < tama; i++) {
+
+			for(int i = 0; i < tama; i++) {
 				aux = nombresArchivos[i];
 				dos.writeUTF(aux);
 				dos.flush();
 			}
-<<<<<<< HEAD
 
-=======
-			// AQUI ME QUEDE
-			//if(index.length > 0)
-				//String path = index[i];
-			// Enviamos la path de los archivos
-			//dos.writeUTF();
-			/* Recibimos el archivo ZIP
-			DataInputStream dis = new DataInputStream(cl.getInputStream()); // InputStream
->>>>>>> f09a416b63b5b503ac7b88473c5d38fa16a3a05e
+			String nombre = System.getProperty("user.home");
+
+			if((System.getProperty("os.name")).indexOf("Windows") != -1) {
+				//Estamos en Windows
+				nombre = nombre + sep + "Desktop" + sep;
+			}
+			else {
+				//Estamos en Ubuntu
+				nombre = nombre + sep + "Escritorio" + sep;
+			}
+
+			//String nombre = "C:\\Users\\YaKerTaker\\Desktop" + sep;
+			nombre = nombre + dis.readUTF();
+
 			long tam = dis.readLong();
 			System.out.println("\nSe recibe el archivo " + nombre + " con " + tam + "bytes");
+
+			DataOutputStream dosArchivo = new DataOutputStream(new FileOutputStream(nombre)); // OutputStream
 			
 			long recibidos = 0;
 			int n = 0, porciento = 0;
@@ -239,14 +251,15 @@ public class Cliente {
 				dosArchivo.flush();
 				recibidos += n;
 				porciento = (int)((recibidos * 100) / tam);
-				//System.out.println("\r Recibiendo el " + porciento + "% --- " + recibidos + "/" + tam + " bytes");
+				System.out.println("\r Recibiendo el " + porciento + "% --- " + recibidos + "/" + tam + " bytes");
 			} // while
 
-			System.out.println("Archivo " + nombre + " recibido.");
+			JOptionPane.showMessageDialog(null, "Se ha descargado el archivo " + nombre + " con tamanio: " + tam);
 			dos.close();
 			dis.close();
 			dosArchivo.close();
 			cl.close();
+
     	}catch(Exception e) {
     		e.printStackTrace();
     	}//catch

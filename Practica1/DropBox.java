@@ -9,7 +9,7 @@ public class DropBox extends JFrame implements ActionListener {
 	static DefaultListModel<String> modelo;
 	MouseListener mouseListener;
 	JPanel panelBotones;
-	JProgressBar BarraProgreso;
+	static JProgressBar BarraProgreso;
 	JScrollPane scroll;
 	//File list[];
 
@@ -54,7 +54,9 @@ public class DropBox extends JFrame implements ActionListener {
 
 		BarraProgreso = new JProgressBar(0, 100);
 		BarraProgreso.setAlignmentX(Component.CENTER_ALIGNMENT);
+		BarraProgreso.setStringPainted(true);
 		c.add(BarraProgreso);
+
 
 		BtnSubir = new JButton("Subir Archivo");
 		BtnActualizar = new JButton("Actualizar - Inicio");
@@ -76,24 +78,28 @@ public class DropBox extends JFrame implements ActionListener {
 		    
 		if(b == BtnSubir) {
 			Cliente.SeleccionarArchivos();
-			//Actualizamos el cliente despues de la subida de archivos
-			modelo.clear();
-			Cliente.Actualizar();
 		}
 		else if(b == BtnActualizar) {
 			modelo.clear();
 			Cliente.Actualizar();
 		}
 		else if(b == BtnDescargar) {
-			int i, aux = 0;
-			int[] indices = archivos.getSelectedIndices();	
-			String[] nombreSeleccion = new String[indices.length];
-			for(i = 0; i < indices.length; i++) {
-				System.out.println("El indice es: " + indices[i]);
-			    nombreSeleccion[i] = modelo.getElementAt(indices[i]);
-			    System.out.println("Nombre: " + nombreSeleccion[i]);
+			if(!archivos.isSelectionEmpty()) {
+				int[] indices = archivos.getSelectedIndices();	
+				String[] nombreSeleccion = new String[indices.length];
+
+				for(int i = 0; i < indices.length; i++) {
+					System.out.println("El indice es: " + indices[i]);
+				    nombreSeleccion[i] = modelo.getElementAt(indices[i]);
+				    System.out.println("Nombre: " + nombreSeleccion[i]);
+				}
+
+				Cliente.RecibirArchivos(nombreSeleccion, indices.length);
 			}
-			Cliente.RecibirArchivos(nombreSeleccion, indices.length);
+			else {
+				JOptionPane.showMessageDialog(null, "Seleccione archivos para descargarlos.");
+			}
+			
 		}
 	}
 

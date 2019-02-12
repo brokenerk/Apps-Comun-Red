@@ -1,0 +1,17 @@
+mkdir example1
+cd example1/
+mkdir WEB-INF
+cd WEB-INF/
+mkdir classes
+mkdir lib
+mkdir tags
+
+jar -cvf example1.war example/*
+jar -cvf ../example1.war *
+
+Carpeta Maven: home > .m2
+junit: pruebas unitarias
+
+Jetty WebApp -> icono rojo
+
+apache-tomcat-8.5.37

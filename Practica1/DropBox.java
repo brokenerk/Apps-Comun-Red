@@ -85,8 +85,15 @@ public class DropBox extends JFrame implements ActionListener {
 			Cliente.Actualizar();
 		}
 		else if(b == BtnDescargar) {
+			int i, aux = 0;
 			int[] indices = archivos.getSelectedIndices();	
-			Cliente.Descargar(indices);
+			String[] nombreSeleccion = new String[indices.length];
+			for(i = 0; i < indices.length; i++) {
+				System.out.println("El indice es: " + indices[i]);
+			    nombreSeleccion[i] = modelo.getElementAt(indices[i]);
+			    System.out.println("Nombre: " + nombreSeleccion[i]);
+			}
+			Cliente.RecibirArchivos(nombreSeleccion, indices.length);
 		}
 	}
 

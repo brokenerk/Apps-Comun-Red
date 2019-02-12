@@ -80,10 +80,12 @@ public class Servidor {
             else { 
             	tipo = 2;
             	if(bandera == 0){//Ruta raiz - Inicio
-            		info = f.getName() + "  -------  " + f.length() + " bytes";
+            		info = f.getName();            		
+            		//info = f.getName() + "  -------  " + f.length() + " bytes";
             	}
             	else {//Abrir ruta y concatenar
-            		info = "." + rutaActual + sep + f.getName() + "  -------  " + f.length() + " bytes";
+            		info = "." + rutaActual + sep + f.getName();
+            		//info = "." + rutaActual + sep + f.getName() + "  -------  " + f.length() + " bytes";
             	}
             }//else
             dos.writeUTF(info);
@@ -97,26 +99,50 @@ public class Servidor {
         //System.out.println("Informacion enviada al cliente: Request atendido."); 
 	}//Actualizar
 
-	public static void DescargarArchivos(DataInputStream dis, int tam) {
+/*********************************************************************************************
+							CREAR ARCHIVO .ZIP
+*********************************************************************************************/
+	
+	public static void crearZIP(DataInputStream dis, int tam) {
 		try {
-			int i; 
-			int[] ind = new int[tam];
+			//Enviamos los indices de los archivos seleccionados
+			String[] nombreArchivos = new String[tam];
+			String aux = "";
+			int i, j;
 			for(i = 0; i < tam; i++) {
-				ind[i] = dis.readInt();
-				System.out.println("\nSe recibe el archivo " + ind[i] + " ,en total son: " + tam );
+				nombreArchivos[i] = dis.readUTF();
+				System.out.println("\nRecibi el nombre: " + nombreArchivos[i]);
 			}
-
-		    for (i = 0; i < ind.length; i++) {
-		    	//Object sel = archivos.getModel().getElementAt(ind[i]);
-		        System.out.println(" " + ind[i]);
-		    }		
-		    // AQUÍ ME QUEDE
-	//		DataOutputStream dos = new DataOutputStream(new FileOutputStream(nombre)); // OutputStream
+			dis.close();
+			// Quito ./ al nombre del directorio
+			char aux1 = ' ', aux2 = ' ';
+			String nombre = ""; 
+			for(i = 0; i < tam; i++) {
+				aux1 = nombreArchivos[i].charAt(0);
+				if( aux1 == '.') {
+					for(j = 2; j < nombreArchivos[i].length(); j++)
+						nombre = nombre + Character.toString(nombreArchivos[i].charAt(j));
+					nombreArchivos[i] = nombre;
+					nombre = "";
+				}
+			}
+		    String destino = rutaServer + "DropBox.zip";
+		    FileOutputStream fos = new FileOutputStream(destino);
+		    ZipOutputStream zipOut = new ZipOutputStream(fos);
+			String sourceFile = "";
+			for(i = 0; i < tam; i++) {
+				// Le doy la ruta de mi archivo o directorio
+				sourceFile = rutaServer + nombreArchivos[i];
+				File fileToZip = new File(sourceFile);
+		    	zipFile(fileToZip, fileToZip.getName(), zipOut);
+		    	sourceFile = " ";
+			}
+			zipOut.close();
+		    fos.close();
 		}
 		catch(Exception e) {
 			e.printStackTrace();
 		}
-		
 	}
 
 /*********************************************************************************************
@@ -150,7 +176,42 @@ public class Servidor {
             zipOut.write(bytes, 0, length);
         }
         fis.close();
+        System.out.println("TERMINE DE COMPRIMIR LOS ARCHIVOS");
     }
+
+/*********************************************************************************************
+									EnviarArchivo
+*********************************************************************************************/
+    public static void EnviarArchivo(DataInputStream dis, DataOutputStream dos, File f, String pathOrigen) {
+		try {
+    		String nombre = f.getName();
+            long tam = f.length();
+            System.out.println("\nSe envia el archivo " + nombre + " con " + tam + " bytes");
+
+			//Se envia info de los archivos
+            //dos.writeUTF(nombre); dos.flush();
+            dos.writeLong(tam);	dos.flush();
+
+            long enviados = 0;
+            int n = 0, porciento = 0;
+            byte[] b = new byte[2000];
+
+            while(enviados < tam) {
+                n = dis.read(b);
+                dos.write(b, 0, n);
+                dos.flush();
+                enviados += n;
+                porciento = (int)((enviados * 100) / tam);
+                System.out.println("\r Enviando el " + porciento + "% --- " + enviados + "/" + tam + " bytes");
+            } //while
+            
+            dis.close(); dos.close();
+		} // try
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+	} // Enviar archivo
+
 /*********************************************************************************************
 										MAIN
 *********************************************************************************************/
@@ -165,7 +226,7 @@ public class Servidor {
 			for( ; ; ) {
 				Socket cl = s.accept();
 				System.out.println("\n\nCliente conectado desde " + cl.getInetAddress() + " " + cl.getPort());
-			
+				DataOutputStream dos = new DataOutputStream(cl.getOutputStream()); //OutputStream
 				DataInputStream dis = new DataInputStream(cl.getInputStream()); // InputStream
 
 				int bandera = dis.readInt();
@@ -185,8 +246,25 @@ public class Servidor {
 				}
 				else if (bandera == 2) {
 					//Descargar archivos -> El servidor prepara y envia archivos
-				int tam = dis.readInt();
-					DescargarArchivos(dis, tam);
+					//Subir archivos -> El servidor recibe
+
+					System.out.println("ENTRE A DESCARGAR\n");
+					int tam = dis.readInt();
+					String path = "DropBox.zip";
+					String pathOrigen = rutaServer + path;
+					File archivoZip = new File(path);
+					crearZIP(dis, tam);
+					if(!archivoZip.exists()) {
+						//System.out.println("Si existeee");
+						System.out.println("La path del archivo esta en: " + pathOrigen + "Con nombre: " + archivoZip.getName());
+						/* Se supone que EnviarArchivo debe hacer eso XDD, entonces yo le paso esos parametros para que envie
+							Declare dos en la linea 219, le envio el archivo y la path de donde esta en mi servidor
+						*/
+						EnviarArchivo(dis, dos, archivoZip, pathOrigen);
+						// Lo elimino porque no debe estar en el servidor, solo lo hice temporalmente
+						if(archivoZip.delete()) 
+							System.out.println("Elimine el DropBox.zip")
+					}
 
 				}
 				else if (bandera == 3) {

@@ -1,16 +1,14 @@
 public class Grupo{
 	private Materia[] materias;
-	private Profesor[] profesores;
+	private String[] profesores;
 	private int numMaterias = 6; /*Constante*/
 	private String periodo;
-	private Horario horario;
 	private String nombre;
 
-	public Grupo(String periodo, Horario horario, String nombre){
+	public Grupo(String periodo, String nombre){
 		materias = new Materia[numMaterias];
 		profesores = new Profesor[numMaterias];
 		this.periodo = periodo;
-		this.horario = horario;
 		this.nombre = nombre;
 	}
 
@@ -18,7 +16,7 @@ public class Grupo{
 		this.materias = materias;
 	}
 
-	public void setProfesores(Profesor[] profesores){
+	public void setProfesores(String[] profesores){
 		this.profesores = profesores;
 	}
 
@@ -26,16 +24,12 @@ public class Grupo{
 		return materias;
 	}
 
-	public Profesor[] getProfesores(){
+	public String[] getProfesores(){
 		return profesores;
 	}
 
 	public String getPeriodo(){
 		return periodo;
-	}
-
-	public Horario getHorario(){
-		return horario;
 	}
 
 	public String getNombre(){

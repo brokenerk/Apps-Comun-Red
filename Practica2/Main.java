@@ -20,8 +20,14 @@ public class Main{
 		Materia[] materiasInscritas = new Materia[6];
 		/*ESTA PARTE SE CONSTRUYE CONFORME SE INVOCA EL METODO: inscribir()*/
 		Horario horario = new Horario(6);
+		gruposInscritos[0] = grupo[0];
+		gruposInscritos[1] = grupo[0];
+		gruposInscritos[2] = grupo[1];
+		gruposInscritos[3] = grupo[1];
+		gruposInscritos[4] = grupo[2];
+		gruposInscritos[5] = grupo[2];
 		for(int i = 0; i < 6; i++){
-			gruposInscritos[i] = grupo[1];
+			//gruposInscritos[i] = grupo[2];
 			horario.setGrupos(gruposInscritos[i].getId(), i);
 
 			Materia[] materiasGrupo = gruposInscritos[i].getMaterias();
@@ -58,9 +64,9 @@ public class Main{
 
 
 			for(int j = 0; j < hrsSemana.length; j++){
-				hrs = hrs + " " +  hrsSemana[j];
+				hrs = hrs +  hrsSemana[j];
 			}
-			System.out.println(g.getNombre() + "\t" + m[i].getNombre() + "\t\t\t" + p[i] + "\t\t\t" + hrs);
+			System.out.println(g.getNombre() + "\t" + m[i].getNombre() + "\t" + p[i] + "\t" + hrs);
 		}
 	}
 }

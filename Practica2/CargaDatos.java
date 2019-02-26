@@ -49,6 +49,7 @@ public class CargaDatos{
 		/*Llenamos los 3 grupos con materias aleatorias*/
 		for(int j = 0; j < 3; j++){
 			Set<Integer> generados = new HashSet<>();
+			System.out.println("Grupo: " + grupo[j].getNombre());
 			for(int i = 0; i < 6; i++){
 				int aleatorio = -1;
     			boolean generado = false;
@@ -62,6 +63,9 @@ public class CargaDatos{
 			            generado = true;
 			        }
 			    }
+
+			    System.out.print(materias[aleatorio].getNombre() + " " + prof[aleatorio] + " ");
+
 
 				grupo[j].setMaterias(materias[aleatorio], i);
 				grupo[j].setProfesores(prof[aleatorio], i);
@@ -101,9 +105,21 @@ public class CargaDatos{
 				    }
 
 		    		h.setHoras(horas[a], a2);
+
+		    		
 				}
+				String[] verHoras = h.getHoras();
+				String hrs = "";
+
+				for(int y = 0; y < 5; y++){
+					hrs = hrs + verHoras[y];
+				}
+
+				System.out.println(hrs);
 				grupo[j].setHoras(h, i);
 			}
+			System.out.println("");
+			System.out.println("");
 		}
 	}
 }

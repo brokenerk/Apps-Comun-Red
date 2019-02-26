@@ -1,14 +1,14 @@
-public class Horario{
+import java.io.Serializable;
+
+public class Horario implements Serializable{
 	private int numMaterias;
 	private Materia[] materias;
-	private String[] horas;
 	private Grupo[] grupos;
 	private int[] califs;
 
 	public Horario(int numMaterias){
 		this.numMaterias = numMaterias;
 		materias = new Materia[this.numMaterias];
-		horas = new String[this.numMaterias];
 		grupos = new Grupo[this.numMaterias];
 		califs = new int[this.numMaterias];
 	}
@@ -16,10 +16,6 @@ public class Horario{
 	/*Setters*/
 	public void setMaterias(Materia[] materias){
 		this.materias = materias;
-	}
-
-	public void setHoras(String[] horas){
-		this.horas = horas;
 	}
 
 	public void setGrupos(Grupo[] grupos){
@@ -33,10 +29,6 @@ public class Horario{
 	/*Getters*/
 	public Materia[] getMaterias(){
 		return materias;
-	}
-
-	public String[] getHoras(){
-		return horas;
 	}
 
 	public int getNumMaterias(){

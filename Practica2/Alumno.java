@@ -1,4 +1,6 @@
-public class Alumno{
+import java.io.Serializable;
+
+public class Alumno implements Serializable{
 	private int boleta;
 	private String nombre;
 	private String primerAp;
@@ -30,7 +32,7 @@ public class Alumno{
 	}
 
 	public String getNombreCompleto(){
-		return nombre + primerAp + segundoAp;
+		return nombre + " " + primerAp + " " + segundoAp;
 	}
 
 	public Horario getHorario(){

@@ -1,13 +1,16 @@
-public class Grupo{
+import java.io.Serializable;
+
+public class Grupo implements Serializable{
 	private Materia[] materias;
 	private String[] profesores;
+	private String[] horas;
 	private int numMaterias = 6; /*Constante*/
 	private String periodo;
 	private String nombre;
 
 	public Grupo(String periodo, String nombre){
 		materias = new Materia[numMaterias];
-		profesores = new Profesor[numMaterias];
+		profesores = new String[numMaterias];
 		this.periodo = periodo;
 		this.nombre = nombre;
 	}
@@ -20,12 +23,20 @@ public class Grupo{
 		this.profesores = profesores;
 	}
 
+	public void setHoras(String[] horas){
+		this.horas = horas;
+	}
+
 	public Materia[] getMaterias(){
 		return materias;
 	}
 
 	public String[] getProfesores(){
 		return profesores;
+	}
+
+	public String[] getHoras(){
+		return horas;
 	}
 
 	public String getPeriodo(){

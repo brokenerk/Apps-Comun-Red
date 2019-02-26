@@ -28,18 +28,18 @@ public class Alumno implements Serializable{
 	/*GETTERS*/
 
 	public int getBoleta(){
-		return boleta;
+		return this.boleta;
 	}
 
 	public String getNombreCompleto(){
-		return nombre + " " + primerAp + " " + segundoAp;
+		return this.nombre + " " + this.primerAp + " " + this.segundoAp;
 	}
 
 	public Horario getHorario(){
-		return horario;
+		return this.horario;
 	}
 
 	public boolean getInscripcion(){
-		return inscripcion;
+		return this.inscripcion;
 	}
 }

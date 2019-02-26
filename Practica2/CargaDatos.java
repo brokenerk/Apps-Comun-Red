@@ -40,16 +40,14 @@ public class CargaDatos{
 		prof[8] = "Hector Rojas Luna";
 		prof[9] = "Axel Ernesto Moreno Cervantes"; 
 
-		grupo[0] = new Grupo("2019-2", "3CM8");
-		grupo[1] = new Grupo("2019-2", "3CM9");
-		grupo[2] = new Grupo("2019-2", "3CV8");
+		grupo[0] = new Grupo(0, "2019-2", "3CM8");
+		grupo[1] = new Grupo(1, "2019-2", "3CM9");
+		grupo[2] = new Grupo(2, "2019-2", "3CV8");
 
 		Random r = new Random();
 		
 		/*Llenamos los 3 grupos con materias aleatorias*/
 		for(int j = 0; j < 3; j++){
-			Materia[] m = new Materia[6];
-			String[] p = new String[6];
 			Set<Integer> generados = new HashSet<>();
 			for(int i = 0; i < 6; i++){
 				int aleatorio = -1;
@@ -64,15 +62,16 @@ public class CargaDatos{
 			            generado = true;
 			        }
 			    }
-				m[i] = materias[aleatorio];
 
-				
-				Set<Integer> setHoras = new HashSet<>();
-				Set<Integer> setDias = new HashSet<>();
-				String[] h = new String[5]; //5 dias a la semana
+				grupo[j].setMaterias(materias[aleatorio], i);
+				grupo[j].setProfesores(prof[aleatorio], i);
+
+				Horas h = new Horas(); //5 dias a la semana
+
+				Set<Integer> conjHoras = new HashSet<>();
+				Set<Integer> conjDias = new HashSet<>();
 
 				for(int l = 0; l < 3; l++){
-
 					int a = -1;
 	    			boolean g = false;
 	    			int a2 = -1;
@@ -85,8 +84,8 @@ public class CargaDatos{
 				        else
 				        	p1 = r.nextInt(6) + 4;
 
-				        if (!setHoras.contains(p1)) {
-				            setHoras.add(p1);
+				        if (!conjHoras.contains(p1)) {
+				            conjHoras.add(p1);
 				            a = p1;
 				            g = true;
 				        }
@@ -94,23 +93,17 @@ public class CargaDatos{
 
 			    	while (!g2) {
 	    				int p2 = r.nextInt(5);
-
-				        if (!setDias.contains(p2)) {
-				            setDias.add(p2);
+				        if (!conjDias.contains(p2)) {
+				            conjDias.add(p2);
 				            a2 = p2;
 				            g2 = true;
 				        }
 				    }
-				    System.out.println(m[i].getNombre() + ": " + a2 + " - " + a);
-			    	h[a2] = horas[a];
+
+		    		h.setHoras(horas[a], a2);
 				}
-
-				m[i].setHorarioSemana(h);
-
-				p[i] = prof[aleatorio];
+				grupo[j].setHoras(h, i);
 			}
-			grupo[j].setProfesores(p);
-			grupo[j].setMaterias(m);
 		}
 	}
 }

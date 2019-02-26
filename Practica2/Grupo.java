@@ -4,13 +4,10 @@ public class Grupo implements Serializable{
 	private Materia[] materias;
 	private String[] profesores;
 	private String[] horas;
-	private int numMaterias = 6; /*Constante*/
 	private String periodo;
 	private String nombre;
 
 	public Grupo(String periodo, String nombre){
-		materias = new Materia[numMaterias];
-		profesores = new String[numMaterias];
 		this.periodo = periodo;
 		this.nombre = nombre;
 	}

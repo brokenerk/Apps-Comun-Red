@@ -50,7 +50,6 @@ public class CargaDatos{
 		for(int j = 0; j < 3; j++){
 			Materia[] m = new Materia[6];
 			String[] p = new String[6];
-			String[] h = new String[6];
 			Set<Integer> generados = new HashSet<>();
 			for(int i = 0; i < 6; i++){
 				int aleatorio = -1;
@@ -66,8 +65,49 @@ public class CargaDatos{
 			        }
 			    }
 				m[i] = materias[aleatorio];
+
+				
+				Set<Integer> setHoras = new HashSet<>();
+				Set<Integer> setDias = new HashSet<>();
+				String[] h = new String[5]; //5 dias a la semana
+
+				for(int l = 0; l < 3; l++){
+
+					int a = -1;
+	    			boolean g = false;
+	    			int a2 = -1;
+	    			boolean g2 = false;
+
+	    			while (!g) {
+	    				int p1 = 0;
+	    				if(j < 2)
+				        	p1 = r.nextInt(3);
+				        else
+				        	p1 = r.nextInt(6) + 4;
+
+				        if (!setHoras.contains(p1)) {
+				            setHoras.add(p1);
+				            a = p1;
+				            g = true;
+				        }
+			    	}
+
+			    	while (!g2) {
+	    				int p2 = r.nextInt(5);
+
+				        if (!setDias.contains(p2)) {
+				            setDias.add(p2);
+				            a2 = p2;
+				            g2 = true;
+				        }
+				    }
+				    System.out.println(m[i].getNombre() + ": " + a2 + " - " + a);
+			    	h[a2] = horas[a];
+				}
+
+				m[i].setHorarioSemana(h);
+
 				p[i] = prof[aleatorio];
-				h[i] = horas[aleatorio];
 			}
 			grupo[j].setProfesores(p);
 			grupo[j].setMaterias(m);

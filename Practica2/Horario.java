@@ -8,9 +8,6 @@ public class Horario implements Serializable{
 
 	public Horario(int numMaterias){
 		this.numMaterias = numMaterias;
-		materias = new Materia[this.numMaterias];
-		grupos = new Grupo[this.numMaterias];
-		califs = new int[this.numMaterias];
 	}
 
 	/*Setters*/

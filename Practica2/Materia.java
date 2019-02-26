@@ -8,7 +8,6 @@ public class Materia implements Serializable{
 	public Materia(int Id, String nombre){
 		this.Id = Id;
 		this.nombre = nombre;
-		this.horarioSemana = new String[7];
 	}
 
 	public void setHorarioSemana(String[] horarioSemana){
@@ -21,6 +20,10 @@ public class Materia implements Serializable{
 
 	public String getNombre(){
 		return nombre;
+	}
+
+	public String[] getHorarioSemana(){
+		return horarioSemana;
 	}
 
 }

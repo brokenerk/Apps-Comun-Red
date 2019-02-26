@@ -48,7 +48,15 @@ public class Main{
 		for(int i = 0; i < 6; i++){
 			//String[] verHoras = verGrupo.getHoras();
 			String[] verProfesores = verGrupo.getProfesores();
-			System.out.println(verMaterias[i].getNombre() + " ----- " + verProfesores[i]);
+			System.out.print(verMaterias[i].getNombre() + " ----- " + verProfesores[i] + " --- ");
+			String[] verHoras = verMaterias[i].getHorarioSemana();
+
+			for(int j = 0; j < verHoras.length; j++){
+				System.out.print(verHoras[j] + " ");
+			}
+			System.out.println("");
+			
+
 		}
 	}
 }

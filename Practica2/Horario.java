@@ -1,46 +1,50 @@
 import java.io.Serializable;
 
-public class Horario implements Serializable{
+public class Horario implements Serializable {
 	private int numMaterias;
 	/*Solo nos interesan los Ids del grupo*/
 	private Materia[] materias;
 	private Grupo[] grupos;
 	private int[] califs;
 
-	public Horario(int numMaterias){
+	public Horario(int numMaterias) {
 		this.numMaterias = numMaterias;
 		this.materias = new Materia[this.numMaterias];
 		this.grupos = new Grupo[this.numMaterias];
 		this.califs = new int[this.numMaterias];
 	}
 
-	/*Setters*/
-	public void setMaterias(Materia materia, int i){
+	/**************************************************************************/
+	/* 								SETTERS 								  */
+	/**************************************************************************/
+	public void setMaterias(Materia materia, int i) {
 		this.materias[i] = materia;
 	}
 
-	public void setGrupos(Grupo grupo, int i){
+	public void setGrupos(Grupo grupo, int i) {
 		this.grupos[i] = grupo;
 	}
 
-	public void setCalifs(int calif, int i){
+	public void setCalifs(int calif, int i) {
 		this.califs[i] = calif;
 	}
 
-	/*Getters*/
-	public Materia[] getMaterias(){
+	/**************************************************************************/
+	/* 								GETTERS 								  */
+	/**************************************************************************/
+	public Materia[] getMaterias() {
 		return materias;
 	}
 
-	public int getNumMaterias(){
+	public int getNumMaterias() {
 		return numMaterias;
 	}
 
-	public Grupo[] getGrupos(){
+	public Grupo[] getGrupos() {
 		return grupos;
 	}
 
-	public int[] getCalifs(){
+	public int[] getCalifs() {
 		return califs;
 	}
 

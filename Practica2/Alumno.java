@@ -1,6 +1,6 @@
 import java.io.Serializable;
 
-public class Alumno implements Serializable{
+public class Alumno implements Serializable {
 	private int boleta;
 	private String nombre;
 	private String primerAp;
@@ -9,45 +9,50 @@ public class Alumno implements Serializable{
 	private boolean inscripcion;
 	private ImageIcon foto;
 
-	public Alumno(int boleta, String nombre, String primerAp, String segundoAp){
+	public Alumno(int boleta, String nombre, String primerAp, String segundoAp) {
 		this.boleta = boleta;
 		this.nombre = nombre;
 		this.primerAp = primerAp;
 		this.segundoAp = segundoAp;
 	}
 
-	/*SETTERS*/
-	public void setHorario(Horario horario){
+	/**************************************************************************/
+	/* 								SETTERS 								  */
+	/**************************************************************************/
+
+	public void setHorario(Horario horario) {
 		this.horario = horario;
 	}
 
-	public void setInscripcion(boolean inscripcion){
+	public void setInscripcion(boolean inscripcion) {
 		this.inscripcion = inscripcion;
 	}
 
-	public void setFoto(String nombreArchivo){
+	public void setFoto(String nombreArchivo) {
 		this.foto = new ImageIcon(nombreArchivo);
 	}
 
-	/*GETTERS*/
+	/**************************************************************************/
+	/* 								GETTERS 								  */
+	/**************************************************************************/
 
-	public int getBoleta(){
+	public int getBoleta() {
 		return this.boleta;
 	}
 
-	public String getNombreCompleto(){
+	public String getNombreCompleto() {
 		return this.nombre + " " + this.primerAp + " " + this.segundoAp;
 	}
 
-	public Horario getHorario(){
+	public Horario getHorario() {
 		return this.horario;
 	}
 
-	public boolean getInscripcion(){
+	public boolean getInscripcion() {
 		return this.inscripcion;
 	}
 
-	public ImageIcon getFoto(){
+	public ImageIcon getFoto() {
 		return this.foto;
 	}
 }

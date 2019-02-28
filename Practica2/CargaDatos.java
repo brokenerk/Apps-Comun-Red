@@ -1,9 +1,9 @@
 import java.util.*;
 
-public class CargaDatos{
+public class CargaDatos {
 	public static void construyeObjetos(Materia[] materias, String[] horas, String[] prof, Grupo[] grupo){
 
-		/*Se cargan 10 materias*/
+		/* Se cargan 10 materias */
 		materias[0] = new Materia(0, "Quimica VI");
 		materias[1] = new Materia(1, "Web Application Development");
 		materias[2] = new Materia(2, "Instrumentacion");
@@ -15,7 +15,7 @@ public class CargaDatos{
 		materias[8] = new Materia(8, "Calculo Aplicado");
 		materias[9] = new Materia(9, "Aplicaciones para Comunicaciones de Red");
 
-		/*Se cargan las horas matutinas y vespertinas*/
+		/* Se cargan las horas matutinas y vespertinas */
 		horas[0] = "7:00 - 8:30";
 		horas[1] = "8:30 - 10:00";
 		horas[2] = "10:30 - 12:00";
@@ -26,7 +26,7 @@ public class CargaDatos{
 		horas[7] = "18:00 - 19:30";
 		horas[8] = "19:30 - 21:00";
 
-		/*Se cargan los profesores para cada materia*/
+		/* Se cargan los profesores para cada materia */
 		prof[0] = "Copca Ramirez Vargas";
 		prof[1] = "Hermes Francisco Montes Casiano";
 		prof[2] = "Juan Carlos Tellez Barrera";
@@ -43,7 +43,7 @@ public class CargaDatos{
 		grupo[2] = new Grupo(2, "2019-2", "3CV8");
 
 		System.out.println("Grupo: " + grupo[0].getNombre());
-		for(int i = 0; i < 6; i++){
+		for(int i = 0; i < 6; i++) {
 			System.out.println(materias[i].getNombre() + " " + prof[i] + " ");
 			grupo[0].setMaterias(materias[i], i);
 			grupo[0].setProfesores(prof[i], i);
@@ -53,7 +53,7 @@ public class CargaDatos{
 		System.out.println("Grupo: " + grupo[1].getNombre());
 		int z = 0;
 
-		for(int i = 2; i < 8; i++){
+		for(int i = 2; i < 8; i++) {
 			System.out.println(materias[i].getNombre() + " " + prof[i] + " ");
 			grupo[1].setMaterias(materias[i], z);
 			grupo[1].setProfesores(prof[i], z);
@@ -65,7 +65,7 @@ public class CargaDatos{
 		System.out.println("Grupo: " + grupo[2].getNombre());
 		z = 0;
 
-		for(int i = 4; i < 10; i++){
+		for(int i = 4; i < 10; i++) {
 			System.out.println(materias[i].getNombre() + " " + prof[i] + " ");
 			grupo[2].setMaterias(materias[i], z);
 			grupo[2].setProfesores(prof[i], z);
@@ -73,7 +73,7 @@ public class CargaDatos{
 		}
 
 
-		for(int x = 0; x < 2; x++){
+		for(int x = 0; x < 2; x++) {
 			grupo[x].setHoras(horas[0], 0, 0);
 			grupo[x].setHoras(horas[0], 0, 3);
 			grupo[x].setHoras(horas[1], 0, 4);

@@ -4,7 +4,7 @@ public class Grupo implements Serializable{
 	private int Id;
 	private Materia[] materias;
 	private String[] profesores;
-	private Horas[] horas;
+	private String[][] horas;
 	private String periodo;
 	private String nombre;
 
@@ -12,17 +12,23 @@ public class Grupo implements Serializable{
 		this.Id = Id;
 		this.periodo = periodo;
 		this.nombre = nombre;
-		this.materias = new Materia[6];
+		this.materias = new Materia[6]; 
 		this.profesores = new String[6];
-		this.horas = new Horas[6];
+		this.horas = new String[6][5]; //6 materias, 5 dias a la semana
+
+		for(int i = 0; i < 6; i++){
+			for(int j = 0; j < 5; j++){
+				this.horas[i][j] = "";
+			}
+		}
 	}
 
 	public void setMaterias(Materia materia, int i){
 		this.materias[i] = materia;
 	}
 
-	public void setHoras(Horas hora, int i){
-		this.horas[i] = hora;
+	public void setHoras(String hora, int i, int j){
+		this.horas[i][j] = hora;
 	}
 
 	public void setProfesores(String profesor, int i){
@@ -41,7 +47,7 @@ public class Grupo implements Serializable{
 		return this.profesores;
 	}
 
-	public Horas[] getHoras(){
+	public String[][] getHoras(){
 		return this.horas;
 	}
 

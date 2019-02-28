@@ -25,8 +25,6 @@ public class CargaDatos{
 		horas[6] = "16:30 - 18:00";
 		horas[7] = "18:00 - 19:30";
 		horas[8] = "19:30 - 21:00";
-		horas[9] = "21:00 - 22:30";
-
 
 		/*Se cargan los profesores para cada materia*/
 		prof[0] = "Copca Ramirez Vargas";
@@ -44,82 +42,89 @@ public class CargaDatos{
 		grupo[1] = new Grupo(1, "2019-2", "3CM9");
 		grupo[2] = new Grupo(2, "2019-2", "3CV8");
 
-		Random r = new Random();
-		
-		/*Llenamos los 3 grupos con materias aleatorias*/
-		for(int j = 0; j < 3; j++){
-			Set<Integer> generados = new HashSet<>();
-			System.out.println("Grupo: " + grupo[j].getNombre());
-			for(int i = 0; i < 6; i++){
-				int aleatorio = -1;
-    			boolean generado = false;
-
-    			while (!generado) {
-			        int posible = r.nextInt(9);
-
-			        if (!generados.contains(posible)) {
-			            generados.add(posible);
-			            aleatorio = posible;
-			            generado = true;
-			        }
-			    }
-
-			    System.out.print(materias[aleatorio].getNombre() + " " + prof[aleatorio] + " ");
-
-
-				grupo[j].setMaterias(materias[aleatorio], i);
-				grupo[j].setProfesores(prof[aleatorio], i);
-
-				Horas h = new Horas(); //5 dias a la semana
-
-				Set<Integer> conjHoras = new HashSet<>();
-				Set<Integer> conjDias = new HashSet<>();
-
-				for(int l = 0; l < 3; l++){
-					int a = -1;
-	    			boolean g = false;
-	    			int a2 = -1;
-	    			boolean g2 = false;
-
-	    			while (!g) {
-	    				int p1 = 0;
-	    				if(j < 2)
-				        	p1 = r.nextInt(3);
-				        else
-				        	p1 = r.nextInt(6) + 4;
-
-				        if (!conjHoras.contains(p1)) {
-				            conjHoras.add(p1);
-				            a = p1;
-				            g = true;
-				        }
-			    	}
-
-			    	while (!g2) {
-	    				int p2 = r.nextInt(5);
-				        if (!conjDias.contains(p2)) {
-				            conjDias.add(p2);
-				            a2 = p2;
-				            g2 = true;
-				        }
-				    }
-
-		    		h.setHoras(horas[a], a2);
-
-		    		
-				}
-				String[] verHoras = h.getHoras();
-				String hrs = "";
-
-				for(int y = 0; y < 5; y++){
-					hrs = hrs + verHoras[y];
-				}
-
-				System.out.println(hrs);
-				grupo[j].setHoras(h, i);
-			}
-			System.out.println("");
-			System.out.println("");
+		System.out.println("Grupo: " + grupo[0].getNombre());
+		for(int i = 0; i < 6; i++){
+			System.out.println(materias[i].getNombre() + " " + prof[i] + " ");
+			grupo[0].setMaterias(materias[i], i);
+			grupo[0].setProfesores(prof[i], i);
 		}
+
+		System.out.println("");
+		System.out.println("Grupo: " + grupo[1].getNombre());
+		int z = 0;
+
+		for(int i = 2; i < 8; i++){
+			System.out.println(materias[i].getNombre() + " " + prof[i] + " ");
+			grupo[1].setMaterias(materias[i], z);
+			grupo[1].setProfesores(prof[i], z);
+			z++;
+		}
+
+		
+		System.out.println("");
+		System.out.println("Grupo: " + grupo[2].getNombre());
+		z = 0;
+
+		for(int i = 4; i < 10; i++){
+			System.out.println(materias[i].getNombre() + " " + prof[i] + " ");
+			grupo[2].setMaterias(materias[i], z);
+			grupo[2].setProfesores(prof[i], z);
+			z++;
+		}
+
+
+		for(int x = 0; x < 2; x++){
+			grupo[x].setHoras(horas[0], 0, 0);
+			grupo[x].setHoras(horas[0], 0, 3);
+			grupo[x].setHoras(horas[1], 0, 4);
+
+			grupo[x].setHoras(horas[0], 1, 1);
+			grupo[x].setHoras(horas[0], 1, 2);
+			grupo[x].setHoras(horas[0], 1, 4);
+
+			grupo[x].setHoras(horas[1], 2, 0);
+			grupo[x].setHoras(horas[1], 2, 2);
+			grupo[x].setHoras(horas[1], 2, 3);
+
+			grupo[x].setHoras(horas[2], 3, 0);
+			grupo[x].setHoras(horas[1], 3, 2);
+			grupo[x].setHoras(horas[2], 3, 3);
+
+			grupo[x].setHoras(horas[3], 4, 0);
+			grupo[x].setHoras(horas[3], 4, 2);
+			grupo[x].setHoras(horas[3], 4, 3);
+			grupo[x].setHoras(horas[3], 4, 4);
+
+			grupo[x].setHoras(horas[2], 5, 0);
+			grupo[x].setHoras(horas[1], 5, 2);
+			grupo[x].setHoras(horas[2], 4, 3);
+		}
+
+			grupo[2].setHoras(horas[4], 0, 0);
+			grupo[2].setHoras(horas[5], 0, 1);
+			grupo[2].setHoras(horas[5], 0, 2);
+			grupo[2].setHoras(horas[5], 0, 4);
+
+			grupo[2].setHoras(horas[4], 1, 1);
+			grupo[2].setHoras(horas[4], 1, 2);
+			grupo[2].setHoras(horas[4], 1, 3);
+
+			grupo[2].setHoras(horas[5], 2, 0);
+			grupo[2].setHoras(horas[5], 2, 3);
+			grupo[2].setHoras(horas[6], 2, 4);
+
+			grupo[2].setHoras(horas[7], 3, 0);
+			grupo[2].setHoras(horas[7], 3, 2);
+			grupo[2].setHoras(horas[7], 3, 3);
+
+			grupo[2].setHoras(horas[8], 4, 0);
+			grupo[2].setHoras(horas[7], 4, 1);
+			grupo[2].setHoras(horas[8], 4, 3);
+
+			grupo[2].setHoras(horas[8], 5, 1);
+			grupo[2].setHoras(horas[8], 5, 2);
+			grupo[2].setHoras(horas[8], 4, 4);
+
+
 	}
 }

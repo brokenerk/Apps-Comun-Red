@@ -6,7 +6,7 @@ public class Main{
 		/*ESTA PARTA LA HARIA EL SERVIDOR, SOLO USA SETTERS*/
 		/*CARGA LOS DATOS MANUALMENTE, DESDE ARCHIVOS, ETC. Y LOS GUARDA EN MEMORIA RAM*/
 		Materia[] materias = new Materia[10];
-		String[] horas = new String[10];
+		String[] horas = new String[9];
 		String[] prof = new String[10];
 		Grupo[] grupo = new Grupo[3];
 		CargaDatos.construyeObjetos(materias, horas, prof, grupo);
@@ -14,26 +14,23 @@ public class Main{
 		/*------------------SE ESTAN ENVIANDO LOS OBJETOS DESDE EL SERVER---------------------*/
 		/*EL CLIENTE UNICAMENTE VA A ENVIAR LA BOLETA, ID DE MATERIA, ETC (PARAMETROS, NO OBJETOS)*/
 
-		
-
-		Grupo[] gruposInscritos = new Grupo[6];
-		Materia[] materiasInscritas = new Materia[6];
 		/*ESTA PARTE SE CONSTRUYE CONFORME SE INVOCA EL METODO: inscribir()*/
 		Horario horario = new Horario(6);
+		Grupo[] gruposInscritos = new Grupo[6];
+		
 		gruposInscritos[0] = grupo[0];
 		gruposInscritos[1] = grupo[0];
 		gruposInscritos[2] = grupo[1];
 		gruposInscritos[3] = grupo[1];
 		gruposInscritos[4] = grupo[2];
 		gruposInscritos[5] = grupo[2];
-		for(int i = 0; i < 6; i++){
-			//gruposInscritos[i] = grupo[2];
-			horario.setGrupos(gruposInscritos[i].getId(), i);
 
-			Materia[] materiasGrupo = gruposInscritos[i].getMaterias();
-			materiasInscritas[i] = materiasGrupo[i];
-			horario.setMaterias(materiasInscritas[i].getId(), i);
+		for(int i = 0; i < 6; i++){
+			horario.setGrupos(gruposInscritos[i], i);
+			Materia[] materiasInscritas = gruposInscritos[i].getMaterias();
+			horario.setMaterias(materiasInscritas[i], i);
 		}
+
 
 		Alumno alumno = new Alumno(2014081268, "Enrique", "Ramos", "Diaz");
 		alumno.setHorario(horario);
@@ -41,6 +38,7 @@ public class Main{
 
 		/*ESTA PARTE LA HARIA EL CLIENTE, SOLO USA GETTERS*/
 		/*SE CREAN NUEVOS OBJETOS EN EL CLIENTE PARA RECIBIR LOS DEL SERVER Y YA SOLO SE LEE SU INFO*/
+		System.out.println("");
 		System.out.println(alumno.getBoleta() + ": " + alumno.getNombreCompleto());
 		if(alumno.getInscripcion()){
 			System.out.println("Inscrito");
@@ -50,23 +48,19 @@ public class Main{
 		}
 
 		Horario verHorario = alumno.getHorario();
-		int[] verGrupos = verHorario.getGrupos(); // 0 0 0 0 0 0
-		int[] verMaterias = verHorario.getMaterias(); //1 2 3 4 5 6
-
+		Grupo[] verGrupos = verHorario.getGrupos(); 
+		Materia[] verMaterias = verHorario.getMaterias();
 		for(int i = 0; i < 6; i++){
-			Grupo g = grupo[verGrupos[i]]; //0
-			int index = verMaterias[i]; //1
-			Materia[] m = g.getMaterias();
+			Grupo g = verGrupos[i]; //0
 			String[] p = g.getProfesores();
-			Horas[] h = g.getHoras();
-			String[] hrsSemana = h[i].getHoras();
 			String hrs = "";
+			String[][] verHoras = g.getHoras();
 
-
-			for(int j = 0; j < hrsSemana.length; j++){
-				hrs = hrs +  hrsSemana[j];
+			for(int j = 0; j < 5; j++){
+				hrs = hrs + "\t" + verHoras[i][j];
 			}
-			System.out.println(g.getNombre() + "\t" + m[i].getNombre() + "\t" + p[i] + "\t" + hrs);
+
+			System.out.println(g.getNombre() + "\t" + verMaterias[i].getNombre() + "\t" + p[i] + "\t\t\t" + hrs);
 		}
 	}
 }

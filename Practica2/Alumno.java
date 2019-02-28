@@ -7,7 +7,7 @@ public class Alumno implements Serializable{
 	private String segundoAp;
 	private Horario horario;
 	private boolean inscripcion;
-	//private foto;
+	private ImageIcon foto;
 
 	public Alumno(int boleta, String nombre, String primerAp, String segundoAp){
 		this.boleta = boleta;
@@ -23,6 +23,10 @@ public class Alumno implements Serializable{
 
 	public void setInscripcion(boolean inscripcion){
 		this.inscripcion = inscripcion;
+	}
+
+	public void setFoto(String nombreArchivo){
+		this.foto = new ImageIcon(nombreArchivo);
 	}
 
 	/*GETTERS*/
@@ -41,5 +45,9 @@ public class Alumno implements Serializable{
 
 	public boolean getInscripcion(){
 		return this.inscripcion;
+	}
+
+	public ImageIcon getFoto(){
+		return this.foto;
 	}
 }

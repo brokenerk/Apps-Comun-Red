@@ -1,14 +1,18 @@
+import clases.*;
 
-public class Main{
+public class Probar{
 	public static void main(String[] args){
 
 		/*ESTA PARTA LA HARIA EL SERVIDOR, SOLO USA SETTERS*/
 		/*CARGA LOS DATOS MANUALMENTE, DESDE ARCHIVOS, ETC. Y LOS GUARDA EN MEMORIA RAM*/
 		Materia[] materias = new Materia[10];
-		String[] horas = new String[9];
-		String[] prof = new String[10];
 		Grupo[] grupo = new Grupo[3];
-		CargaDatos.construyeObjetos(materias, horas, prof, grupo);
+		Alumno[] alumnos = new Alumno[3];
+
+		CargaDatos.cargar();
+		materias = CargaDatos.getMaterias();
+		grupo = CargaDatos.getGrupos();
+		alumnos = CargaDatos.getAlumnos();
 
 		/*------------------SE ESTAN ENVIANDO LOS OBJETOS DESDE EL SERVER---------------------*/
 		/*EL CLIENTE UNICAMENTE VA A ENVIAR LA BOLETA, ID DE MATERIA, ETC (PARAMETROS, NO OBJETOS)*/
@@ -31,7 +35,7 @@ public class Main{
 		}
 
 
-		Alumno alumno = new Alumno(2014081268, "Enrique", "Ramos", "Diaz");
+		Alumno alumno = alumnos[0];
 		alumno.setHorario(horario);
 		alumno.setInscripcion(true);
 

@@ -1,3 +1,4 @@
+package clases;
 import java.io.Serializable;
 
 public class Horario implements Serializable {

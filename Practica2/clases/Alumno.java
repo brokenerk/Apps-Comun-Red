@@ -1,7 +1,10 @@
+package clases;
 import java.io.Serializable;
+import javax.swing.ImageIcon;
 
 public class Alumno implements Serializable {
 	private int boleta;
+	private String contrasenia;
 	private String nombre;
 	private String primerAp;
 	private String segundoAp;
@@ -9,8 +12,9 @@ public class Alumno implements Serializable {
 	private boolean inscripcion;
 	private ImageIcon foto;
 
-	public Alumno(int boleta, String nombre, String primerAp, String segundoAp) {
+	public Alumno(int boleta, String contrasenia, String nombre, String primerAp, String segundoAp) {
 		this.boleta = boleta;
+		this.contrasenia = contrasenia;
 		this.nombre = nombre;
 		this.primerAp = primerAp;
 		this.segundoAp = segundoAp;
@@ -54,5 +58,9 @@ public class Alumno implements Serializable {
 
 	public ImageIcon getFoto() {
 		return this.foto;
+	}
+
+	public String getContrasenia(){
+		return this.contrasenia;
 	}
 }

@@ -1,8 +1,27 @@
+package clases;
 import java.util.*;
 
 public class CargaDatos {
-	public static void construyeObjetos(Materia[] materias, String[] horas, String[] prof, Grupo[] grupo){
+	//Cargamos toda la info para trabajar
+	static Materia[] materias = new Materia[10];
+	static String[] horas = new String[9];
+	static String[] prof = new String[10];
+	static Grupo[] grupo = new Grupo[3];
+	static Alumno[] alumnos = new Alumno[3];
 
+	public static Materia[] getMaterias(){
+		return materias;
+	}
+
+	public static Grupo[] getGrupos(){
+		return grupo;
+	}
+
+	public static Alumno[] getAlumnos(){
+		return alumnos;
+	}
+
+	public static void cargar(){
 		/* Se cargan 10 materias */
 		materias[0] = new Materia(0, "Quimica VI");
 		materias[1] = new Materia(1, "Web Application Development");
@@ -14,6 +33,13 @@ public class CargaDatos {
 		materias[7] = new Materia(7, "Analisis de Algoritmos");
 		materias[8] = new Materia(8, "Calculo Aplicado");
 		materias[9] = new Materia(9, "Aplicaciones para Comunicaciones de Red");
+
+		/*Se cargan alumnos*/
+		alumnos[0] = new Alumno(2014081268, "prueba123", "Enrique", "Ramos", "Diaz");
+		alumnos[1] = new Alumno(2014081144, "prueba123", "Angel", "Hernandez", "Molina");
+		alumnos[2] = new Alumno(2014087832, "prueba123", "Abigail", "Nicolas", "Sayago");
+
+		alumnos[0].setFoto("../fotos/" + alumnos[0].getBoleta() + ".jpg");
 
 		/* Se cargan las horas matutinas y vespertinas */
 		horas[0] = "7:00 - 8:30";
@@ -42,31 +68,31 @@ public class CargaDatos {
 		grupo[1] = new Grupo(1, "2019-2", "3CM9");
 		grupo[2] = new Grupo(2, "2019-2", "3CV8");
 
-		System.out.println("Grupo: " + grupo[0].getNombre());
+		//System.out.println("Grupo: " + grupo[0].getNombre());
 		for(int i = 0; i < 6; i++) {
-			System.out.println(materias[i].getNombre() + " " + prof[i] + " ");
+			//System.out.println(materias[i].getNombre() + " " + prof[i] + " ");
 			grupo[0].setMaterias(materias[i], i);
 			grupo[0].setProfesores(prof[i], i);
 		}
 
-		System.out.println("");
-		System.out.println("Grupo: " + grupo[1].getNombre());
+		//System.out.println("");
+		//System.out.println("Grupo: " + grupo[1].getNombre());
 		int z = 0;
 
 		for(int i = 2; i < 8; i++) {
-			System.out.println(materias[i].getNombre() + " " + prof[i] + " ");
+			//System.out.println(materias[i].getNombre() + " " + prof[i] + " ");
 			grupo[1].setMaterias(materias[i], z);
 			grupo[1].setProfesores(prof[i], z);
 			z++;
 		}
 
 		
-		System.out.println("");
-		System.out.println("Grupo: " + grupo[2].getNombre());
+		//System.out.println("");
+		//System.out.println("Grupo: " + grupo[2].getNombre());
 		z = 0;
 
 		for(int i = 4; i < 10; i++) {
-			System.out.println(materias[i].getNombre() + " " + prof[i] + " ");
+			//System.out.println(materias[i].getNombre() + " " + prof[i] + " ");
 			grupo[2].setMaterias(materias[i], z);
 			grupo[2].setProfesores(prof[i], z);
 			z++;

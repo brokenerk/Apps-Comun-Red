@@ -1,4 +1,3 @@
-package clases;
 import java.io.Serializable;
 
 public class Grupo implements Serializable {

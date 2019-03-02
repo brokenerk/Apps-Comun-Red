@@ -1,6 +1,4 @@
-import clases.*;
-
-public class Probar{
+public class Clases{
 	public static void main(String[] args){
 
 		/*ESTA PARTA LA HARIA EL SERVIDOR, SOLO USA SETTERS*/
@@ -9,10 +7,10 @@ public class Probar{
 		Grupo[] grupo = new Grupo[3];
 		Alumno[] alumnos = new Alumno[3];
 
-		CargaDatos.cargar();
-		materias = CargaDatos.getMaterias();
-		grupo = CargaDatos.getGrupos();
-		alumnos = CargaDatos.getAlumnos();
+		Catalogo.cargar();
+		materias = Catalogo.getMaterias();
+		grupo = Catalogo.getGrupos();
+		alumnos = Catalogo.getAlumnos();
 
 		/*------------------SE ESTAN ENVIANDO LOS OBJETOS DESDE EL SERVER---------------------*/
 		/*EL CLIENTE UNICAMENTE VA A ENVIAR LA BOLETA, ID DE MATERIA, ETC (PARAMETROS, NO OBJETOS)*/

@@ -1,7 +1,6 @@
-package clases;
 import java.util.*;
 
-public class CargaDatos {
+public class Catalogo {
 	//Cargamos toda la info para trabajar
 	static Materia[] materias = new Materia[10];
 	static String[] horas = new String[9];
@@ -39,7 +38,8 @@ public class CargaDatos {
 		alumnos[1] = new Alumno(2014081144, "prueba123", "Angel", "Hernandez", "Molina");
 		alumnos[2] = new Alumno(2014087832, "prueba123", "Abigail", "Nicolas", "Sayago");
 
-		alumnos[0].setFoto("../fotos/" + alumnos[0].getBoleta() + ".jpg");
+		alumnos[0].setFoto("./fotos/" + alumnos[0].getBoleta() + ".png");
+		//System.out.println(".png");
 
 		/* Se cargan las horas matutinas y vespertinas */
 		horas[0] = "7:00 - 8:30";

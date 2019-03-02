@@ -1,7 +1,6 @@
 // SERVIDOR
 import java.net.*;
 import java.io.*;
-import clases.*;
 
 public class Servidor{
 	//Clases para trabajar
@@ -10,7 +9,7 @@ public class Servidor{
 	static Alumno[] alumnos = new Alumno[3];
 
 
-	public static void AutentificarLogin(Socket cl, DataInputStream dis){
+	public static void autentificarLogin(Socket cl, DataInputStream dis){
 		try{
 			/*Para enviar y recibir objetos*/
 			int boleta_temp = dis.readInt();
@@ -56,10 +55,10 @@ public class Servidor{
 
 	public static void main(String[] args){
 		//Construimos nuestros catalogos
-		CargaDatos.cargar();
-		materias = CargaDatos.getMaterias();
-		grupos = CargaDatos.getGrupos();
-		alumnos = CargaDatos.getAlumnos();
+		Catalogo.cargar();
+		materias = Catalogo.getMaterias();
+		grupos = Catalogo.getGrupos();
+		alumnos = Catalogo.getAlumnos();
 
 		System.out.println("Catalogos creados.");
 		try{
@@ -76,7 +75,7 @@ public class Servidor{
 
 				if(bandera == 0){
 					//Login
-					AutentificarLogin(cl, dis);
+					autentificarLogin(cl, dis);
 				}
 				else {
 					System.out.println("Error al atender la solicitud del cliente.");

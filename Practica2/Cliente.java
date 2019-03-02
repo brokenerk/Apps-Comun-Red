@@ -1,7 +1,6 @@
 // CLIENTE
 import java.net.*;
 import java.io.*;
-import clases.*;
 
 public class Cliente{
 	private static int pto = 4321;
@@ -17,7 +16,7 @@ public class Cliente{
 			//La bandera tiene el valor de 0 = Login
 			dos.writeInt(0);
 			dos.flush();
-			System.out.println("Enviando datos, esperando servidor...");
+			System.out.println("Enviando datos: " + boleta_tmp + " - " + psswd_temp + ", esperando servidor...");
 			//Enviar boleta y psswd de los textbox
 			dos.writeInt(boleta_tmp);
 			dos.flush();

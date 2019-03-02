@@ -2,7 +2,6 @@ import java.awt.event.*;
 import java.awt.*;
 import javax.swing.*;	
 import java.io.*;
-import clases.*;
 
 public class Login extends JFrame implements ActionListener {
 	JPanel panelBotones, panelEntrada;
@@ -60,37 +59,42 @@ public class Login extends JFrame implements ActionListener {
 		    
 		if(b == BtnIniciar) {
 			// Iniciar sesion
-
 			if(TxtBoleta.getText().length() == 0 || TxtPassword.getPassword().length == 0){
 				JOptionPane.showMessageDialog(null, "Ingrese sus datos.");
 			}
 			else{
 				char[] pass = TxtPassword.getPassword();
 				String passwd_temp = String.valueOf(pass);
-				int boleta_temp = Integer.parseInt(TxtBoleta.getText());
-				System.out.println(boleta_temp + " " + passwd_temp);
+				int boleta_temp = 0;
 
-				Alumno alumno = Cliente.iniciarSesion(boleta_temp, passwd_temp);
+				try{
+					boleta_temp = Integer.parseInt(TxtBoleta.getText());
+					Alumno alumno = Cliente.iniciarSesion(boleta_temp, passwd_temp);
 
-				if(alumno != null){
-					System.out.println("Objeto alumno recibido con boleta: " + alumno.getBoleta());
+					if(alumno != null){
+						System.out.println("Objeto alumno recibido con boleta: " + alumno.getBoleta());
 
-					/*Construir objeto MiniMenu y abrirlo*/
-					crearMiniMenu(alumno);
-					/*Cerrar login*/
-					System.out.print("Cerrando Login....");
-					this.setVisible(false);
-					System.out.println(" Cerrado.");
-					this.dispose();
+						/*Construir objeto MiniMenu y abrirlo*/
+						crearMiniMenu(alumno);
+						/*Cerrar login*/
+						System.out.print("Cerrando Login....");
+						this.setVisible(false);
+						System.out.println(" Cerrado.");
+						this.dispose();
+					}
+					else{
+						System.out.println("Objeto recibido es null");
+						JOptionPane.showMessageDialog(null, "Contrasena y/o boleta incorrectas. Intente de nuevo.", "Datos incorrectos", JOptionPane.ERROR_MESSAGE);
+						TxtBoleta.setText("");
+						TxtPassword.setText("");
+					}
 				}
-				else{
-					System.out.println("Objeto recibido es null");
-					JOptionPane.showMessageDialog(null, "Contrasena y/o boleta incorrectas. Intente de nuevo.", "Datos incorrectos", JOptionPane.ERROR_MESSAGE);
+				catch(Exception ex){
+					JOptionPane.showMessageDialog(null, "El campo de boleta solo admite numeros.", "Datos incorrectos", JOptionPane.ERROR_MESSAGE);
 					TxtBoleta.setText("");
 					TxtPassword.setText("");
 				}
 			}
-			
 		}
 	}
 

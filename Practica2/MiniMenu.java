@@ -2,14 +2,14 @@ import java.awt.event.*;
 import java.awt.*;
 import javax.swing.*;	
 import java.io.*;
-import clases.*;
 
 public class MiniMenu extends JFrame implements ActionListener {
 	JPanel panelBotones;
 	JButton BtnInscribir, BtnCal, BtnHorario, BtnCerrarSesion;
-	Alumno alumno;
+	Alumno alumno = null;
 
 	public MiniMenu(Alumno alumno) {
+		//Vamos pasando el objeto alumno, esto a modo de una "sesion"
 		this.alumno = alumno;
 		Container c = getContentPane();
 		c.setLayout(new BoxLayout(c, BoxLayout.Y_AXIS));
@@ -63,6 +63,7 @@ public class MiniMenu extends JFrame implements ActionListener {
 			System.out.print("Cerrando MiniMenu....");
 			this.setVisible(false);
 			System.out.println(" Cerrado.");
+			alumno = null;
 			this.dispose();
 		}
 	}

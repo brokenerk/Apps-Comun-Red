@@ -4,13 +4,16 @@ import javax.swing.*;
 import java.io.*;
 import java.awt.Image;
 import javax.swing.ImageIcon;
+import java.util.*;
+import java.lang.reflect.Field;
+import javax.swing.table.*;
 
 public class inscribirV extends JFrame implements ActionListener {
 	JPanel panelInfo, panelFoto, panelDatos, panelBuscar, panelMostrar, panelHorario, panelBotones;
 	JButton btnBuscar, btnAgregar, btnInscribir, btnEliminar;
 	JLabel lfoto, lGrupo, lNombre, lBoleta, nombre, boleta;
 	JComboBox comboBox;
-	JScrollPane scrollHorario, scrollGrupo;
+	JScrollPane scrollMostrar, scrollHorario;
 	ImageIcon foto;
 	/* Para guardar el grupo que quieres ver cuando muestres
 	   las materias de ese grupo.*/
@@ -20,6 +23,7 @@ public class inscribirV extends JFrame implements ActionListener {
 	// Guarda la lista de materias de un grupo
 	static JList<String> stringMateria;
 	static DefaultListModel<String> modelo;
+	JTable tablaMostrar, tablaHorario;
 
 	public inscribirV() {
 		Container c = getContentPane();
@@ -89,6 +93,20 @@ public class inscribirV extends JFrame implements ActionListener {
 		panelMostrar.setBorder(BorderFactory.createTitledBorder("HORARIO DEL GRUPO SELECCIONADO"));		
 		panelMostrar.setPreferredSize(new Dimension(650, 200));
 
+		String[] titulos = {"GRUPO", "MATERIA", "PROFESOR", "LUNES", "MARTES", "MIERCOLES", "JUEVES", "VIERNES"};
+		scrollMostrar = new JScrollPane();
+		DefaultTableModel modeloMostrar = new DefaultTableModel(null, titulos);
+		tablaMostrar = new JTable(modeloMostrar); 
+		scrollMostrar.setViewportView(tablaMostrar);
+		Object[] fila = new Object[8];
+		int i, j;
+		for(i = 0; i < 10; i++) {
+			for(j = 0; j < 8; j++) {
+				fila[j] = " ";
+			}
+			modeloMostrar.addRow(fila);
+		}
+		panelMostrar.add(scrollMostrar);
 		c.add(panelMostrar);
 
 		// -----------------------------------------------------------------------
@@ -107,7 +125,20 @@ public class inscribirV extends JFrame implements ActionListener {
 		panelHorario = new JPanel(new GridLayout(1, 3));
 		panelHorario.setBorder(BorderFactory.createTitledBorder("HORARIO SELECCIONADO"));		
 		panelHorario.setPreferredSize(new Dimension(650, 200));
-
+		
+		scrollHorario = new JScrollPane();
+		DefaultTableModel modeloHorario = new DefaultTableModel(null, titulos);
+		tablaHorario = new JTable(modeloHorario); 
+		scrollHorario.setViewportView(tablaHorario);
+		fila = new Object[8];
+		for(i = 0; i < 1; i++) {
+			for(j = 0; j < 8; j++) {
+				fila[j] = " ";
+			}
+			modeloHorario.addRow(fila);
+		}
+		panelHorario.add(scrollHorario);
+		c.add(panelHorario);
 		c.add(panelHorario);
 
 		// -----------------------------------------------------------------------
@@ -128,7 +159,21 @@ public class inscribirV extends JFrame implements ActionListener {
 
 	}
 	public void actionPerformed(ActionEvent e) {
-		
+		JButton b = (JButton) e.getSource();
+
+		if(b == btnBuscar) {
+			// Hace que se permita ver el horario de un grupo seleccionado
+		}
+		if(b == btnAgregar) {
+			// Se agregan al horario del usuario las materias seleccionadas
+
+		}
+		if(b == btnInscribir) {
+			// Se inscriben al horario del usuario las materias seleccinadas
+		}
+		if(b == btnEliminar) {
+			// Se eliman del horario del usuario las masterias seleccionadas
+		}
 	}
 
 	public static void main(String s[]) {

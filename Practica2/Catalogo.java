@@ -39,7 +39,13 @@ public class Catalogo {
 		alumnos[2] = new Alumno(2014171285, "prueba123", "Abigail", "Nicolas", "Sayago");
 
 		alumnos[0].setFoto("./fotos/" + alumnos[0].getBoleta() + ".png");
-		//System.out.println(".png");
+		alumnos[1].setFoto("./fotos/default.png");
+		alumnos[2].setFoto("./fotos/" + alumnos[2].getBoleta() + ".png");
+
+		alumnos[0].setInscripcion(false);
+		alumnos[1].setInscripcion(false);
+		alumnos[2].setInscripcion(false);
+
 
 		/* Se cargan las horas matutinas y vespertinas */
 		horas[0] = "7:00 - 8:30";

@@ -46,7 +46,7 @@ public class MiniMenu extends JFrame implements ActionListener {
 	}
 
 	public static void crearInscribir(Alumno alumno) {
-		inscribirV f = new inscribirV(alumno);
+		InscribirV f = new InscribirV(alumno);
 		System.out.println("Enviando objeto alumno a inscribir, abriendo inscribir....");
 		f.setTitle("Inscribir");
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -59,14 +59,34 @@ public class MiniMenu extends JFrame implements ActionListener {
 		JButton b = (JButton) e.getSource();
 		    
 		if(b == BtnInscribir) {
-			// Abrir ventana para inscribirse
-			crearInscribir(alumno);
+			if(alumno.getInscripcion()){
+				// Abrir ventana de Ver horario	
+				JOptionPane.showMessageDialog(null, "Su inscripcion ha finalizado.", "Inscripcion finalizada", JOptionPane.ERROR_MESSAGE);
+			}
+			else{
+				// Abrir ventana para inscribirse
+				crearInscribir(alumno);
+				System.out.print("Cerrando MiniMenu....");
+				this.setVisible(false);
+				System.out.println(" Cerrado.");
+				this.dispose();
+			}	
 		}
 		else if(b == BtnCal) {
-			// Abrir ventana de ver calificaciones 
+			if(alumno.getInscripcion()){
+				// Abrir ventana de ver calificaciones 
+			}
+			else{
+				JOptionPane.showMessageDialog(null, "Debe finalizar su inscripcion para ver sus calificaciones.", "Inscripcion no finalizada", JOptionPane.ERROR_MESSAGE);
+			}
 		}
 		else if(b == BtnHorario) {
-			// Abrir ventana de Ver horario			
+			if(alumno.getInscripcion()){
+				// Abrir ventana de Ver horario	
+			}
+			else{
+				JOptionPane.showMessageDialog(null, "Debe finalizar su inscripcion para ver su horario.", "Inscripcion no finalizada", JOptionPane.ERROR_MESSAGE);
+			}		
 		}
 		else if(b == BtnCerrarSesion){
 			//Cerrar sesion, abrir login

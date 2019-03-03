@@ -6,7 +6,7 @@ public class Servidor{
 	//Clases para trabajar
 	static Materia[] materias = new Materia[10];
 	static Grupo[] grupos = new Grupo[3];
-	static Alumno[] alumnos = new Alumno[3];
+	static Alumno[] alumnos = new Alumno[5];
 
 
 	public static void autentificarLogin(Socket cl, DataInputStream dis) {
@@ -20,7 +20,7 @@ public class Servidor{
 			int numReg = 0;
 			Alumno alumnoActual = null;
 
-			for(int i = 0; i < 3; i++) {
+			for(int i = 0; i < alumnos.length; i++) {
 				int b = alumnos[i].getBoleta();
 				String p = alumnos[i].getContrasenia();
 
@@ -51,6 +51,87 @@ public class Servidor{
 		
 	}
 
+	public static void enviarGrupos(Socket cl){
+		try{
+			ObjectOutputStream oos = new ObjectOutputStream(cl.getOutputStream());
+			oos.writeObject(grupos);
+			oos.flush();
+
+			System.out.println("Grupos enviados");
+			oos.close();
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+	}
+
+	public static void recibirHorario(Socket cl, DataInputStream dis){
+		try{
+			int boletaActual = dis.readInt();
+			String[] g;
+			String[] m;
+
+			ObjectInputStream ois = new ObjectInputStream(cl.getInputStream()); //Recibir objetos
+			g = (String[]) ois.readObject();
+			m = (String[]) ois.readObject();
+			
+			int numMateriasInscritas = m.length;
+			int inscripcion = 0;
+
+			Horario horarioInscrito = new Horario(numMateriasInscritas);
+			
+			for(int i = 0; i < alumnos.length; i++){
+				if(alumnos[i].getBoleta() == boletaActual){
+					inscripcion = i;
+				}
+			}
+
+			System.out.println("Horario recibido:");
+
+			for(int i = 0; i < 3; i++)
+			{
+				for(int j = 0; j < numMateriasInscritas; j++)
+				{
+					if(grupos[i].getNombre().equals(g[j]))
+					{
+						System.out.print(grupos[i].getNombre() + " - ");
+						horarioInscrito.setGrupos(grupos[i], j);
+
+						Materia[] mGrupo = grupos[i].getMaterias();
+
+						for(int k = 0; k < 6; k++)
+						{
+							if(mGrupo[k].getNombre().equals(m[j]))
+							{
+								System.out.println(mGrupo[k].getNombre());
+								horarioInscrito.setMaterias(mGrupo[k], j);
+							}
+						}
+					}
+					/*Genero calificaciones aleatorias por practicidad*/
+					int calif = (int) (Math.random() * 15) - 9;
+					horarioInscrito.setCalifs(calif, j);
+				}
+			}
+
+			
+
+
+			System.out.println("Construyendo horario... Listo.");
+			System.out.println("Asignando horario a alumno.");
+
+			alumnos[inscripcion].setHorario(horarioInscrito);
+			alumnos[inscripcion].setInscripcion(true);
+
+			System.out.println("Alumno inscrito con horario correctamente.");
+			ois.close();
+			cl.close();
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}//catch	
+	}
+
 	public static void main(String[] args){
 		//Construimos nuestros catalogos
 		Catalogo.cargar();
@@ -74,6 +155,14 @@ public class Servidor{
 				if(bandera == 0){
 					//Login
 					autentificarLogin(cl, dis);
+				}
+				else if(bandera == 1){
+					//Enviar grupos con materias
+					enviarGrupos(cl);
+				}
+				else if(bandera == 2){
+					//Recibir grupos y materias para horario
+					recibirHorario(cl, dis);
 				}
 				else {
 					System.out.println("Error al atender la solicitud del cliente.");

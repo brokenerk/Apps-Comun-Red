@@ -6,7 +6,7 @@ public class Catalogo {
 	static String[] horas = new String[9];
 	static String[] prof = new String[10];
 	static Grupo[] grupo = new Grupo[3];
-	static Alumno[] alumnos = new Alumno[3];
+	static Alumno[] alumnos = new Alumno[5];
 
 	public static Materia[] getMaterias(){
 		return materias;
@@ -37,10 +37,14 @@ public class Catalogo {
 		alumnos[0] = new Alumno(2014081268, "prueba123", "Enrique", "Ramos", "Diaz");
 		alumnos[1] = new Alumno(2014081144, "prueba123", "Angel", "Hernandez", "Molina");
 		alumnos[2] = new Alumno(2014171285, "prueba123", "Abigail", "Nicolas", "Sayago");
+		alumnos[3] = new Alumno(2015674078, "prueba123", "Oribe", "Peralta", "Morones");
+		alumnos[4] = new Alumno(2014011111, "prueba123", "Son", "Goku", "");
 
 		alumnos[0].setFoto("./fotos/" + alumnos[0].getBoleta() + ".png");
 		alumnos[1].setFoto("./fotos/default.png");
 		alumnos[2].setFoto("./fotos/" + alumnos[2].getBoleta() + ".png");
+		alumnos[3].setFoto("./fotos/" + alumnos[3].getBoleta() + ".png");
+		alumnos[4].setFoto("./fotos/" + alumnos[4].getBoleta() + ".png");
 
 		alumnos[0].setInscripcion(false);
 		alumnos[1].setInscripcion(false);
@@ -119,7 +123,7 @@ public class Catalogo {
 			grupo[x].setHoras(horas[1], 2, 3);
 
 			grupo[x].setHoras(horas[2], 3, 0);
-			grupo[x].setHoras(horas[1], 3, 2);
+			grupo[x].setHoras(horas[1], 3, 1);
 			grupo[x].setHoras(horas[2], 3, 3);
 
 			grupo[x].setHoras(horas[3], 4, 0);
@@ -127,9 +131,9 @@ public class Catalogo {
 			grupo[x].setHoras(horas[3], 4, 3);
 			grupo[x].setHoras(horas[3], 4, 4);
 
-			grupo[x].setHoras(horas[2], 5, 0);
-			grupo[x].setHoras(horas[1], 5, 2);
-			grupo[x].setHoras(horas[2], 4, 3);
+			grupo[x].setHoras(horas[2], 5, 1);
+			grupo[x].setHoras(horas[2], 5, 2);
+			grupo[x].setHoras(horas[2], 5, 4);
 		}
 
 			grupo[2].setHoras(horas[4], 0, 0);
@@ -155,7 +159,7 @@ public class Catalogo {
 
 			grupo[2].setHoras(horas[8], 5, 1);
 			grupo[2].setHoras(horas[8], 5, 2);
-			grupo[2].setHoras(horas[8], 4, 4);
+			grupo[2].setHoras(horas[8], 5, 4);
 
 
 	}

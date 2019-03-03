@@ -9,7 +9,7 @@ public class Servidor{
 	static Alumno[] alumnos = new Alumno[3];
 
 
-	public static void autentificarLogin(Socket cl, DataInputStream dis){
+	public static void autentificarLogin(Socket cl, DataInputStream dis) {
 		try {
 			/* Para enviar y recibir objetos */
 			int boleta_temp = dis.readInt();

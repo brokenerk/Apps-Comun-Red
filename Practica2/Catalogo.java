@@ -36,7 +36,7 @@ public class Catalogo {
 		/*Se cargan alumnos*/
 		alumnos[0] = new Alumno(2014081268, "prueba123", "Enrique", "Ramos", "Diaz");
 		alumnos[1] = new Alumno(2014081144, "prueba123", "Angel", "Hernandez", "Molina");
-		alumnos[2] = new Alumno(2014087832, "prueba123", "Abigail", "Nicolas", "Sayago");
+		alumnos[2] = new Alumno(2014171285, "prueba123", "Abigail", "Nicolas", "Sayago");
 
 		alumnos[0].setFoto("./fotos/" + alumnos[0].getBoleta() + ".png");
 		//System.out.println(".png");

@@ -36,11 +36,21 @@ public class MiniMenu extends JFrame implements ActionListener {
 		BtnCerrarSesion.addActionListener(this);
 	}
 
-	public static void crearLogin(){
+	public static void crearLogin() {
 		Login f = new Login();
 		f.setTitle("Iniciar sesion");
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.setSize(400, 200);
+		f.setVisible(true);
+		f.setLocationRelativeTo(null);
+	}
+
+	public static void crearInscribir(Alumno alumno) {
+		inscribirV f = new inscribirV(alumno);
+		System.out.println("Enviando objeto alumno a inscribir, abriendo inscribir....");
+		f.setTitle("Inscribir");
+		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		f.setSize(700, 720);
 		f.setVisible(true);
 		f.setLocationRelativeTo(null);
 	}
@@ -50,6 +60,7 @@ public class MiniMenu extends JFrame implements ActionListener {
 		    
 		if(b == BtnInscribir) {
 			// Abrir ventana para inscribirse
+			crearInscribir(alumno);
 		}
 		else if(b == BtnCal) {
 			// Abrir ventana de ver calificaciones 
@@ -67,7 +78,7 @@ public class MiniMenu extends JFrame implements ActionListener {
 			this.dispose();
 		}
 	}
-
+	
 	/*public static void main(String s[]) {
 		MiniMenu f = new MiniMenu();
 		f.setTitle("MENU");

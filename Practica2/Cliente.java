@@ -31,7 +31,8 @@ public class Cliente{
 			dos.close();
 			ois.close();
 			cl.close();
-		}catch(Exception e) {
+		}
+		catch(Exception e) {
     		e.printStackTrace();
     	}//catch
 

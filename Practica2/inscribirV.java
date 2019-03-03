@@ -25,7 +25,12 @@ public class inscribirV extends JFrame implements ActionListener {
 	static DefaultListModel<String> modelo;
 	JTable tablaMostrar, tablaHorario;
 
-	public inscribirV() {
+	Alumno alumno = null;
+
+	public inscribirV(Alumno alumno) {
+		//Vamos pasando el objeto alumno, esto a modo de una "sesion"
+		this.alumno = alumno;
+		
 		Container c = getContentPane();
 		c.setLayout(new FlowLayout());
 
@@ -40,6 +45,7 @@ public class inscribirV extends JFrame implements ActionListener {
 		// Agregamos al panel FOTO la imagen default
 		lfoto = new JLabel(foto);
 		lfoto.setIcon(new ImageIcon(new javax.swing.ImageIcon(getClass().getResource("fotos/2014171285.png")).getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH)));
+		//lfoto.setIcon(new ImageIcon(new javax.swing.ImageIcon(getClass().getResource("fotos/2014171285.png")).getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH)));
 		panelFoto.add(lfoto);
 		
 		// -----------------------------------------------------------------------
@@ -165,7 +171,7 @@ public class inscribirV extends JFrame implements ActionListener {
 			// Hace que se permita ver el horario de un grupo seleccionado
 		}
 		if(b == btnAgregar) {
-			// Se agregan al horario del usuario las materias seleccionadas
+			// Se agregan al horario del usuario las materias seleccionado
 
 		}
 		if(b == btnInscribir) {
@@ -176,12 +182,12 @@ public class inscribirV extends JFrame implements ActionListener {
 		}
 	}
 
-	public static void main(String s[]) {
+	/*public static void main(String s[]) {
 		inscribirV f = new inscribirV();
 		f.setTitle("Inscribir");
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.setSize(700, 720);
 		f.setVisible(true);
 		f.setLocationRelativeTo(null);
-	}
+	}*/
 }

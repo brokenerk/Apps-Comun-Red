@@ -59,15 +59,15 @@ public class Login extends JFrame implements ActionListener {
 		    
 		if(b == BtnIniciar) {
 			// Iniciar sesion
-			if(TxtBoleta.getText().length() == 0 || TxtPassword.getPassword().length == 0){
+			if(TxtBoleta.getText().length() == 0 || TxtPassword.getPassword().length == 0) {
 				JOptionPane.showMessageDialog(null, "Ingrese sus datos.");
 			}
-			else{
+			else {
 				char[] pass = TxtPassword.getPassword();
 				String passwd_temp = String.valueOf(pass);
 				int boleta_temp = 0;
 
-				try{
+				try {
 					boleta_temp = Integer.parseInt(TxtBoleta.getText());
 					Alumno alumno = Cliente.iniciarSesion(boleta_temp, passwd_temp);
 
@@ -82,14 +82,14 @@ public class Login extends JFrame implements ActionListener {
 						System.out.println(" Cerrado.");
 						this.dispose();
 					}
-					else{
+					else {
 						System.out.println("Objeto recibido es null");
 						JOptionPane.showMessageDialog(null, "Contrasena y/o boleta incorrectas. Intente de nuevo.", "Datos incorrectos", JOptionPane.ERROR_MESSAGE);
 						TxtBoleta.setText("");
 						TxtPassword.setText("");
 					}
 				}
-				catch(Exception ex){
+				catch(Exception ex) {
 					JOptionPane.showMessageDialog(null, "El campo de boleta solo admite numeros.", "Datos incorrectos", JOptionPane.ERROR_MESSAGE);
 					TxtBoleta.setText("");
 					TxtPassword.setText("");
@@ -98,7 +98,7 @@ public class Login extends JFrame implements ActionListener {
 		}
 	}
 
-	public static void crearMiniMenu(Alumno alumno){
+	public static void crearMiniMenu(Alumno alumno) {
 		MiniMenu menu = new MiniMenu(alumno);
 		System.out.println("Enviando objeto alumno a MiniMenu, abriendo MiniMenu....");
 		menu.setTitle("MENU");

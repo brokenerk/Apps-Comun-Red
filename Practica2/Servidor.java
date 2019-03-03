@@ -10,8 +10,8 @@ public class Servidor{
 
 
 	public static void autentificarLogin(Socket cl, DataInputStream dis){
-		try{
-			/*Para enviar y recibir objetos*/
+		try {
+			/* Para enviar y recibir objetos */
 			int boleta_temp = dis.readInt();
 			String passwd_temp = dis.readUTF();
 			System.out.println("Datos recibidos: " + boleta_temp + " " + passwd_temp + ". Buscando...");
@@ -20,7 +20,7 @@ public class Servidor{
 			int numReg = 0;
 			Alumno alumnoActual = null;
 
-			for(int i = 0; i < 3; i++){
+			for(int i = 0; i < 3; i++) {
 				int b = alumnos[i].getBoleta();
 				String p = alumnos[i].getContrasenia();
 
@@ -30,11 +30,11 @@ public class Servidor{
 				}
 			}
 
-			if(existe){
+			if(existe) {
 				alumnoActual = alumnos[numReg];
 				System.out.println("Objeto alumno enviado con boleta: " + alumnoActual.getBoleta());
 			}
-			else{
+			else {
 				System.out.println("Alumno no encontrado, enviando null...");
 			}
 
@@ -51,8 +51,6 @@ public class Servidor{
 		
 	}
 
-
-
 	public static void main(String[] args){
 		//Construimos nuestros catalogos
 		Catalogo.cargar();
@@ -61,12 +59,12 @@ public class Servidor{
 		alumnos = Catalogo.getAlumnos();
 
 		System.out.println("Catalogos creados.");
-		try{
+		try {
 			ServerSocket s = new ServerSocket(4321);
 			s.setReuseAddress(true);
 			System.out.println("Servidor Mini SAES iniciado, esperando alumnos/clientes...");
 
-			for( ; ; ){
+			for( ; ; ) {
 				Socket cl = s.accept();
 				DataInputStream dis = new DataInputStream(cl.getInputStream()); // InputStream
 				System.out.println("\n\nCliente conectado desde " + cl.getInetAddress() + " " + cl.getPort());
@@ -83,7 +81,8 @@ public class Servidor{
 				dis.close();
 				cl.close();
 			}//for
-		}catch(Exception e) {
+		} // Fin try
+		catch(Exception e) {
 			e.printStackTrace();
 		}//catch
 	}

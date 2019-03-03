@@ -6,10 +6,10 @@ public class Cliente{
 	private static int pto = 4321;
 	private static String host = "127.0.0.1";
 
-	public static Alumno iniciarSesion(int boleta_tmp, String psswd_temp){
+	public static Alumno iniciarSesion(int boleta_tmp, String psswd_temp) {
 		Alumno alumnoActual = null;
 		
-		try{
+		try {
 			Socket cl = new Socket(host, pto);
 			DataOutputStream dos = new DataOutputStream(cl.getOutputStream()); //Enviar datps
 

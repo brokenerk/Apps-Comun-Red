@@ -98,13 +98,27 @@ public class Servidor{
 						horarioInscrito.setGrupos(grupos[i], j);
 
 						Materia[] mGrupo = grupos[i].getMaterias();
+						String[] profsInscritos = grupos[i].getProfesores();
+						String[][] horasInscritas = grupos[i].getHoras(); 
 
 						for(int k = 0; k < 6; k++)
 						{
 							if(mGrupo[k].getNombre().equals(m[j]))
 							{
-								System.out.println(mGrupo[k].getNombre());
+
+								System.out.print(mGrupo[k].getNombre() + " - ");
 								horarioInscrito.setMaterias(mGrupo[k], j);
+								horarioInscrito.setProfesores(profsInscritos[k], j);
+								System.out.print(profsInscritos[k] + " - ");
+
+								String hrs = "";
+
+								for(int dias = 0; dias < 5; dias++){
+									horarioInscrito.setHoras(horasInscritas[k][dias], j, dias);
+									hrs = hrs + " " + horasInscritas[k][dias];
+								}
+								System.out.println(hrs);
+								
 							}
 						}
 					}

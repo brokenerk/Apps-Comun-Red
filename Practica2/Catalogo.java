@@ -70,7 +70,7 @@ public class Catalogo {
 		prof[4] = "Ignacio Rios de la Torre";
 		prof[5] = "Jorge Cortes Galicia";
 		prof[6] = "Jose Antonio Ramirez";
-		prof[7] = "Edgardo Adrían Franco Martínez";
+		prof[7] = "Edgardo Adrian Franco Martinez";
 		prof[8] = "Hector Rojas Luna";
 		prof[9] = "Axel Ernesto Moreno Cervantes"; 
 

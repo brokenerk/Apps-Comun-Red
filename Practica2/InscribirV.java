@@ -224,7 +224,7 @@ public class InscribirV extends JFrame implements ActionListener {
 
 		}
 		if(b == btnInscribir) {
-			int resp = JOptionPane.showConfirmDialog(null, "Esta seguro de inscribir el siguiente horario?", "Confirmación inscripcion", JOptionPane.YES_NO_OPTION);
+			int resp = JOptionPane.showConfirmDialog(null, "Esta seguro de inscribir el siguiente horario?", "Confirmacion inscripcion", JOptionPane.YES_NO_OPTION);
 
 			if(resp == JOptionPane.YES_OPTION){
 				// Se inscriben al horario del usuario las materias seleccinadas

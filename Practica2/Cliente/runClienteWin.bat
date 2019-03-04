@@ -1,3 +1,4 @@
+javac Clases.java
 javac Cliente.java
 javac Login.java 
 javac MiniMenu.java

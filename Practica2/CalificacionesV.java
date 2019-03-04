@@ -7,7 +7,7 @@ import javax.swing.ImageIcon;
 import java.util.*;
 import java.lang.reflect.Field;
 import javax.swing.table.*;
-public class HorarioV extends JFrame implements ActionListener {
+public class CalificacionesV extends JFrame implements ActionListener {
 	JPanel panelInfo, panelFoto, panelDatos, panelHorario, panelMostrar;
 	JButton btnRegresar;
 	JLabel lfoto, lGrupo, lNombre, lBoleta, nombre, boleta;
@@ -27,7 +27,7 @@ public class HorarioV extends JFrame implements ActionListener {
 
 	Alumno alumno = null;
 
-	public HorarioV(Alumno alumno) {
+	public CalificacionesV(Alumno alumno) {
 		//Vamos pasando el objeto alumno, esto a modo de una "sesion"
 		this.alumno = alumno;
 
@@ -81,29 +81,22 @@ public class HorarioV extends JFrame implements ActionListener {
 		panelMostrar.setBorder(BorderFactory.createTitledBorder("HORARIO DEL GRUPO SELECCIONADO"));		
 		panelMostrar.setPreferredSize(new Dimension(650, 200));
 
-		String[] titulos = {"GRUPO", "MATERIA", "PROFESOR", "LUNES", "MARTES", "MIERCOLES", "JUEVES", "VIERNES"};
+		String[] titulos = {"GRUPO", "MATERIA", "PROFESOR", "CALIFICACION"};
 		scrollMostrar = new JScrollPane();
 		DefaultTableModel modeloMostrar = new DefaultTableModel(null, titulos);
 		tablaMostrar = new JTable(modeloMostrar); 
 		scrollMostrar.setViewportView(tablaMostrar);
-		Object[] fila = new Object[8];
 		int i, j;
-		/*for(i = 0; i < 10; i++) {
-			for(j = 0; j < 8; j++) {
-				fila[j] = " ";
-			}
-			modeloMostrar.addRow(fila);
-		}*/
-
+	
 
 		// *************** HACER QUE SE VEA EL HORARIO ***************
 
 		// Hace que se permita ver el horario de un grupo seleccionado
 		Horario h = alumno.getHorario();
-		int numMaterias = h.getNumMaterias();
-		Materia[] materias = h.getMaterias();
 		Grupo[] grupos = h.getGrupos();
-//		String[] profs = g.getProfesores();
+		Materia[] materias = h.getMaterias();
+
+		int[] califs = h.getCalifs();
 		
 		DefaultTableModel modelo = (DefaultTableModel) tablaMostrar.getModel();
 		modelo.setRowCount(0);
@@ -112,11 +105,7 @@ public class HorarioV extends JFrame implements ActionListener {
 			System.out.println("Despliego materia del grupo: " + grupos[i].getId());
 			Grupo g = Cliente.grupos[grupos[i].getId()];
 			String nombreGrupo = g.getNombre();
-			String[] profs = g.getProfesores();
-			String[][] horas = g.getHoras();
-			Materia[] mat = g.getMaterias();
-			String[] filaA = {nombreGrupo, materias[i].getNombre(), "profs[materias[i].getId()]", "horas[i][0]", "horas[i][1]", "horas[i][2]", "horas[i][3]", "horas[i][4]"};		
-//			String[] filaA = {nombre, materias[i].getNombre(), profs[i], horas[i][0], horas[i][1], horas[i][2], horas[i][3], horas[i][4]};
+			String[] filaA = {nombreGrupo, materias[i].getNombre(), "profs[materias[i].getId()]", " " +califs[i]};		
 			modelo.addRow(filaA);
 		}
 		System.out.println("Grupo desplegado actualizado.");

@@ -122,8 +122,8 @@ public class Servidor{
 							}
 						}
 					}
-					/*Genero calificaciones aleatorias por practicidad*/
-					int calif = (int) (Math.random() * 15) - 9;
+					/*Genero calificaciones aleatorias por practicidad 5 - 10*/
+					int calif = (int) (Math.random() * 6) + 5;
 					horarioInscrito.setCalifs(calif, j);
 				}
 			}

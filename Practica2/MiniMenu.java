@@ -55,6 +55,16 @@ public class MiniMenu extends JFrame implements ActionListener {
 		f.setLocationRelativeTo(null);
 	}
 
+	public static void crearHorario(Alumno alumno) {
+		HorarioV f = new HorarioV(alumno);
+		System.out.println("Enviando objeto alumno a ver Horario, abriendo Horario....");
+		f.setTitle("Horario");
+		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		f.setSize(700, 720);
+		f.setVisible(true);
+		f.setLocationRelativeTo(null);
+	}
+
 	public void actionPerformed(ActionEvent e) {
 		JButton b = (JButton) e.getSource();
 		    
@@ -63,7 +73,7 @@ public class MiniMenu extends JFrame implements ActionListener {
 				// Abrir ventana de Ver horario	
 				JOptionPane.showMessageDialog(null, "Su inscripcion ha finalizado.", "Inscripcion finalizada", JOptionPane.ERROR_MESSAGE);
 			}
-			else{
+			else {
 				// Abrir ventana para inscribirse
 				crearInscribir(alumno);
 				System.out.print("Cerrando MiniMenu....");
@@ -81,10 +91,15 @@ public class MiniMenu extends JFrame implements ActionListener {
 			}
 		}
 		else if(b == BtnHorario) {
-			if(alumno.getInscripcion()){
+			if(alumno.getInscripcion()) {
 				// Abrir ventana de Ver horario	
+				crearHorario(alumno);
+				System.out.print("Cerrando MiniMenu....");
+				this.setVisible(false);
+				System.out.println(" Cerrado.");
+				this.dispose();
 			}
-			else{
+			else {
 				JOptionPane.showMessageDialog(null, "Debe finalizar su inscripcion para ver su horario.", "Inscripcion no finalizada", JOptionPane.ERROR_MESSAGE);
 			}		
 		}

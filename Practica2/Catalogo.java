@@ -160,7 +160,5 @@ public class Catalogo {
 			grupo[2].setHoras(horas[8], 5, 1);
 			grupo[2].setHoras(horas[8], 5, 2);
 			grupo[2].setHoras(horas[8], 5, 4);
-
-
 	}
 }

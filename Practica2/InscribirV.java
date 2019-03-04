@@ -262,13 +262,4 @@ public class InscribirV extends JFrame implements ActionListener {
 			System.out.println("Materias eliminadas.");
 		}
 	}
-
-	/*public static void main(String s[]) {
-		inscribirV f = new inscribirV();
-		f.setTitle("Inscribir");
-		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		f.setSize(700, 720);
-		f.setVisible(true);
-		f.setLocationRelativeTo(null);
-	}*/
 }

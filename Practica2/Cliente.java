@@ -40,7 +40,7 @@ public class Cliente{
     	return alumnoActual;
 	}
 
-	public static void obtenerGrupos(){
+	public static void obtenerGrupos() {
 		try{
 			Socket cl = new Socket(host, pto);
 
@@ -63,8 +63,8 @@ public class Cliente{
     	}//catch
 	}
 
-	public static void enviarHorario(String[] grupos, String[] materias, int boleta){
-		try{
+	public static void enviarHorario(String[] grupos, String[] materias, int boleta) {
+		try {
 			Socket cl = new Socket(host, pto);
 
 			DataOutputStream dos = new DataOutputStream(cl.getOutputStream()); //Enviar datps

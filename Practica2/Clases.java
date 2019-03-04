@@ -1,8 +1,8 @@
-public class Clases{
-	public static void main(String[] args){
+public class Clases {
+	public static void main(String[] args) {
 
-		/*ESTA PARTA LA HARIA EL SERVIDOR, SOLO USA SETTERS*/
-		/*CARGA LOS DATOS MANUALMENTE, DESDE ARCHIVOS, ETC. Y LOS GUARDA EN MEMORIA RAM*/
+		// El servidor se encarga de esta parte, usa SETTERS
+		// Carga datos manualmente, puede ser archivo, etc. Se guarda en memoria RAM
 		Materia[] materias = new Materia[10];
 		Grupo[] grupo = new Grupo[3];
 		Alumno[] alumnos = new Alumno[3];
@@ -12,10 +12,12 @@ public class Clases{
 		grupo = Catalogo.getGrupos();
 		alumnos = Catalogo.getAlumnos();
 
-		/*------------------SE ESTAN ENVIANDO LOS OBJETOS DESDE EL SERVER---------------------*/
-		/*EL CLIENTE UNICAMENTE VA A ENVIAR LA BOLETA, ID DE MATERIA, ETC (PARAMETROS, NO OBJETOS)*/
+		// ---------------------------------------------------------------------------
+		//						ENVIAR OBJETOS DESDE EL SERVIDOR
+		// ---------------------------------------------------------------------------
+		// El cliente envia boleta, ID de materia (Parametros, no objetos)
+		// Esta parte se construye conforme se invoca el metodo: inscribir
 
-		/*ESTA PARTE SE CONSTRUYE CONFORME SE INVOCA EL METODO: inscribir()*/
 		Horario horario = new Horario(6);
 		Grupo[] gruposInscritos = new Grupo[6];
 		
@@ -26,41 +28,38 @@ public class Clases{
 		gruposInscritos[4] = grupo[2];
 		gruposInscritos[5] = grupo[2];
 
-		for(int i = 0; i < 6; i++){
+		for(int i = 0; i < 6; i++) {
 			horario.setGrupos(gruposInscritos[i], i);
 			Materia[] materiasInscritas = gruposInscritos[i].getMaterias();
 			horario.setMaterias(materiasInscritas[i], i);
 		}
 
-
 		Alumno alumno = alumnos[0];
 		alumno.setHorario(horario);
 		alumno.setInscripcion(true);
 
-		/*ESTA PARTE LA HARIA EL CLIENTE, SOLO USA GETTERS*/
-		/*SE CREAN NUEVOS OBJETOS EN EL CLIENTE PARA RECIBIR LOS DEL SERVER Y YA SOLO SE LEE SU INFO*/
+		// El cliente se encarga de esta parte, usa GETTERS
+		// Crea nuevos objetos en el cliente para recibir los del Servidor
+		// Se lee informacion		
 		System.out.println("");
 		System.out.println(alumno.getBoleta() + ": " + alumno.getNombreCompleto());
-		if(alumno.getInscripcion()){
+		if(alumno.getInscripcion())
 			System.out.println("Inscrito");
-		}
-		else{
+		else
 			System.out.println("No inscrito.");
-		}
 
 		Horario verHorario = alumno.getHorario();
 		Grupo[] verGrupos = verHorario.getGrupos(); 
 		Materia[] verMaterias = verHorario.getMaterias();
-		for(int i = 0; i < 6; i++){
+		for(int i = 0; i < 6; i++) {
 			Grupo g = verGrupos[i]; //0
 			String[] p = g.getProfesores();
 			String hrs = "";
 			String[][] verHoras = g.getHoras();
 
-			for(int j = 0; j < 5; j++){
+			for(int j = 0; j < 5; j++) {
 				hrs = hrs + "\t" + verHoras[i][j];
 			}
-
 			System.out.println(g.getNombre() + "\t" + verMaterias[i].getNombre() + "\t" + p[i] + "\t\t\t" + hrs);
 		}
 	}

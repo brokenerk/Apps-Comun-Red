@@ -2,7 +2,7 @@
 import java.net.*;
 import java.io.*;
 
-public class Cliente{
+public class Cliente {
 	private static int pto = 4321;
 	private static String host = "127.0.0.1";
 	public static Grupo[] grupos = null;
@@ -12,20 +12,23 @@ public class Cliente{
 		
 		try {
 			Socket cl = new Socket(host, pto);
-			DataOutputStream dos = new DataOutputStream(cl.getOutputStream()); //Enviar datps
+			DataOutputStream dos = new DataOutputStream(cl.getOutputStream()); //Enviar datos
 
-			//La bandera tiene el valor de 0 = Login
+			// Bandera con valor 0 = Login
 			dos.writeInt(0);
 			dos.flush();
 			System.out.println("Enviando datos: " + boleta_tmp + " - " + psswd_temp + ", esperando servidor...");
-			//Enviar boleta y psswd de los textbox
+
+			// Enviar boleta y psswd de los textbox
 			dos.writeInt(boleta_tmp);
 			dos.flush();
 			dos.writeUTF(psswd_temp);
 			dos.flush();
+
+			// Recibir objetos
+			ObjectInputStream ois = new ObjectInputStream(cl.getInputStream()); 
 			
-			ObjectInputStream ois = new ObjectInputStream(cl.getInputStream()); //Recibir objetos
-			//Importante hacer un cast
+			// Importante hacer un cast
 			alumnoActual = (Alumno) ois.readObject();
 			System.out.println("Objeto recibido");
 
@@ -35,18 +38,18 @@ public class Cliente{
 		}
 		catch(Exception e) {
     		e.printStackTrace();
-    	}//catch
+    	} // Catch
 
     	return alumnoActual;
 	}
 
 	public static void obtenerGrupos() {
-		try{
+		try {
 			Socket cl = new Socket(host, pto);
+ 			// Enviar datos
+			DataOutputStream dos = new DataOutputStream(cl.getOutputStream());
 
-			DataOutputStream dos = new DataOutputStream(cl.getOutputStream()); //Enviar datps
-
-			//La bandera tiene el valor de 1 = getGrupos
+			// La bandera tiene el valor de 1 = getGrupos
 			dos.writeInt(1);
 			dos.flush();
 

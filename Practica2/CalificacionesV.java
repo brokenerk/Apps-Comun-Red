@@ -7,6 +7,7 @@ import javax.swing.ImageIcon;
 import java.util.*;
 import java.lang.reflect.Field;
 import javax.swing.table.*;
+
 public class CalificacionesV extends JFrame implements ActionListener {
 	JPanel panelInfo, panelFoto, panelDatos, panelHorario, panelMostrar;
 	JButton btnRegresar;
@@ -14,10 +15,6 @@ public class CalificacionesV extends JFrame implements ActionListener {
 	JScrollPane scrollHorario, scrollMostrar;
 	ImageIcon foto;
 
-	// Guarda la lista de grupos que un estudiante inscribe
-	static JList<String> stringGrupo;
-	// Guarda la lista de materias de un grupo
-	static JList<String> stringMateria;
 	static DefaultListModel<String> modelo;
 	JTable tablaMostrar, tablaHorario;
 
@@ -110,7 +107,6 @@ public class CalificacionesV extends JFrame implements ActionListener {
 		}
 		System.out.println("Grupo desplegado actualizado.");
 
-
 		panelMostrar.add(scrollMostrar);
 		c.add(panelMostrar);
 
@@ -128,9 +124,9 @@ public class CalificacionesV extends JFrame implements ActionListener {
 		JButton b = (JButton) e.getSource();
 
 		if(b == btnRegresar) {
-			/*Construir objeto MiniMenu y abrirlo*/
+			// Construir objeto MiniMenu y abrirlo
 			crearMiniMenu(alumno);
-			/*Cerrar login*/
+			// Cerrar login
 			System.out.print("Cerrando VerHorario....");
 			this.setVisible(false);
 			System.out.println(" Cerrado.");
@@ -138,6 +134,7 @@ public class CalificacionesV extends JFrame implements ActionListener {
 		}
 	}
 
+	// Crear ventana de MiniMenu
 	public static void crearMiniMenu(Alumno alumno) {
 		MiniMenu menu = new MiniMenu(alumno);
 		System.out.println("Enviando objeto alumno a MiniMenu, abriendo MiniMenu....");

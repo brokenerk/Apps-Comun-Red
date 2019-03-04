@@ -68,7 +68,7 @@ public class MiniMenu extends JFrame implements ActionListener {
 	public static void crearCalificaciones(Alumno alumno) {
 		CalificacionesV f = new CalificacionesV(alumno);
 		System.out.println("Enviando objeto alumno a ver Horario, abriendo Horario....");
-		f.setTitle("Horario");
+		f.setTitle("Calificaciones");
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.setSize(700, 520);
 		f.setVisible(true);

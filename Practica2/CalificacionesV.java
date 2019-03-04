@@ -95,7 +95,7 @@ public class CalificacionesV extends JFrame implements ActionListener {
 		Horario h = alumno.getHorario();
 		Grupo[] grupos = h.getGrupos();
 		Materia[] materias = h.getMaterias();
-
+		String[] profs = h.getProfesores();
 		int[] califs = h.getCalifs();
 		
 		DefaultTableModel modelo = (DefaultTableModel) tablaMostrar.getModel();
@@ -105,7 +105,7 @@ public class CalificacionesV extends JFrame implements ActionListener {
 			System.out.println("Despliego materia del grupo: " + grupos[i].getId());
 			Grupo g = Cliente.grupos[grupos[i].getId()];
 			String nombreGrupo = g.getNombre();
-			String[] filaA = {nombreGrupo, materias[i].getNombre(), "profs[materias[i].getId()]", " " +califs[i]};		
+			String[] filaA = {nombreGrupo, materias[i].getNombre(), profs[i], " " +califs[i]};		
 			modelo.addRow(filaA);
 		}
 		System.out.println("Grupo desplegado actualizado.");

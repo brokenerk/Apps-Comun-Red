@@ -108,14 +108,14 @@ public class HorarioV extends JFrame implements ActionListener {
 		DefaultTableModel modelo = (DefaultTableModel) tablaMostrar.getModel();
 		modelo.setRowCount(0);
 
-		for(i = 0; i < materias.length; i++){
+		for(i = 0; i < materias.length; i++) {
 			System.out.println("Despliego materia del grupo: " + grupos[i].getId());
 			Grupo g = Cliente.grupos[grupos[i].getId()];
 			String nombreGrupo = g.getNombre();
 			String[] profs = g.getProfesores();
 			String[][] horas = g.getHoras();
 			Materia[] mat = g.getMaterias();
-			String[] filaA = {nombreGrupo, materias[i].getNombre(), profs[mat[materias[i].getId()].getId()], "horas[i][0]", "horas[i][1]", "horas[i][2]", "horas[i][3]", "horas[i][4]"};		
+			String[] filaA = {nombreGrupo, materias[i].getNombre(), "profs[materias[i].getId()]", horas[i][0], horas[i][1], horas[i][2], horas[i][3], horas[i][4]};		
 //			String[] filaA = {nombre, materias[i].getNombre(), profs[i], horas[i][0], horas[i][1], horas[i][2], horas[i][3], horas[i][4]};
 			modelo.addRow(filaA);
 		}

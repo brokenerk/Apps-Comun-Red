@@ -60,7 +60,7 @@ public class MiniMenu extends JFrame implements ActionListener {
 		System.out.println("Enviando objeto alumno a ver Horario, abriendo Horario....");
 		f.setTitle("Horario");
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		f.setSize(700, 720);
+		f.setSize(700, 450);
 		f.setVisible(true);
 		f.setLocationRelativeTo(null);
 	}
@@ -70,7 +70,7 @@ public class MiniMenu extends JFrame implements ActionListener {
 		System.out.println("Enviando objeto alumno a ver Horario, abriendo Horario....");
 		f.setTitle("Calificaciones");
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		f.setSize(700, 520);
+		f.setSize(700, 450);
 		f.setVisible(true);
 		f.setLocationRelativeTo(null);
 	}
@@ -128,13 +128,4 @@ public class MiniMenu extends JFrame implements ActionListener {
 			this.dispose();
 		}
 	}
-	
-	/*public static void main(String s[]) {
-		MiniMenu f = new MiniMenu();
-		f.setTitle("MENU");
-		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		f.setSize(500, 200);
-		f.setVisible(true);
-		f.setLocationRelativeTo(null);
-	}*/
 }

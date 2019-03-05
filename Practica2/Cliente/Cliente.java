@@ -72,15 +72,15 @@ public class Cliente {
 
 			DataOutputStream dos = new DataOutputStream(cl.getOutputStream()); //Enviar datps
 
-			//La bandera tiene el valor de 2 = enviarHorario
+			// La bandera tiene el valor de 2 = enviarHorario
 			dos.writeInt(2);
 			dos.flush();
 
-			//Enviamos el numero de boleta
+			// Enviamos el numero de boleta
 			dos.writeInt(boleta);
 			dos.flush();
 			System.out.println("Boleta enviada");
-			//Enviamos los arreglos de materias y grupos seleccionados
+			// Enviamos los arreglos de materias y grupos seleccionados
 			ObjectOutputStream oos = new ObjectOutputStream(cl.getOutputStream());
 			oos.writeObject(grupos);
 			oos.flush();
@@ -91,7 +91,8 @@ public class Cliente {
 			dos.close();
 			oos.close();
 			cl.close();
-		}catch(Exception e) {
+		}
+		catch(Exception e) {
     		e.printStackTrace();
     	}//catch
 	}

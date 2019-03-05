@@ -19,9 +19,9 @@ public class Alumno implements Serializable {
 		this.segundoAp = segundoAp;
 	}
 
-	/**************************************************************************/
-	/* 								SETTERS 								  */
-	/**************************************************************************/
+	/**********************************************/
+	/* 				SETTERS 				     */
+	/********************************************/
 
 	public void setHorario(Horario horario) {
 		this.horario = horario;
@@ -35,9 +35,9 @@ public class Alumno implements Serializable {
 		this.foto = new ImageIcon(nombreArchivo);
 	}
 
-	/**************************************************************************/
-	/* 								GETTERS 								  */
-	/**************************************************************************/
+	/*******************************************/
+	/* 					GETTERS 	 			*/
+	/*******************************************/
 
 	public int getBoleta() {
 		return this.boleta;

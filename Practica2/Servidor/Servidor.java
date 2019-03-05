@@ -2,16 +2,15 @@
 import java.net.*;
 import java.io.*;
 
-public class Servidor{
-	//Clases para trabajar
+public class Servidor {
+	// Clases para trabajar
 	static Materia[] materias = new Materia[10];
 	static Grupo[] grupos = new Grupo[3];
 	static Alumno[] alumnos = new Alumno[5];
 
-
 	public static void autentificarLogin(Socket cl, DataInputStream dis) {
 		try {
-			/* Para enviar y recibir objetos */
+			// Envia y recibe objetos
 			int boleta_temp = dis.readInt();
 			String passwd_temp = dis.readUTF();
 			System.out.println("Datos recibidos: " + boleta_temp + " " + passwd_temp + ". Buscando...");
@@ -24,7 +23,8 @@ public class Servidor{
 				int b = alumnos[i].getBoleta();
 				String p = alumnos[i].getContrasenia();
 
-				if(boleta_temp == b && passwd_temp.equals(p)){
+				// Para el inicio de sesión
+				if(boleta_temp == b && passwd_temp.equals(p)) {
 					existe = true;
 					numReg = i;
 				}
@@ -42,36 +42,37 @@ public class Servidor{
 			oos.writeObject(alumnoActual);
 			oos.flush();
 			oos.close();
-			//Limpiamos memoria
+			// Limpiamos memoria
 			alumnoActual = null;
-
-		}catch(Exception e) {
+		}
+		catch(Exception e) {
     		e.printStackTrace();
-    	}//catch
-		
+    	} // Fin catch
 	}
 
-	public static void enviarGrupos(Socket cl){
-		try{
+	public static void enviarGrupos(Socket cl) {
+		try {
 			ObjectOutputStream oos = new ObjectOutputStream(cl.getOutputStream());
 			oos.writeObject(grupos);
 			oos.flush();
 
 			System.out.println("Grupos enviados");
 			oos.close();
-		}catch(Exception e){
+		}
+		catch(Exception e) {
 			e.printStackTrace();
 		}
 		
 	}
 
-	public static void recibirHorario(Socket cl, DataInputStream dis){
-		try{
+	public static void recibirHorario(Socket cl, DataInputStream dis) {
+		try {
 			int boletaActual = dis.readInt();
 			String[] g;
 			String[] m;
 
-			ObjectInputStream ois = new ObjectInputStream(cl.getInputStream()); //Recibir objetos
+			// Recibir objetos
+			ObjectInputStream ois = new ObjectInputStream(cl.getInputStream()); 
 			g = (String[]) ois.readObject();
 			m = (String[]) ois.readObject();
 			
@@ -80,20 +81,16 @@ public class Servidor{
 
 			Horario horarioInscrito = new Horario(numMateriasInscritas);
 			
-			for(int i = 0; i < alumnos.length; i++){
-				if(alumnos[i].getBoleta() == boletaActual){
+			for(int i = 0; i < alumnos.length; i++) {
+				if(alumnos[i].getBoleta() == boletaActual)
 					inscripcion = i;
-				}
 			}
 
 			System.out.println("Horario recibido:");
 
-			for(int i = 0; i < 3; i++)
-			{
-				for(int j = 0; j < numMateriasInscritas; j++)
-				{
-					if(grupos[i].getNombre().equals(g[j]))
-					{
+			for(int i = 0; i < 3; i++) {
+				for(int j = 0; j < numMateriasInscritas; j++) {
+					if(grupos[i].getNombre().equals(g[j])) {
 						System.out.print(grupos[i].getNombre() + " - ");
 						horarioInscrito.setGrupos(grupos[i], j);
 
@@ -101,10 +98,8 @@ public class Servidor{
 						String[] profsInscritos = grupos[i].getProfesores();
 						String[][] horasInscritas = grupos[i].getHoras(); 
 
-						for(int k = 0; k < 6; k++)
-						{
-							if(mGrupo[k].getNombre().equals(m[j]))
-							{
+						for(int k = 0; k < 6; k++) {
+							if(mGrupo[k].getNombre().equals(m[j])) {
 
 								System.out.print(mGrupo[k].getNombre() + " - ");
 								horarioInscrito.setMaterias(mGrupo[k], j);
@@ -113,23 +108,20 @@ public class Servidor{
 
 								String hrs = "";
 
-								for(int dias = 0; dias < 5; dias++){
+								for(int dias = 0; dias < 5; dias++) {
 									horarioInscrito.setHoras(horasInscritas[k][dias], j, dias);
 									hrs = hrs + " " + horasInscritas[k][dias];
 								}
-								System.out.println(hrs);
-								
+								System.out.println(hrs);	
 							}
 						}
 					}
-					/*Genero calificaciones aleatorias por practicidad 5 - 10*/
+					// Genera calificaciones aleatorias a modo de ejemplo.
+					// Rango de 5 a 10
 					int calif = (int) (Math.random() * 6) + 5;
 					horarioInscrito.setCalifs(calif, j);
 				}
 			}
-
-			
-
 
 			System.out.println("Construyendo horario... Listo.");
 			System.out.println("Asignando horario a alumno.");
@@ -139,15 +131,15 @@ public class Servidor{
 
 			System.out.println("Alumno inscrito con horario correctamente.");
 			ois.close();
-			cl.close();
-			
-		}catch(Exception e) {
+			cl.close();	
+		}
+		catch(Exception e) {
 			e.printStackTrace();
-		}//catch	
+		} // Fin catch	
 	}
 
-	public static void main(String[] args){
-		//Construimos nuestros catalogos
+	public static void main(String[] args) {
+		// Construimos nuestros catalogos
 		Catalogo.cargar();
 		materias = Catalogo.getMaterias();
 		grupos = Catalogo.getGrupos();
@@ -161,32 +153,32 @@ public class Servidor{
 
 			for( ; ; ) {
 				Socket cl = s.accept();
-				DataInputStream dis = new DataInputStream(cl.getInputStream()); // InputStream
+				// InputStream
+				DataInputStream dis = new DataInputStream(cl.getInputStream()); 
 				System.out.println("\n\nCliente conectado desde " + cl.getInetAddress() + " " + cl.getPort());
 
 				int bandera = dis.readInt();
-
-				if(bandera == 0){
-					//Login
+				// Login
+				if(bandera == 0) 	
 					autentificarLogin(cl, dis);
-				}
-				else if(bandera == 1){
-					//Enviar grupos con materias
+				
+				// Enviar grupos con materias
+				else if(bandera == 1)
 					enviarGrupos(cl);
-				}
-				else if(bandera == 2){
-					//Recibir grupos y materias para horario
+				
+				// Recibir grupos y materias para horario
+				else if(bandera == 2)
 					recibirHorario(cl, dis);
-				}
-				else {
+				
+				else 
 					System.out.println("Error al atender la solicitud del cliente.");
-				}
+				
 				dis.close();
 				cl.close();
-			}//for
+			} // Fin for
 		} // Fin try
 		catch(Exception e) {
 			e.printStackTrace();
-		}//catch
+		} // Fin catch
 	}
 }

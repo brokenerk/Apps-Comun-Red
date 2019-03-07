@@ -4,10 +4,9 @@ import java.io.*;
 public class CECO_O{
 	public static void main(String[] args){
 		try{
-			int limite = 5;
+			int limite = 10;
 			DatagramSocket cl = new DatagramSocket();
 			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-			System.out.println("Escribe un mensaje:");
 			String host = "127.0.0.1";
 			int pto = 1234;
 			InetAddress dst = null;
@@ -21,6 +20,7 @@ public class CECO_O{
 			}//catch
 
 			for( ; ; ) {
+				System.out.println("Escribe un mensaje:");
 				String msj = br.readLine();
 				if(msj.compareToIgnoreCase("salir") == 0)
 					break;

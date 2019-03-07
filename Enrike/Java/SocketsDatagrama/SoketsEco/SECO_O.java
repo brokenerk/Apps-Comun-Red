@@ -8,7 +8,7 @@ public class SECO_O{
 			System.out.println("Servidor de datagrams iniciado, esperando datagramas...");
 
 			for( ; ; ){
-				DatagramPacket p = new DatagramPacket(new byte[5], 5);
+				DatagramPacket p = new DatagramPacket(new byte[10], 10);
 				s.receive(p);
 				String datos = new String(p.getData(), 0, p.getLength());
 				ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(datos.getBytes()));

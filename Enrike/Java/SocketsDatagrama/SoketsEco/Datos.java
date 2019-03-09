@@ -1,4 +1,5 @@
 import java.io.Serializable;
+import java.util.Arrays;
 
 public class Datos implements Serializable{
 	//String archivo;
@@ -8,7 +9,7 @@ public class Datos implements Serializable{
 
 	public Datos(int n, byte[] b, int t){
 		this.n = n;
-		this.b = b; //Arrays.copy()
+		this.b = Arrays.copyOf(b, b.length); //Arrays.copy()
 		this.t = t;
 	}
 }

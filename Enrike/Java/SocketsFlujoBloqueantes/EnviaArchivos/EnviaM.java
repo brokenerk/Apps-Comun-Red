@@ -43,7 +43,7 @@ public class EnviaM
 
 					long enviados = 0;
 					int n = 0, porciento = 0;
-					byte[] b = new byte[2000];
+					byte[] b = new byte[1000];
 
 					while(enviados < tam)
 					{

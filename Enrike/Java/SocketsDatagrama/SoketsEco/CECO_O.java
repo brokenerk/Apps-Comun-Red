@@ -46,9 +46,13 @@ public class CECO_O{
 							byte[] tmp = baos.toByteArray();
 							DatagramPacket dp = new DatagramPacket(tmp, tmp.length, dst, pto);
 							cl.send(dp);
+							System.out.println("Enviada parte: " + c + "/" + np + " de " + tmp.length + " bytes.");
 							c++;
 						}//while
 					}//if
+					oos.close();
+					baos.close();
+					bais.close();
 				}//if
 			}
 			br.close();

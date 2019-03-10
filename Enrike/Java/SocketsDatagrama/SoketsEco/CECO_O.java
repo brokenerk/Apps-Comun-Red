@@ -4,11 +4,11 @@ import java.io.*;
 public class CECO_O{
 	public static void main(String[] args){
 		try{
-			int limite = 10;
+			int limite = 5;
 			DatagramSocket cl = new DatagramSocket();
 			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 			String host = "127.0.0.1";
-			int pto = 1234;
+			int pto = 3421;
 			InetAddress dst = null;
 
 			try {
@@ -36,20 +36,22 @@ public class CECO_O{
 					int n = 0, c = 0;
 					int np = (int)(b1.length / b2.length);
 
-					if(b1.length % b2.length > 0){
-						np += 1;
-						while(c < np){
-							n = bais.read(b2);
-							Datos d = new Datos(c + 1, b2, np);
-							oos.writeObject(d);
-							oos.flush();
-							byte[] tmp = baos.toByteArray();
-							DatagramPacket dp = new DatagramPacket(tmp, tmp.length, dst, pto);
-							cl.send(dp);
-							System.out.println("Enviada parte: " + c + "/" + np + " de " + tmp.length + " bytes.");
-							c++;
-						}//while
-					}//if
+					if(b1.length % b2.length > 0) 
+						np++;
+
+					while(c < np){
+						n = bais.read(b2);
+						Datos d = new Datos(c + 1, b2, n, np);
+						oos.writeObject(d);
+						oos.flush();
+						byte[] tmp = baos.toByteArray();
+						DatagramPacket dp = new DatagramPacket(tmp, tmp.length, dst, pto);
+						cl.send(dp);
+						c++;
+						System.out.println("Enviada parte: " + d.getParte() + "/" + d.getTotal() + " de " + tmp.length + " bytes.");
+						System.out.println("Datos: " + new String(d.getContenido(), 0, d.getContenido().length));
+					}//while
+					
 					oos.close();
 					baos.close();
 					bais.close();

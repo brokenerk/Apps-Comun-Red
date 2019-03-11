@@ -28,18 +28,19 @@ public class CECO_O{
 				byte[] b1 = msj.getBytes();
 
 				if(b1.length > limite){
-					byte[] b2 = new byte[limite];
+					
 					ByteArrayOutputStream baos = new ByteArrayOutputStream();
 					ObjectOutputStream oos = new ObjectOutputStream(baos);
 					ByteArrayInputStream bais = new ByteArrayInputStream(b1);
 
 					int n = 0, c = 0;
-					int np = (int)(b1.length / b2.length);
+					int np = (int)(b1.length / limite);
 
-					if(b1.length % b2.length > 0) 
+					if(b1.length % limite > 0) 
 						np++;
 
 					while(c < np){
+						byte[] b2 = new byte[limite];
 						n = bais.read(b2);
 						Datos d = new Datos(c + 1, b2, n, np);
 						oos.writeObject(d);

@@ -18,6 +18,7 @@ public class SECO_O{
 				System.out.println("Recibida parte: " + d1.getParte() + "/" + d1.getTotal() + " de " + p.getLength() + " bytes.");
 				System.out.println("Datos: " + new String(d1.getContenido(), 0, d1.getContenido().length));
 				ois.close();
+				d1=null;
 			}//for
 
 		}catch(Exception e){

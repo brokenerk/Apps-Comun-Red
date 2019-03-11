@@ -18,7 +18,7 @@ public class Datos implements Serializable{
 	}
 
 	public byte[] getContenido(){
-		return this.b;
+		return Arrays.copyOf(this.b, this.b.length);
 	}
 
 	public int getTotal(){

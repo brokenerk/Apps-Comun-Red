@@ -6,7 +6,7 @@ public class CECO{
 		try{
 			int limite = 10;
 			DatagramSocket cl = new DatagramSocket();
-			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));s
+			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 			String host = "127.0.0.1";
 			int pto = 1234;
 			InetAddress dst = null;

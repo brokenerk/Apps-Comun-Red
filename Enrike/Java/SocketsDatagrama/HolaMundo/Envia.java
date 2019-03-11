@@ -4,7 +4,7 @@ import java.io.*;
 public class Envia{
 	public static void main(String[] args){
 		try{
-			DatagramSocket cl = new DatagramSocket(1234);
+			DatagramSocket cl = new DatagramSocket();
 			String msj = "Un mensaje sobre datagrams..";
 			byte[] b = msj.getBytes();
 			String host = "127.0.0.1";

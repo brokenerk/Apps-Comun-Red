@@ -1,6 +1,7 @@
 import javax.swing.JFileChooser;
 import java.net.*;
 import java.io.*;
+import java.util.*;
 
 public class ClienteA{
 	public static void main(String[] args){
@@ -11,7 +12,6 @@ public class ClienteA{
 
 			if(r == JFileChooser.APPROVE_OPTION)
 			{
-				DatagramSocket cl = new DatagramSocket();
 				String host = "127.0.0.1";
 				int pto = 1234;
 				InetAddress dst = null;
@@ -28,53 +28,56 @@ public class ClienteA{
 				String nombre = f.getName();
 				int tam = (int) f.length();
 				String path = f.getAbsolutePath();
-			
-				System.out.println("\nSe envia el archivo " + path + " con " + tam + " bytes");
+				int numPartes = tam / limite;
+				if(tam % limite > 0) 
+					numPartes++;
 
+				ArrayList<byte[]> bytesArchivo = new ArrayList<byte[]>();
+				int parte = 0;
+				int n = 0;
 
+				DataInputStream dis = new DataInputStream(new FileInputStream(path));
 				
-				
-				DataInputStream dis = new DataInputStream(new FileInputStream(path)); // InputStream
-
-				byte[] b1 = new byte[tam];
-				int aux = dis.read(b1);
-
-				if(tam > limite){
-					byte[] b2 = new byte[limite];
-					ByteArrayOutputStream baos = new ByteArrayOutputStream();
-					ObjectOutputStream oos = new ObjectOutputStream(baos);
-					ByteArrayInputStream bais = new ByteArrayInputStream(b1);
-
-					int n = 0, parte = 1;
-					int npartes = (int)(b1.length / b2.length);
-
-					if(b1.length % b2.length > 0){
-						npartes += 1;
-						while(parte < npartes){
-							n = bais.read(b2);
-							Archivo d = new Archivo(nombre, parte, b2, npartes);
-							oos.writeObject(d);
-							oos.flush();
-							byte[] tmp = baos.toByteArray();
-							DatagramPacket dp = new DatagramPacket(tmp, tmp.length, dst, pto);
-							System.out.println("" + tmp.length);
-							cl.send(dp);
-							System.out.println("Enviada parte: " + parte + "/" + npartes + " de " + n + " bytes.");
-							parte++;
-						}//while
-					}//if
-					baos.close();
-					oos.close();
-					bais.close();
-				}//if
-				else{
-					DatagramPacket dp1 = new DatagramPacket(b1, b1.length, dst, pto);
-					cl.send(dp1);
-				}
-				System.out.println("\nArchivo " + path + " con " + tam + " bytes enviado");
+				while(parte < numPartes){
+					byte[] b = new byte[limite];
+					n = dis.read(b);
+					bytesArchivo.add(parte, b);
+					parte++;
+				}//while
 				dis.close();
+
+				System.out.println("\nSe envia el archivo " + path + " con " + tam + " bytes de " + numPartes + " partes.");
+				
+				DatagramSocket cl = new DatagramSocket();
+				
+				String hs = nombre + "-" + tam + "-" + numPartes;
+				byte[] bhs = hs.getBytes();
+				DatagramPacket handshake = new DatagramPacket(bhs, bhs.length, dst, pto);
+				cl.send(handshake);
+				System.out.println("\nHandShake enviado al servidor.");
+
+				DatagramPacket respuesta = new DatagramPacket(new byte[65535], 65535);
+				for( ; ; ){	
+					cl.receive(respuesta);
+					String res = new String(respuesta.getData(), 0 , respuesta.getLength());
+					
+					if(res.equalsIgnoreCase("finalizado")){
+						System.out.println("Archivo enviado.");
+						break;
+					}//if
+					else{
+						int parteReq = Integer.parseInt(res);
+						byte[] enviar = bytesArchivo.get(parteReq);
+						System.out.println("Enviando parte: " + parteReq);
+						
+						DatagramPacket enviarParte = new DatagramPacket(enviar, enviar.length, dst, pto);
+						cl.send(enviarParte);
+						System.out.println("Bytes enviados.");
+					}//else
+				}//for
+
 				cl.close();
-			}
+			}//if
 		}catch(Exception e){
 			e.printStackTrace();
 		}//catch

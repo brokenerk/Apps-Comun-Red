@@ -11,22 +11,11 @@ import javax.swing.table.*;
 public class inicioV extends JFrame implements ActionListener {
 	JPanel panelInfo, panelFoto, panelDatos, panelBuscar, panelMostrar,  panelBotones;
 	JButton btnBuscar, btnAgregar, btnActualizar, btnSalir;
-	JLabel lfoto, lGrupo, lNombre, lBoleta, nombre, boleta;
+	JLabel lfoto, lNombre, nombre, boleta;
 	JTextField tfBuscar;
-	JScrollPane scrollMostrar, scrollHorario;
+	JScrollPane scrollMostrar;
 	ImageIcon foto;
-
-	// Guarda la lista de grupos que un estudiante inscribe
-	static JList<String> stringGrupo;
-	// Guarda la lista de materias de un grupo
-	static JList<String> stringMateria;
-	static DefaultListModel<String> modelo;
-	JTable tablaMostrar, tablaHorario;
-
-	//Modelos para agregar filas a las tablas
-	DefaultTableModel modeloMostrar;
-	DefaultTableModel modeloHorario;
-
+	
 	public inicioV() {
 		Container c = getContentPane();
 		c.setLayout(new FlowLayout());

@@ -6,7 +6,7 @@ public class Cliente {
 	private static int pto = 4321;
 	private static String host = "127.0.0.1";
 
-	public static Usuario iniciarSesion(int nickname_tmp, String psswd_tmp) {
+	public static Usuario iniciarSesion(String nickname_tmp, String psswd_tmp) {
 		Usuario usuarioActual = null;
 		
 		try {
@@ -19,7 +19,7 @@ public class Cliente {
 			System.out.println("Enviando datos: " + nickname_tmp + " - " + psswd_tmp + ", esperando servidor...");
 
 			// Enviar boleta y psswd de los textbox
-			dos.writeInt(nickname_tmp);
+			dos.writeUTF(nickname_tmp);
 			dos.flush();
 			dos.writeUTF(psswd_tmp);
 			dos.flush();
@@ -29,7 +29,7 @@ public class Cliente {
 			
 			// Importante hacer un cast
 			usuarioActual = (Usuario) ois.readObject();
-			System.out.println("Objeto recibido");
+			//System.out.println("Objeto recibido");
 
 			dos.close();
 			ois.close();

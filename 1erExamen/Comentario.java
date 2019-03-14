@@ -8,12 +8,15 @@ public class Comentario implements Serializable{
 	private ImageIcon imagen;
 	private Usuario usuario;
 
-	public Comentario(int Id, String fecha, String texto, String imagen, Usuario usuario){
+	public Comentario(int Id, String fecha, String texto, Usuario usuario){
 		this.Id = Id;
 		this.fecha = fecha;
 		this.texto = texto;
-		this.imagen = new ImageIcon(imagen);
 		this.usuario = usuario;
+	}
+
+	public void setImagen(String imagen){
+		this.imagen = new ImageIcon(imagen);
 	}
 
 	public int getId(){

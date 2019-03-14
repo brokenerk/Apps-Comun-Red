@@ -5,13 +5,16 @@ public class Usuario implements Serializable{
 	private int Id;
 	private String nickname;
 	private String password;
-	private ImageIcon foto;
+	private ImageIcon avatar;
 
-	public Usuario(int Id, String nickname, String password, String foto){
+	public Usuario(int Id, String nickname, String password){
 		this.Id = Id;
 		this.nickname = nickname;
 		this.password = password;
-		this.foto = new ImageIcon(foto);
+	}
+
+	public void setAvatar(String avatar){
+		this.avatar = new ImageIcon(avatar);
 	}
 
 	public int getId(){
@@ -26,7 +29,7 @@ public class Usuario implements Serializable{
 		return this.password;
 	}
 
-	public ImageIcon getFoto(){
-		return this.foto;
+	public ImageIcon getAvatar(){
+		return this.avatar;
 	}
 }

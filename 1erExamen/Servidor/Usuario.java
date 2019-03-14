@@ -1,4 +1,7 @@
-public class Usuario{
+import java.io.Serializable;
+import javax.swing.ImageIcon;
+
+public class Usuario implements Serializable{
 	private int Id;
 	private String nickname;
 	private String password;

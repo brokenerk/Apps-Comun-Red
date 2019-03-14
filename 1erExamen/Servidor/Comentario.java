@@ -1,4 +1,7 @@
-public class Comentario{
+import java.io.Serializable;
+import javax.swing.ImageIcon;
+
+public class Comentario implements Serializable{
 	private int Id;
 	private String fecha;
 	private String texto;

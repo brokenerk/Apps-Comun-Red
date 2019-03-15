@@ -22,21 +22,18 @@ public class Login extends JFrame implements ActionListener {
 		panelEntrada.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 10));
 		l = new JLabel[2];
 
-		for(i = 0; i < 2; i++) {
+		for(i = 0; i < 2; i++)
 			l[i] = new JLabel(label[i]);
-		}
 
 		TxtNickname = new JTextField();
 		TxtPassword = new JPasswordField();
 		TxtNickname.setAlignmentX(Component.CENTER_ALIGNMENT);
 		TxtPassword.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-
 		panelEntrada.add(l[0]);
 		panelEntrada.add(TxtNickname);
 		panelEntrada.add(l[1]);
 		panelEntrada.add(TxtPassword);
-		
 		c.add(panelEntrada);
 
   		// Para panel de botones
@@ -47,16 +44,16 @@ public class Login extends JFrame implements ActionListener {
 		BtnIniciar.setAlignmentX(Component.CENTER_ALIGNMENT);
 		
 		panelBotones.add(BtnIniciar);
-		
 		c.add(panelBotones);
 
 		BtnIniciar.addActionListener(this);
-		
 	}
 
+	/*********************************************************************************************
+									ACTIONPERFORMED
+	*********************************************************************************************/
 	public void actionPerformed(ActionEvent e) {
 		JButton b = (JButton) e.getSource();
-		    
 		if(b == BtnIniciar) {
 			// Iniciar sesion
 			if(TxtNickname.getText().length() == 0 || TxtPassword.getPassword().length == 0) {
@@ -67,6 +64,7 @@ public class Login extends JFrame implements ActionListener {
 				String passwd_tmp = String.valueOf(pass);
 
 				try {
+					/*Logica de negocios xd*/
 					String nickname_tmp = TxtNickname.getText();
 					Usuario usuario = Cliente.iniciarSesion(nickname_tmp, passwd_tmp);
 
@@ -74,12 +72,12 @@ public class Login extends JFrame implements ActionListener {
 						System.out.println("Objeto usuario recibido con Id: " + usuario.getId());
 
 						/*Construir objeto Foro y abrirlo*/
-
-						/*Cerrar login
+						crearForoV(usuario);
+						/*Cerrar login*/
 						System.out.print("Cerrando Login....");
 						this.setVisible(false);
 						System.out.println(" Cerrado.");
-						this.dispose();*/
+						this.dispose();
 					}
 					else {
 						System.out.println("Objeto recibido es null");
@@ -97,15 +95,18 @@ public class Login extends JFrame implements ActionListener {
 		}
 	}
 
-	/*public static void crearMiniMenu(Alumno alumno) {
-		MiniMenu menu = new MiniMenu(alumno);
-		System.out.println("Enviando objeto alumno a MiniMenu, abriendo MiniMenu....");
-		menu.setTitle("MENU");
-		menu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		menu.setSize(500, 200);
-		menu.setVisible(true);
-		menu.setLocationRelativeTo(null);
-	}*/
+	/*********************************************************************************************
+									CREARFORO
+	*********************************************************************************************/
+	public static void crearForoV(Usuario usuario) {
+		System.out.println("Enviando objeto usuario a Foro, abriendo Foro....");
+		ForoV f = new ForoV(usuario);
+		f.setTitle("Foro");
+		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		f.setSize(700, 720);
+		f.setVisible(true);
+		f.setLocationRelativeTo(null);
+	}
 
 	public static void main(String s[]) {
 		Login f = new Login();

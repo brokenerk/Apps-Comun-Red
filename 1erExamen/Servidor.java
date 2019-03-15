@@ -3,12 +3,35 @@
 // Ejecutar: java -cp .:mysql-connector-java-5.1.47-bin.jar: Servidor
 import java.net.*;
 import java.io.*;
+import java.util.ArrayList;
 
 public class Servidor {
 	private static Conexion c;
 
+	public static void obtenerPublicaciones(Socket cl){
+		try{
+			c.conectarBD();
+			Publicacion[] p = c.recuperarPublicaciones();
+			c.cerrarConexion();
+
+			if(p != null)
+				System.out.println("Publicaciones cargadas.");
+			else 
+				System.out.println("No existen publicaciones.");
+
+			ObjectOutputStream oos = new ObjectOutputStream(cl.getOutputStream());
+			oos.writeObject(p);
+			oos.flush();
+			oos.close();
+			// Limpiamos memoria
+			p = null;
+		}catch(Exception e) {
+    		e.printStackTrace();
+    	} // Fin catch
+	}
+
 	public static void autentificarLogin(Socket cl, DataInputStream dis) {
-		try {
+		try{
 			// Envia y recibe objetos
 			String nickname_tmp = dis.readUTF();
 			String passwd_tmp = dis.readUTF();
@@ -18,13 +41,10 @@ public class Servidor {
 			Usuario u = c.buscarUsuario(nickname_tmp, passwd_tmp);
 			c.cerrarConexion();
 
-
-			if(u != null) {
+			if(u != null) 
 				System.out.println("Objeto usuario enviado con Id: " + u.getId());
-			}
-			else {
+			else 
 				System.out.println("Usuario no encontrado, enviando null...");
-			}
 
 			ObjectOutputStream oos = new ObjectOutputStream(cl.getOutputStream());
 			oos.writeObject(u);
@@ -32,8 +52,7 @@ public class Servidor {
 			oos.close();
 			// Limpiamos memoria
 			u = null;
-		}
-		catch(Exception e) {
+		}catch(Exception e) {
     		e.printStackTrace();
     	} // Fin catch
 	}
@@ -52,9 +71,15 @@ public class Servidor {
 				System.out.println("\n\nCliente conectado desde " + cl.getInetAddress() + " " + cl.getPort());
 
 				int bandera = dis.readInt();
-				// Login
-				if(bandera == 0) 	
+				
+				if(bandera == 0){
+					// Login
 					autentificarLogin(cl, dis);
+				}
+				else if(bandera == 1){
+					// actualizar
+					obtenerPublicaciones(cl);
+				}
 				else 
 					System.out.println("Error al atender la solicitud del cliente.");
 				

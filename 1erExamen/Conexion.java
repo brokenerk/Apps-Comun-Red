@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.sql.Date;
+import java.util.ArrayList;
 
 public class Conexion{
 	String url;
@@ -33,7 +34,7 @@ public class Conexion{
             con = DriverManager.getConnection(url + db + "?useSSL=false",  user, password);
             con.setAutoCommit(false);
         }catch (Exception e) {
-            System.out.println("Ocurrio un error : " + e.getMessage());
+            e.printStackTrace();
             System.exit(1);
         }
         //System.out.println("La conexión se realizo sin problemas");
@@ -49,6 +50,37 @@ public class Conexion{
 		}
 	}
 
+	public Publicacion[] recuperarPublicaciones(){
+		Publicacion[] publicaciones = null;
+		try{
+			Statement stmt = con.createStatement();
+		    ResultSet rsPublicacion = stmt.executeQuery("SELECT * FROM Publicacion;");
+
+		    int cont = 0, i = 0;
+
+		    while(rsPublicacion.next())
+		    	cont++;
+
+		    publicaciones = new Publicacion[cont];
+		    rsPublicacion = stmt.executeQuery("SELECT * FROM Publicacion;");
+
+		    while(rsPublicacion.next()){
+		    	int IdPublicacion = rsPublicacion.getInt("IdPublicacion");
+		    	String fecha = sdf.format(rsPublicacion.getDate("Fecha"));
+		    	String nombre = rsPublicacion.getString("Nombre");
+		    	publicaciones[i] = new Publicacion(IdPublicacion, nombre, fecha);
+		    	i++;
+		    }
+
+		    System.out.println("Publicaciones recuperadas de la BD");
+		    rsPublicacion.close();
+		    stmt.close();
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return publicaciones;
+	}
+
 	public Usuario buscarUsuario(String nickname_tmp, String password_tmp){
 		Usuario usuario = null;
 		System.out.println("Buscando usuario en la BD.");
@@ -58,16 +90,15 @@ public class Conexion{
 		    ResultSet rsUsuario = stmt.executeQuery(
 								"SELECT * " +
 								"FROM Usuario " +
-								"WHERE Nickname = '" + nickname_tmp + "'" +
+								"WHERE Nickname = '" + nickname_tmp + "' " +
 								"AND Password = '" + password_tmp + "';");
 
 		    if(rsUsuario.next()){
-		    	int Id = rsUsuario.getInt("IdUsuario");
+		    	int IdUsuario = rsUsuario.getInt("IdUsuario");
 		    	String nickname = rsUsuario.getString("Nickname");
 		    	String password = rsUsuario.getString("Password");
-		    	String avatar = rsUsuario.getString("Foto");
-
-		    	usuario = new Usuario(Id, nickname, password);
+		    	String avatar = rsUsuario.getString("Avatar");
+		    	usuario = new Usuario(IdUsuario, nickname, password);
 
 		    	if(!avatar.equals(null))
 		    		usuario.setAvatar(avatar);
@@ -84,6 +115,7 @@ public class Conexion{
 	public static void main(String[] args){
 		Conexion c = new Conexion("com.mysql.jdbc.Driver", "jdbc:mysql://localhost:3306/", "Foro", "root", "root");
    		c.conectarBD();
+   		c.recuperarPublicaciones();
 		c.cerrarConexion();
 	}
 }

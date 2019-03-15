@@ -1,6 +1,7 @@
 import java.util.ArrayList;
+import java.io.Serializable;
 
-public class Publicacion{
+public class Publicacion implements Serializable{
 	private int Id;
 	private ArrayList<Comentario> comentarios;
 	private String nombre;

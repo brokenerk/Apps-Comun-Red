@@ -1,5 +1,5 @@
-//Compilar: javac -cp .:mysql-connector-java-5.1.47-bin.jar: Conexion.java
-//Ejecutar: java -cp .:mysql-connector-java-5.1.47-bin.jar: Conexion
+//Compilar: javac -cp ,;mysql-connector-java-5.1.47-bin.jar; Conexion.java
+//Ejecutar: java -cp ,;mysql-connector-java-5.1.47-bin.jar; Conexion
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;

@@ -1,6 +1,6 @@
 // SERVIDOR
-// Compilar: javac -cp .:mysql-connector-java-5.1.47-bin.jar: Servidor.java
-// Ejecutar: java -cp .:mysql-connector-java-5.1.47-bin.jar: Servidor
+// Compilar: javac -cp ,;mysql-connector-java-5.1.47-bin.jar; Servidor.java
+// Ejecutar: java -cp ,;mysql-connector-java-5.1.47-bin.jar; Servidor
 import java.net.*;
 import java.io.*;
 import java.util.ArrayList;

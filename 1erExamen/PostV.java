@@ -12,7 +12,8 @@ public class PostV extends JFrame implements ActionListener {
 	JPanel panelInfo, panelComentario, panelAgregar, panelTexto, panelFoto, panelTotal;
 	JPanel[] pComentario, pTexto, pImagen;
 	JButton btnAgregar, btnBuscar, btnRegresar;
-	JLabel lfoto, lNombre, nombre;
+	JLabel lfoto, lNombre, nombre, lId, id;
+	JLabel[] lNombreComentario;
 	JTextField tfBuscar;
 	JTextArea taAgregar;
 	JScrollPane scrollMostrar, scrollAgregar;
@@ -21,153 +22,179 @@ public class PostV extends JFrame implements ActionListener {
 	JTextArea[] textComentario;
 	JScrollPane[] scrollComentario;
 	JLabel[] limagen;
+	Publicacion publicacion;
+	Usuario usuario;
 	
-	public PostV() {
-		Container c = getContentPane();
-		c.setLayout(new FlowLayout());
+	public PostV(int IdPublicacion, Usuario usuario) {
+		//Obtenemos la publicacion y la sesion usuario en cuestion
+		this.publicacion = Cliente.descargarComentarios(IdPublicacion);
+		this.usuario = usuario;
+
+		Container container = getContentPane();
+		container.setLayout(new FlowLayout());
 
 		// --------------------------------
 		// 		PANEL DE LA INFORMACION
 		// --------------------------------
 
-		panelInfo = new JPanel(new GridLayout(1, 2));
-		panelInfo.setPreferredSize(new Dimension(300, 20));
+		panelInfo = new JPanel(new FlowLayout());
+		panelInfo.setPreferredSize(new Dimension(500, 20));
 
-		lNombre = new JLabel("NOMBRE DEL POST: ");
-		//nombre = new JLabel(alumno.getNombreCompleto());
-		nombre = new JLabel("AMOR");
+		lId = new JLabel("ID:");
+		lNombre = new JLabel(" - ");
+
+		id = new JLabel("" + publicacion.getId());
+		nombre = new JLabel(publicacion.getNombre());
+
+		panelInfo.add(lId); panelInfo.add(id);
 		panelInfo.add(lNombre); panelInfo.add(nombre);
-
-		c.add(panelInfo);
+		container.add(panelInfo);
 
 		// --------------------------------
 		// 	 PANEL PARA MOSTRAR LOS POST
 		// --------------------------------
+		//Obtenemos los comentarios en un ArrayList
+		ArrayList<Comentario> comentarios = publicacion.getComentarios();
 				
 		// Se debe obtener consultando a la bd
-		int numComentarios = 5;
+		int numComentarios = comentarios.size();
 		int i, tamPanel;
-		String nombreComentario;
 
 		// Para que se vea nice
 		tamPanel = numComentarios * 120 ;
 		// Panel general
 		panelComentario = new JPanel(new GridLayout(numComentarios, 1));
-		panelComentario.setBorder(BorderFactory.createTitledBorder("COMENTARIOS"));		
+			
 		panelComentario.setPreferredSize(new Dimension(620, tamPanel));
 		scrollMostrar = new JScrollPane(panelComentario);
-		//panelComentario.add(scrollMostrar);
-
+		scrollMostrar.setBorder(BorderFactory.createTitledBorder("Comentarios"));	
 		scrollMostrar.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        scrollMostrar.setBounds(15, 30, 625, 360);
+        scrollMostrar.setBounds(0, 30, 670, 360);
 
 		// Voy a crear numComentarios de paneles
-		// Si tengo 5 comentarios, entonces 5 paneles
 		pComentario = new JPanel[numComentarios];
 		pImagen = new JPanel[numComentarios];
 		pTexto = new JPanel[numComentarios];
 
 		// Crea nunComentarios de 
 		limagen = new JLabel[numComentarios];
+		lNombreComentario = new JLabel[numComentarios];
 		textComentario = new JTextArea[numComentarios];
 		scrollComentario = new JScrollPane[numComentarios];
+
 	
 		for(i = 0; i < numComentarios; i++) {
+			Comentario c = comentarios.get(i);
+
 			pComentario[i] = new JPanel(new GridLayout(1, 2));
-			nombreComentario = "Comentario " + i;
-			pComentario[i].setBorder(BorderFactory.createTitledBorder(nombreComentario));
-			pComentario[i].setMinimumSize(new Dimension(555, 100));
 			pComentario[i].setPreferredSize(new Dimension(555, 400)); 
 			pComentario[i].setMaximumSize(new Dimension(555, 100));
+
+			// ---------------------------
+			//	LABEL CABECERA COMENTARIO
+			// ---------------------------
+			String datos = "ID " + c.getId() + ". Fecha: " + c.getFecha() + ". Autor: " + c.getUsuario().getNickname();
+			lNombreComentario[i] = new JLabel(datos);
+			pComentario[i].setBorder(BorderFactory.createTitledBorder(datos));
 
 			// ---------------------------
 			//	PANEL TEXTO
 			// ---------------------------
 			pTexto[i] = new JPanel(new GridLayout(1,1));
-			textComentario[i] = new JTextArea("AQUI SE VA A VER EL TEXTO");
+			textComentario[i] = new JTextArea(c.getTexto());
+			textComentario[i].setEditable(false);
 			scrollComentario[i] = new JScrollPane(textComentario[i]);
 			scrollComentario[i].setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-			pTexto[i].setPreferredSize(new Dimension(400, 80));
-
 			pTexto[i].add(scrollComentario[i]);
 			
 			// ---------------------------
 			//	PANEL IMAGEN
 			// ---------------------------
 			pImagen[i] = new JPanel(new GridLayout(1, 1));
-			pImagen[i].setPreferredSize(new Dimension(100, 300)); 
-			
 			// Agregamos la imagen
 			limagen[i] = new JLabel(imag);
-			//lfoto.setIcon(new ImageIcon(alumno.getFoto().getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH)));
-			limagen[i].setIcon(new ImageIcon(new javax.swing.ImageIcon(getClass().getResource("avatars/default.png")).getImage().getScaledInstance(80, 80, Image.SCALE_SMOOTH)));
-			
-			pImagen[i].add(limagen[i]);
-			// Cada panel tiene el comentario y la foto
+			ImageIcon img = c.getImagen();
 
-			panelComentario.add(pTexto[i]);
-			panelComentario.add(pImagen[i]);
+			//Revisamos si se agrego o no una imagen en el comentario
+			if(img == null)
+				limagen[i].setIcon(new ImageIcon(new javax.swing.ImageIcon(getClass().getResource("./fotos/default.png")).getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH)));
+			else
+				limagen[i].setIcon(new ImageIcon(img.getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH)));
+
+			pImagen[i].add(limagen[i]);
+
+			// Cada panel tiene el comentario y la foto
+			pComentario[i].add(pTexto[i]);
+			pComentario[i].add(pImagen[i]);
+			panelComentario.add(pComentario[i]);
 		}
 
 		panelTotal = new JPanel(null);
         panelTotal.setPreferredSize(new Dimension(670, 400));
         panelTotal.add(scrollMostrar);
-		c.add(panelTotal);
+		container.add(panelTotal);
 		
 		// ----------------------------------------
 		// 			PANEL AGREGAR TEXTO
 		// ----------------------------------------
-
 		panelTexto = new JPanel(new GridLayout(1,1));
-		taAgregar = new JTextArea("Escribir comentario");
+		taAgregar = new JTextArea();
 		scrollAgregar = new JScrollPane(taAgregar);
 		scrollAgregar.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		panelTexto.setPreferredSize(new Dimension(100, 200));
 
 		// Dar margen interior y color al jpanel 
-		panelTexto.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.black),BorderFactory.createEmptyBorder(10, 15, 5, 15)));
+		panelTexto.setBorder(BorderFactory.createTitledBorder("Nuevo Comentario"));
 		panelTexto.add(scrollAgregar);
 
 		// ----------------------------------------
 		// 			PANEL AGREGAR FOTO
 		// ----------------------------------------
-		
 		panelFoto = new JPanel(new GridLayout(1, 1));
 		panelFoto.setPreferredSize(new Dimension(300, 200));
 
 		// Agregamos al panel FOTO la imagen default
 		lfoto = new JLabel(imagen);
-		//lfoto.setIcon(new ImageIcon(alumno.getFoto().getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH)));
-		lfoto.setIcon(new ImageIcon(new javax.swing.ImageIcon(getClass().getResource("avatars/default.png")).getImage().getScaledInstance(175, 175, Image.SCALE_SMOOTH)));
-		
+		lfoto.setIcon(new ImageIcon(new javax.swing.ImageIcon(getClass().getResource("./fotos/default.png")).getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH)));
 		panelFoto.add(lfoto); 
 
 		// ----------------------------------------
 		// 	PANEL PARA AGREGAR UN NUEVO COMENTARIO
 		// ----------------------------------------
-		
 		panelAgregar = new JPanel(new GridLayout(1, 2));
 		panelAgregar.setBorder(BorderFactory.createTitledBorder("AGREGAR COMENTARIO"));		
 
 		panelAgregar.setPreferredSize(new Dimension(670, 200));
 		panelAgregar.add(panelTexto); panelAgregar.add(panelFoto);
 
-		c.add(panelAgregar);	
+		container.add(panelAgregar);	
 
 		// -----------------------------------------
 		//  		BOTON AGREGAR Y REGRESAR
 		// -----------------------------------------
-
 		btnAgregar = new JButton("Agregar comentario");
 		btnAgregar.addActionListener(this);
 
 		btnRegresar = new JButton("Regresar");
 		btnRegresar.addActionListener(this);
 
-		btnBuscar = new JButton("Agregar Foto");
+		btnBuscar = new JButton("Cargar Foto");
 		btnBuscar.addActionListener(this);
 
-		c.add(btnAgregar); c.add(btnRegresar); c.add(btnBuscar);
+		container.add(btnAgregar); container.add(btnRegresar); container.add(btnBuscar);
+	}
+
+	/*********************************************************************************************
+									CREARFORO
+	*********************************************************************************************/
+	public static void crearForoV(Usuario usuario) {
+		System.out.println("Enviando objeto usuario a Foro, abriendo Foro....");
+		ForoV f = new ForoV(usuario);
+		f.setTitle("Foro");
+		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		f.setSize(700, 720);
+		f.setVisible(true);
+		f.setLocationRelativeTo(null);
 	}
 	
 	public void actionPerformed(ActionEvent e) {
@@ -175,24 +202,23 @@ public class PostV extends JFrame implements ActionListener {
 
 		if(b == btnAgregar) {
 			// AGREGA UN NUEVO COMENTARIO CON SU IMAGEN O SIN IMAGEN
+			// Se utilizar el objeto Usuario para saber quien hizo el comentario
 			// SI NO SE ELIGE IMAGEN, SE PONE LA DE DEFAULT O SIMPLEMENTE SE OCULTA
 
 		}
 		else if(b == btnBuscar) {
-			// BUSCA LA FOTO PARA AGREGARLA AL COMENTARIO
-			// SUBE LA FOTO AL SERVIDOR
+			/* BUSCA LA FOTO PARA AGREGARLA AL COMENTARIO 
+			// SUBE LA FOTO AL SERVIDOR (y al mismo tiempo guarda la ruta en la BD)*/
 		}
 		else if(b == btnRegresar) {
-			// REGRESA AL INICIO
+			System.out.print("Abriendo ForoV....");
+			crearForoV(usuario);
+			System.out.print("Cerrando PostV....");
+			this.setVisible(false);
+			System.out.println(" Cerrado.");
+			usuario = null;
+			publicacion = null;
+			this.dispose();
 		}
-	}
-
-	public static void main(String[] args) {
-		PostV f = new PostV();
-		f.setTitle("COMENTARIOS");
-		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		f.setSize(700, 725);
-		f.setVisible(true);
-		f.setLocationRelativeTo(null);
 	}
 }

@@ -21,3 +21,5 @@ INSERT INTO Comentario(Fecha, Texto, Imagen, IdUsuario, IdPublicacion) VALUES("2
 INSERT INTO Comentario(Fecha, Texto, Imagen, IdUsuario, IdPublicacion) VALUES("2019-04-01 12:00:00", "Otra prueba de texto", null, 2, 1);
 INSERT INTO Comentario(Fecha, Texto, Imagen, IdUsuario, IdPublicacion) VALUES("2019-03-01 13:00:00", "Lorem ipsum", null, 3, 2);
 INSERT INTO Comentario(Fecha, Texto, Imagen, IdUsuario, IdPublicacion) VALUES("2019-04-22 14:00:00", "Aaaaaaaa", null, 1, 3);
+INSERT INTO Comentario(Fecha, Texto, Imagen, IdUsuario, IdPublicacion) VALUES("2019-03-15 19:57:00", "Doggo wow", "./fotos/5.png", 3, 1);
+INSERT INTO Comentario(Fecha, Texto, Imagen, IdUsuario, IdPublicacion) VALUES("2019-05-01 13:00:00", "Perritos en la nave del amor", "./fotos/6.png", 1, 1);

@@ -11,6 +11,7 @@ public class Usuario implements Serializable{
 		this.Id = Id;
 		this.nickname = nickname;
 		this.password = password;
+		this.avatar = null;
 	}
 
 	public void setAvatar(String avatar){

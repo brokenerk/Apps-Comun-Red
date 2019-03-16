@@ -13,6 +13,7 @@ public class Comentario implements Serializable{
 		this.fecha = fecha;
 		this.texto = texto;
 		this.usuario = usuario;
+		this.imagen = null;
 	}
 
 	public void setImagen(String imagen){

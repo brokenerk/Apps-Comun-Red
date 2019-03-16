@@ -11,8 +11,50 @@ public class Cliente {
 	private static int pto = 4321;
 	private static String host = "127.0.0.1";
 
-	public static Publicacion[] actualizar(DefaultTreeModel modelo){
-		Publicacion[] publicaciones = null;
+	//Objetos para la pantalla de ForoV
+	private static Publicacion[] publicaciones;
+
+	public static Publicacion descargarComentarios(int IdPublicacion){
+		Publicacion p = null;
+		try {
+			Socket cl = new Socket(host, pto);
+			DataOutputStream dos = new DataOutputStream(cl.getOutputStream()); //Enviar datos
+
+			// Bandera con valor 2 = CargarComentarios
+			dos.writeInt(2);
+			dos.flush();
+			System.out.println("Enviando datos: " + IdPublicacion + ", esperando servidor...");
+
+			// Enviar boleta y psswd de los textbox
+			dos.writeInt(IdPublicacion);
+			dos.flush();
+
+			// Recibir objetos
+			ObjectInputStream ois = new ObjectInputStream(cl.getInputStream()); 
+			
+			// Importante hacer un cast
+			p = (Publicacion) ois.readObject();
+
+			dos.close();
+			ois.close();
+			cl.close();
+		}
+		catch(Exception e) {
+    		e.printStackTrace();
+    	} // Catch
+    	return p;
+	}
+
+	//Sirve para obtener el ID de la publicacion seleccionada en el JTree
+	public static int stringToID(String contenido){
+		//Contenido --> ID: XXXX - Nombre: blablabla
+		String[] eliminarNombre = contenido.split(" - "); // --> ID: XXX
+		String[] eliminarResto = eliminarNombre[0].split(": "); //--> XXXX
+		return Integer.parseInt(eliminarResto[1]);
+	}
+
+	public static void actualizar(DefaultTreeModel modelo){
+		publicaciones = null;
 		try {
 			Socket cl = new Socket(host, pto);
 			DataOutputStream dos = new DataOutputStream(cl.getOutputStream()); //Enviar datos
@@ -31,6 +73,7 @@ public class Cliente {
 			//Creamos un set para evitar repetir fechas, ordenarlas y clasificar los posts por fecha
 			Set<String> fechas = new TreeSet<String>(); 
 			ArrayList<String> alFechas = new ArrayList<String>();
+			int longitud = publicaciones.length;
 
 			//Obtenemos la raiz del JTree
 			DefaultMutableTreeNode root = (DefaultMutableTreeNode)modelo.getRoot();
@@ -38,7 +81,7 @@ public class Cliente {
 			root.removeAllChildren();
 
 			//Añadimos las fechas sin repetir al set
-			for(int i = 0; i < publicaciones.length; i++)
+			for(int i = 0; i < longitud; i++)
 				fechas.add(publicaciones[i].getFecha());
 
 			//Ordenamos las fechas de forma descendente (posts mas recientes)
@@ -50,9 +93,9 @@ public class Cliente {
 			for(String f : alFechas){
 				DefaultMutableTreeNode fechaNode = new DefaultMutableTreeNode(f);
         		root.add(fechaNode);
-        		for(int j = 0; j < publicaciones.length; j++){
+        		for(int j = 0; j < longitud; j++){
         			if(f.equals(publicaciones[j].getFecha())){
-        				DefaultMutableTreeNode postNode = new DefaultMutableTreeNode(publicaciones[j].getId() + ": " + publicaciones[j].getNombre());
+        				DefaultMutableTreeNode postNode = new DefaultMutableTreeNode("ID: " + publicaciones[j].getId() + " - " + publicaciones[j].getNombre());
         				fechaNode.add(postNode);
         			}
         		}
@@ -68,7 +111,6 @@ public class Cliente {
 		catch(Exception e) {
     		e.printStackTrace();
     	} // Catch
-    	return publicaciones;
 	}
 
 	public static Usuario iniciarSesion(String nickname_tmp, String psswd_tmp) {
@@ -105,6 +147,4 @@ public class Cliente {
     	} // Catch
     	return usuarioActual;
 	}
-
-	
 }

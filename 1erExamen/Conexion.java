@@ -24,8 +24,8 @@ public class Conexion{
 		this.user = user;
 		this.password = password;
 		this.con = null;
-		sdf = new SimpleDateFormat("dd-MM-yyyy");
-		sdf2 = new SimpleDateFormat("yyyy-MM-dd");
+		sdf = new SimpleDateFormat("dd-MM-yyyy"); //Para consultas
+		sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); //Para insertar
 	}
 
 	public void conectarBD() {
@@ -37,29 +37,78 @@ public class Conexion{
             e.printStackTrace();
             System.exit(1);
         }
-        //System.out.println("La conexión se realizo sin problemas");
 	}
 	
 	public void cerrarConexion() {
 		try {
 			con.close();
-			//System.out.println("Se cierra la conexion...");
 		}catch(Exception e) {
 			e.printStackTrace();
 			System.exit(1);
 		}
 	}
 
+	public Publicacion cargarComentarios(int IdPublicacion){
+		Publicacion p = null;
+		try{
+			Statement stmt = con.createStatement();
+		    ResultSet rsPublicacion = stmt.executeQuery("SELECT Fecha, Nombre FROM Publicacion " +
+		    											"WHERE IdPublicacion = " + IdPublicacion + ";");
+
+		    if(rsPublicacion.next()){
+		    	String fecha = sdf.format(rsPublicacion.getDate("Fecha"));
+		    	String nombre = rsPublicacion.getString("Nombre");
+		    	p = new Publicacion(IdPublicacion, nombre, fecha);
+
+		    	Statement stmt2 = con.createStatement();
+		   		ResultSet rsComentarios = stmt.executeQuery("SELECT C.*, U.Nickname from Comentario C, Usuario U " +
+		   		 											"WHERE C.IdPublicacion = " + IdPublicacion + " " + 
+		   		 											"AND C.IdUsuario = U.IdUsuario " +
+		   		 											"ORDER BY C.Fecha ASC;");
+
+		   		while(rsComentarios.next()){
+		   			System.out.println("Comentario encontrado.");
+		   			int IdComentario = rsComentarios.getInt("IdComentario");
+		   			String fechaComentario = sdf.format(rsComentarios.getDate("Fecha"));
+		   			String texto = rsComentarios.getString("Texto");
+		   			String imagen = rsComentarios.getString("Imagen");
+		   			int IdUsuario = rsComentarios.getInt("IdUsuario");
+		   			String nickname = rsComentarios.getString("Nickname");
+
+		   			Usuario u_tmp = new Usuario(IdUsuario, nickname, "");
+		   			Comentario c_tmp = new Comentario(IdComentario, fechaComentario, texto, u_tmp);
+		   			
+		   			if(imagen != null){
+		   				c_tmp.setImagen(imagen);
+		   				System.out.println("Agregando imagen.");
+		   			}
+		   			
+		   			p.setComentario(c_tmp);
+		   		}
+		   		rsComentarios.close();
+			    stmt2.close();
+			    
+		    }
+
+		    System.out.println("Comentarios recuperadas de la BD");
+		    rsPublicacion.close();
+		    stmt.close();
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return p;
+	}
+
 	public Publicacion[] recuperarPublicaciones(){
 		Publicacion[] publicaciones = null;
 		try{
 			Statement stmt = con.createStatement();
-		    ResultSet rsPublicacion = stmt.executeQuery("SELECT * FROM Publicacion;");
+		    ResultSet rsPublicacion = stmt.executeQuery("SELECT COUNT(*) FROM Publicacion;");
 
 		    int cont = 0, i = 0;
 
-		    while(rsPublicacion.next())
-		    	cont++;
+		    if(rsPublicacion.next())
+		    	cont = rsPublicacion.getInt(1);
 
 		    publicaciones = new Publicacion[cont];
 		    rsPublicacion = stmt.executeQuery("SELECT * FROM Publicacion;");
@@ -100,7 +149,7 @@ public class Conexion{
 		    	String avatar = rsUsuario.getString("Avatar");
 		    	usuario = new Usuario(IdUsuario, nickname, password);
 
-		    	if(!avatar.equals(null))
+		    	if(avatar != null)
 		    		usuario.setAvatar(avatar);
 		    }
 
@@ -115,7 +164,7 @@ public class Conexion{
 	public static void main(String[] args){
 		Conexion c = new Conexion("com.mysql.jdbc.Driver", "jdbc:mysql://localhost:3306/", "Foro", "root", "root");
    		c.conectarBD();
-   		c.recuperarPublicaciones();
+   		c.cargarComentarios(1);
 		c.cerrarConexion();
 	}
 }

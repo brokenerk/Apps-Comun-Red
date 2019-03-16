@@ -8,6 +8,32 @@ import java.util.ArrayList;
 public class Servidor {
 	private static Conexion c;
 
+	public static void obtenerComentarios(Socket cl, DataInputStream dis){
+		try{
+			// Recibe IdPublicacion
+			int IdPublicacion = dis.readInt();
+			System.out.println("Datos recibidos: " + IdPublicacion + " . Buscando...");
+
+			c.conectarBD();
+			Publicacion p = c.cargarComentarios(IdPublicacion);
+			c.cerrarConexion();
+
+			if(p != null) 
+				System.out.println("Objeto publicacion con comentarios enviado con Id: " + p.getId());
+			else 
+				System.out.println("Publicacion no encontrado, enviando null...");
+
+			ObjectOutputStream oos = new ObjectOutputStream(cl.getOutputStream());
+			oos.writeObject(p);
+			oos.flush();
+			oos.close();
+			// Limpiamos memoria
+			p = null;
+		}catch(Exception e) {
+    		e.printStackTrace();
+    	} // Fin catch
+	}
+
 	public static void obtenerPublicaciones(Socket cl){
 		try{
 			c.conectarBD();
@@ -79,6 +105,10 @@ public class Servidor {
 				else if(bandera == 1){
 					// actualizar
 					obtenerPublicaciones(cl);
+				}
+				else if(bandera == 2){
+					// Cargar comentarios
+					obtenerComentarios(cl, dis);
 				}
 				else 
 					System.out.println("Error al atender la solicitud del cliente.");

@@ -30,7 +30,7 @@ public class Publicacion implements Serializable{
 		return this.nombre;
 	}
 
-	public void setComentario(int IdComentario, Comentario nvoComentario){
-		this.comentarios.add(IdComentario, nvoComentario);
+	public void setComentario(Comentario nvoComentario){
+		this.comentarios.add(nvoComentario);
 	}
 }

@@ -1,12 +1,13 @@
 import java.awt.event.*;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 import java.awt.*;
 import javax.swing.*;	
 import java.io.*;
 import javax.swing.JFrame;
 import javax.swing.JTree;
 import javax.swing.SwingUtilities;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.*;
 import java.awt.Image;
 import javax.swing.ImageIcon;
 import java.util.*;
@@ -31,9 +32,8 @@ public class ForoV extends JFrame implements ActionListener {
 		c.setLayout(new FlowLayout());
 
 		// -----------------------------------------------------------------------
-		// 						PANEL DE avatar
+		// 						PANEL DE AVATAR
 		// -----------------------------------------------------------------------
-
 		// Agregamos al panel DATOS la información del usuario
 		panelAvatar = new JPanel(new GridLayout(1, 1));
 		panelAvatar.setPreferredSize(new Dimension(100, 100));
@@ -46,13 +46,12 @@ public class ForoV extends JFrame implements ActionListener {
 		// -----------------------------------------------------------------------
 		// 						PANEL DE DATOS PERSONALES
 		// -----------------------------------------------------------------------
-
 		// Agregamos al panel DATOS la información del usuario
 		panelDatos = new JPanel(new GridLayout(2, 2));
 		panelDatos.setBorder(BorderFactory.createTitledBorder("Sesion del Usuario"));		
 		panelDatos.setPreferredSize(new Dimension(300, 100));
 
-		lId = new JLabel("Id: ");
+		lId = new JLabel("ID: ");
 		id = new JLabel("" + usuario.getId());
 		panelDatos.add(lId); panelDatos.add(id);
 
@@ -61,9 +60,8 @@ public class ForoV extends JFrame implements ActionListener {
 		panelDatos.add(lNickname); panelDatos.add(nickname);
 
 		// -----------------------------------------------------------------------
-		// 				PANEL QUE INTEGRA avatar Y DATOS PERSONALES
+		// 				PANEL QUE INTEGRA AVATAR Y DATOS PERSONALES
 		// -----------------------------------------------------------------------
-		
 		panelInfo = new JPanel(new GridLayout(1, 2));
 		panelInfo.setPreferredSize(new Dimension(650, 100));
 		panelInfo.add(panelAvatar); panelInfo.add(panelDatos);
@@ -72,7 +70,6 @@ public class ForoV extends JFrame implements ActionListener {
 		// -----------------------------------------------------------------------
 		// 						PANEL PARA BUSCAR 
 		// -----------------------------------------------------------------------
-		
 		// Agregamos al panel GRUPO el comboBox para elegir un grupo
 		panelBuscar = new JPanel(new GridLayout(1,2));
 		panelBuscar.setBorder(BorderFactory.createTitledBorder("Buscar"));		
@@ -88,21 +85,15 @@ public class ForoV extends JFrame implements ActionListener {
 		// -----------------------------------------------------------------------
 		// 				PANEL PARA MOSTRAR LAS PUBLICACIONES: JTree
 		// -----------------------------------------------------------------------
-		
 		panelMostrar = new JPanel(new BorderLayout());
 		panelMostrar.setBorder(BorderFactory.createTitledBorder("Foro"));		
 		panelMostrar.setPreferredSize(new Dimension(650, 450));
 
         DefaultMutableTreeNode root = new DefaultMutableTreeNode("Foro");
-        //DefaultMutableTreeNode vegetableNode = new DefaultMutableTreeNode("Vegetables");
-        //DefaultMutableTreeNode fruitNode = new DefaultMutableTreeNode("Fruits");
-
-        //root.add(vegetableNode);
-        //root.add(fruitNode);
-
         tree = new JTree(root);
         scrollMostrar = new JScrollPane(tree);
         tree.setRootVisible(false);
+        tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 
 		panelMostrar.add(BorderLayout.CENTER, scrollMostrar);
 		c.add(panelMostrar);
@@ -112,9 +103,26 @@ public class ForoV extends JFrame implements ActionListener {
 		Cliente.actualizar(modeloTree);
 
 		// -----------------------------------------------------------------------
-		// 					BOTON DE AGREGAR SELECCION AL HORARIO
+		// 					DAR CLICK EN LAS PUBLICACIONES PARA ABRIRLAS
 		// -----------------------------------------------------------------------
-		
+		tree.addTreeSelectionListener(new TreeSelectionListener() {
+			public void valueChanged(TreeSelectionEvent evt) {
+				try{
+					DefaultMutableTreeNode seleccion = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
+					if (seleccion.isLeaf()) {
+						TreePath contenido = new TreePath(seleccion.getPath());
+						System.out.print("Abriendo PostV....");
+						abrirPublicacion(Cliente.stringToID("" + contenido.getLastPathComponent()));
+					} 
+				}catch(Exception exc){
+					exc.printStackTrace();
+				}
+			}
+		});
+
+		// -----------------------------------------------------------------------
+		// 					BOTONES
+		// -----------------------------------------------------------------------
 		panelBotones = new JPanel(new GridLayout(1, 2));
 		panelBotones.setPreferredSize(new Dimension(650, 40));
 		btnAgregar = new JButton("Nuevo Post");
@@ -135,6 +143,22 @@ public class ForoV extends JFrame implements ActionListener {
 
 		c.add(panelBotones);
 		
+	}
+
+	//Abrir publicacion seleccionada
+	public void abrirPublicacion(int IdPublicacion){
+		//Enviamos la publicacion y el usuario
+		PostV f = new PostV(IdPublicacion, usuario);
+		f.setTitle("Comentarios");
+		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		f.setSize(800, 725);
+		f.setVisible(true);
+		f.setLocationRelativeTo(null);
+		System.out.print("Cerrando ForoV....");
+		this.setVisible(false);
+		System.out.println(" Cerrado.");
+		usuario = null;
+		this.dispose();
 	}
 
 	// Se ocupa para cerrar sesion
@@ -161,8 +185,10 @@ public class ForoV extends JFrame implements ActionListener {
 		}
 		else if(b == btnActualizar) {
 			// Debe actualizar el foro, es decir volver a cargar
+			//tree.clearSelection();
 			modeloTree = (DefaultTreeModel)tree.getModel();
 			Cliente.actualizar(modeloTree);
+
 		}
 		else if(b == btnSalir) {
 			//Cerrar sesion, abrir login
@@ -174,13 +200,5 @@ public class ForoV extends JFrame implements ActionListener {
 			usuario = null;
 			this.dispose();
 		}
-	}
-	public static void main(String[] args) {
-		ForoV f = new ForoV(null);
-		f.setTitle("Foro");
-		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		f.setSize(700, 720);
-		f.setVisible(true);
-		f.setLocationRelativeTo(null);
 	}
 }

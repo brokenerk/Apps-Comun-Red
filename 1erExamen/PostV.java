@@ -24,6 +24,9 @@ public class PostV extends JFrame implements ActionListener {
 	JLabel[] limagen;
 	Publicacion publicacion;
 	Usuario usuario;
+	public static String sep = System.getProperty("file.separator");
+
+	public static int banderaImagen = 0;
 	
 	public PostV(int IdPublicacion, Usuario usuario) {
 		//Obtenemos la publicacion y la sesion usuario en cuestion
@@ -197,6 +200,24 @@ public class PostV extends JFrame implements ActionListener {
 		f.setLocationRelativeTo(null);
 	}
 	
+	
+	/***************************************************
+				SELECCIONAR IMAGEN
+	****************************************************/
+	public void SeleccionarImagen() {
+		try {
+			JFileChooser jf = new JFileChooser();
+			int r = jf.showOpenDialog(null);
+
+			if(r == JFileChooser.APPROVE_OPTION) {
+				File file = jf.getSelectedFile();
+				
+			}
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
 	public void actionPerformed(ActionEvent e) {
 		JButton b = (JButton) e.getSource();
 
@@ -204,11 +225,12 @@ public class PostV extends JFrame implements ActionListener {
 			// AGREGA UN NUEVO COMENTARIO CON SU IMAGEN O SIN IMAGEN
 			// Se utilizar el objeto Usuario para saber quien hizo el comentario
 			// SI NO SE ELIGE IMAGEN, SE PONE LA DE DEFAULT O SIMPLEMENTE SE OCULTA
-
+			
 		}
 		else if(b == btnBuscar) {
 			/* BUSCA LA FOTO PARA AGREGARLA AL COMENTARIO 
 			// SUBE LA FOTO AL SERVIDOR (y al mismo tiempo guarda la ruta en la BD)*/
+			SeleccionarImagen();
 		}
 		else if(b == btnRegresar) {
 			System.out.print("Abriendo ForoV....");

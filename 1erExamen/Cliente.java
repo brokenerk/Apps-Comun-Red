@@ -6,15 +6,72 @@ import javax.swing.JTree;
 import javax.swing.SwingUtilities;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.*;
 
 public class Cliente {
 	private static int pto = 4321;
 	private static String host = "127.0.0.1";
+	private static String rutaDirectorios = "";
+	public static String sep = System.getProperty("file.separator");
 
 	//Objetos para la pantalla de ForoV
 	private static Publicacion[] publicaciones;
 
-	public static Publicacion descargarComentarios(int IdPublicacion){
+	/***************************************************
+				ENVIAR IMAGEN
+	****************************************************/
+
+	public static void EnviarPublicacionCompleta(String nombrePublicacion, String comentario, File f, String pathOrigen) {
+		try {
+			Socket cl = new Socket(host, pto);
+	        DataOutputStream dos = new DataOutputStream(cl.getOutputStream()); //OutputStream
+
+    		String nombre = f.getName();
+    		
+            long tam = f.length();
+
+            System.out.println("\nSe envia el archivo " + pathOrigen + " con " + tam + " bytes");
+            DataInputStream dis = new DataInputStream(new FileInputStream(pathOrigen)); // InputStream
+
+            //La bandera tiene el valor de 3  = Enviar imagen
+            dos.writeInt(3); dos.flush();
+
+			//Se envia info de la imagen
+
+            dos.writeUTF(nombre); dos.flush();
+            dos.writeLong(tam);	dos.flush();
+
+			dos.writeUTF(nombrePublicacion); dos.flush();
+			dos.writeUTF(comentario); dos.flush();
+
+            long enviados = 0;
+            int pb = 0;
+            int n = 0, porciento = 0;
+            byte[] b = new byte[2000];
+
+            while(enviados < tam) {
+                n = dis.read(b);
+                dos.write(b, 0, n);
+                dos.flush();
+                enviados += n;
+                porciento = (int)((enviados * 100) / tam);
+                System.out.println("\r Enviando el " + porciento + "% --- " + enviados + "/" + tam + " bytes");
+            } // while
+
+            JOptionPane.showMessageDialog(null, "Se ha subido el archivo " + nombre + " con tamanio: " + tam);
+            dis.close(); 
+            dos.close(); 
+            cl.close();
+	    } // Try
+	    catch(Exception e) {
+            e.printStackTrace();
+        }
+	} // Class Enviar Imagen
+
+
+	public static Publicacion descargarComentarios(int IdPublicacion) {
 		Publicacion p = null;
 		try {
 			Socket cl = new Socket(host, pto);

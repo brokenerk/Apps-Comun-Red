@@ -48,7 +48,22 @@ public class Conexion{
 		}
 	}
 
-	public Publicacion cargarComentarios(int IdPublicacion){
+	public int insertarPublicacion(String nombre, String fecha) {
+		int bandera = 1;
+		try {
+			Statement stmt = con.createStatement();
+			String sql = "INSERT INTO Publicacion(Nombre, Fecha) VALUES(" + nombre +", "+ fecha +")";
+			//INSERT INTO Publicacion(Nombre, Fecha) VALUES("Perritos", "2019-03-14 10:00:00");
+			stmt.executeUpdate(sql);
+		}
+		catch(Exception e) {
+			bandera = 0;
+			e.printStackTrace();
+		}
+		return bandera;
+	}
+
+	public Publicacion cargarComentarios(int IdPublicacion) {
 		Publicacion p = null;
 		try{
 			Statement stmt = con.createStatement();
@@ -99,7 +114,7 @@ public class Conexion{
 		return p;
 	}
 
-	public Publicacion[] recuperarPublicaciones(){
+	public Publicacion[] recuperarPublicaciones() {
 		Publicacion[] publicaciones = null;
 		try{
 			Statement stmt = con.createStatement();

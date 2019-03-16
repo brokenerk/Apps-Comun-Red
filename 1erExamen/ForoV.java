@@ -170,6 +170,15 @@ public class ForoV extends JFrame implements ActionListener {
 		f.setVisible(true);
 		f.setLocationRelativeTo(null);
 	}
+	// Se ocupa para cerrar sesion
+	public void crearAgregar(Usuario usuario) {
+		AgregarV f = new AgregarV(usuario);
+		f.setTitle("Nuevo POST");
+		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		f.setSize(700, 325);
+		f.setVisible(true);
+		f.setLocationRelativeTo(null);
+	}
 
 	public void actionPerformed(ActionEvent e) {
 		JButton b = (JButton) e.getSource();
@@ -182,6 +191,7 @@ public class ForoV extends JFrame implements ActionListener {
 			// Despliega pantalla para AGREGAR NUEVO POST
 			// Actualiza el PANEL FORO, es decir después de agregar, debe regresar al inicio
 			// Y se debe ver que ya agrego el nuevo POST
+			crearAgregar(usuario);
 		}
 		else if(b == btnActualizar) {
 			// Debe actualizar el foro, es decir volver a cargar

@@ -7,6 +7,13 @@ import javax.swing.ImageIcon;
 import java.util.*;
 import java.lang.reflect.Field;
 import javax.swing.table.*;
+import javax.swing.ImageIcon;
+import java.awt.image.BufferedImage;
+import javax.swing.Icon;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import java.io.File;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class AgregarV extends JFrame implements ActionListener {
 	JPanel panelInfo, panelAgregar, panelTexto, panelFoto;
@@ -16,8 +23,14 @@ public class AgregarV extends JFrame implements ActionListener {
 	JTextArea taAgregar;
 	JScrollPane scrollMostrar, scrollAgregar;
 	ImageIcon imagen;
-	
-	public AgregarV() {
+	Usuario usuario;
+	Publicacion publicacion;
+	File file;
+	int banderaImagen = 0;
+
+	public AgregarV(Usuario usuario) {
+		//Obtenemos el usuario logeado (sesion)
+		this.usuario = usuario;
 		Container c = getContentPane();
 		c.setLayout(new FlowLayout());
 
@@ -59,7 +72,7 @@ public class AgregarV extends JFrame implements ActionListener {
 		// Agregamos al panel FOTO la imagen default
 		lfoto = new JLabel(imagen);
 		//lfoto.setIcon(new ImageIcon(alumno.getFoto().getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH)));
-		lfoto.setIcon(new ImageIcon(new javax.swing.ImageIcon(getClass().getResource("avatars/default.png")).getImage().getScaledInstance(175, 175, Image.SCALE_SMOOTH)));
+		lfoto.setIcon(new ImageIcon(new javax.swing.ImageIcon(getClass().getResource("./fotos/default.png")).getImage().getScaledInstance(175, 175, Image.SCALE_SMOOTH)));
 		
 		panelFoto.add(lfoto); 
 
@@ -90,6 +103,74 @@ public class AgregarV extends JFrame implements ActionListener {
 
 		c.add(btnAgregar); c.add(btnRegresar); c.add(btnBuscar);
 	}
+
+    // Se ocupa para cerrar sesion
+	public void crearLogin() {
+		Login f = new Login();
+		f.setTitle("Iniciar sesion");
+		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		f.setSize(400, 200);
+		f.setVisible(true);
+		f.setLocationRelativeTo(null);
+	}
+
+	/*********************************************************************************************
+									CREARFORO
+	*********************************************************************************************/
+	public static void crearForoV(Usuario usuario) {
+		System.out.println("Enviando objeto usuario a Foro, abriendo Foro....");
+		ForoV f = new ForoV(usuario);
+		f.setTitle("Foro");
+		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		f.setSize(700, 720);
+		f.setVisible(true);
+		f.setLocationRelativeTo(null);
+	}
+
+	/***************************************************
+				SELECCIONAR IMAGEN
+	****************************************************/
+	public void SeleccionarImagenFC() {
+		try {
+			JFileChooser jf = new JFileChooser();
+			int r = jf.showOpenDialog(null);
+			FileNameExtensionFilter filter = new FileNameExtensionFilter("*.Images", "jpg","gif","png");
+          	jf.addChoosableFileFilter(filter);
+				
+			if(r == JFileChooser.APPROVE_OPTION) {
+				file = jf.getSelectedFile();
+				String path = file.getAbsolutePath();
+				System.out.println("La ruta es: " + path);
+
+				// Convertir el archivo a Bytes para poder mostrarlo
+			    byte[] archivoBytes = null;
+			    long tamanoArch = file.length(); // File size
+			    archivoBytes = new byte[(int) tamanoArch];
+			    try {
+			      // Lee el archivo
+			      FileInputStream docu = new FileInputStream(file);
+			      // Inserta en un nuevo arreglo
+			      int numBytes = docu.read(archivoBytes);
+			      System.out.print("El archivo tiene " + numBytes + " de bytes.");
+			      docu.close(); // Close
+			    } 
+			    catch (FileNotFoundException e) {
+			      System.out.print("No se ha encontrado el archivo.");
+			    } 
+			    catch (IOException e) {
+			      System.out.print("No se ha podido leer el archivo.");
+			    }
+			    // Creamos una imagen
+				ImageIcon icon = new ImageIcon(archivoBytes);
+				// Se muestra en el panel
+				lfoto.setIcon(new ImageIcon(icon.getImage().getScaledInstance(175, 175, Image.SCALE_SMOOTH)));
+				banderaImagen = 1;
+			}
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
 	
 	public void actionPerformed(ActionEvent e) {
 		JButton b = (JButton) e.getSource();
@@ -97,23 +178,51 @@ public class AgregarV extends JFrame implements ActionListener {
 		if(b == btnAgregar) {
 			// AGREGA UN NUEVO COMENTARIO CON SU IMAGEN O SIN IMAGEN
 			// SI NO SE ELIGE IMAGEN, SE PONE LA DE DEFAULT O SIMPLEMENTE SE OCULTA
+			String comentarioTA = taAgregar.getText();
+			String nombrePub = tfnombre.getText();
+			if((nombrePub != null) && (nombrePub.length() > 0)) {
+				if((comentarioTA != null) && (comentarioTA.length() > 0)) {
+					if(banderaImagen == 1) {
+						String path = file.getAbsolutePath();
+						Cliente.EnviarPublicacionCompleta(nombrePub, comentarioTA, file, path);
+					}
+					else {
+						//Cliente.enviarPublicacion(nombrePub, comentarioTA);
+					}
+				}
+				else {
+					JOptionPane.showMessageDialog(null, "Ingresa un comentario valido");
+				}
+			}
+			else {
+				JOptionPane.showMessageDialog(null, "Ingresa el nombre de la publicacion");
+			}
 
+			banderaImagen = 0;
+			// Al termina regresa a la pagina principal
+			crearForoV(usuario);
+			System.out.print("Cerrando PostV....");
+			this.setVisible(false);
+			System.out.println(" Cerrado.");
+			usuario = null;
+			publicacion = null;
+			this.dispose();
 		}
 		else if(b == btnBuscar) {
 			// BUSCA LA FOTO PARA AGREGARLA AL COMENTARIO
 			// SUBE LA FOTO AL SERVIDOR
+			SeleccionarImagenFC();
 		}
 		else if(b == btnRegresar) {
 			// REGRESA AL INICIO
+			System.out.print("Abriendo ForoV....");
+			crearForoV(usuario);
+			System.out.print("Cerrando PostV....");
+			this.setVisible(false);
+			System.out.println(" Cerrado.");
+			usuario = null;
+			publicacion = null;
+			this.dispose();
 		}
-	}
-
-	public static void main(String[] args) {
-		AgregarV f = new AgregarV();
-		f.setTitle("Nuevo POST");
-		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		f.setSize(700, 325);
-		f.setVisible(true);
-		f.setLocationRelativeTo(null);
 	}
 }

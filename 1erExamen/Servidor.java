@@ -4,9 +4,63 @@
 import java.net.*;
 import java.io.*;
 import java.util.ArrayList;
+import java.text.SimpleDateFormat;  
+import java.util.Date; 
 
 public class Servidor {
+	public static String sep = System.getProperty("file.separator");
+	private static String rutaServer = "." + sep + "fotos" + sep;
 	private static Conexion c;
+
+	/*********************************************************************************************
+									0. RECIBIR ARCHIVOS
+	*********************************************************************************************/
+	// Valor de la bandera = 0
+	public static void recibirComentarioCompleto(DataInputStream dis, String nombre) throws IOException {
+		long tam = dis.readLong();
+		String nombrePublicacion = dis.readUTF();
+		String comentario = dis.readUTF();
+
+		//String pathDestino = dis.readUTF();
+		nombre = rutaServer + nombre;
+		
+		System.out.println("\nSe recibe el archivo " + nombre + " con " + tam + "bytes");
+		DataOutputStream dos = new DataOutputStream(new FileOutputStream(nombre)); // OutputStream
+		
+		long recibidos = 0;
+		int n = 0, porciento = 0;
+		byte[] b = new byte[2000];
+
+		while(recibidos < tam) {
+			n = dis.read(b);
+			dos.write(b, 0, n);
+			dos.flush();
+			recibidos += n;
+			porciento = (int)((recibidos * 100) / tam);
+			System.out.println("\r Recibiendo el " + porciento + "% --- " + recibidos + "/" + tam + " bytes");
+		} // while
+
+		System.out.println("\nArchivo " + nombre + " de tamanio: " + tam + " recibido.");
+		dos.close();
+		dis.close();
+
+		// ********************************
+
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  
+   		Date date = new Date();  
+    	String fecha = formatter.format(date);
+    	System.out.println(fecha);  
+    	try {
+    		c.conectarBD();
+	    	if(c.insertarPublicacion(nombrePublicacion, fecha) == 1) {
+	    		// Va a poder insertar el comentarios
+	    	}
+    		c.cerrarConexion();
+    	}
+    	catch(Exception e) {
+    		e.printStackTrace();
+    	} // Fin catch
+	} // RecibirArchivos
 
 	public static void obtenerComentarios(Socket cl, DataInputStream dis){
 		try{
@@ -103,12 +157,17 @@ public class Servidor {
 					autentificarLogin(cl, dis);
 				}
 				else if(bandera == 1){
-					// actualizar
+					// Actualizar
 					obtenerPublicaciones(cl);
 				}
 				else if(bandera == 2){
 					// Cargar comentarios
 					obtenerComentarios(cl, dis);
+				}
+				else if(bandera == 3) {
+					// Envia la imagen al servidor
+					String nombre = dis.readUTF();
+					recibirComentarioCompleto(dis, nombre);
 				}
 				else 
 					System.out.println("Error al atender la solicitud del cliente.");

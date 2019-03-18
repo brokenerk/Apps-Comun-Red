@@ -107,7 +107,10 @@ public class PostV extends JFrame implements ActionListener {
 			// ---------------------------
 			pTexto[i] = new JPanel(new GridLayout(1,1));
 			textComentario[i] = new JTextArea(c.getTexto());
+			//No editable y saltos de linea automaticos
 			textComentario[i].setEditable(false);
+			textComentario[i].setLineWrap(true);
+			textComentario[i].setWrapStyleWord(true);
 			scrollComentario[i] = new JScrollPane(textComentario[i]);
 			scrollComentario[i].setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 			pTexto[i].add(scrollComentario[i]);
@@ -144,6 +147,9 @@ public class PostV extends JFrame implements ActionListener {
 		// ----------------------------------------
 		panelTexto = new JPanel(new GridLayout(1,1));
 		taAgregar = new JTextArea();
+		//Saltos de linea automaticos
+		taAgregar.setLineWrap(true);
+		taAgregar.setWrapStyleWord(true);
 		scrollAgregar = new JScrollPane(taAgregar);
 		scrollAgregar.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		panelTexto.setPreferredSize(new Dimension(100, 200));
@@ -212,7 +218,6 @@ public class PostV extends JFrame implements ActionListener {
 	public void seleccionarImagenFC() {
 		try {
 			JFileChooser jf = new JFileChooser();
-			
 			//Solo imagenes
 			jf.setFileFilter(new FileNameExtensionFilter("Image Files", "jpg", "png", "tif", "gif", "jpeg"));
 			

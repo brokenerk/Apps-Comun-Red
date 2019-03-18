@@ -52,6 +52,9 @@ public class AgregarV extends JFrame implements ActionListener {
 		// ----------------------------------------
 		panelTexto = new JPanel(new GridLayout(1,1));
 		taAgregar = new JTextArea();
+		//Saltos de linea automaticos
+		taAgregar.setLineWrap(true);
+		taAgregar.setWrapStyleWord(true);
 		scrollAgregar = new JScrollPane(taAgregar);
 		scrollAgregar.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		panelTexto.setPreferredSize(new Dimension(100, 200));
@@ -105,10 +108,10 @@ public class AgregarV extends JFrame implements ActionListener {
 	public void seleccionarImagenFC() {
 		try {
 			JFileChooser jf = new JFileChooser();
+			//Solo imagenes
+			jf.setFileFilter(new FileNameExtensionFilter("Image Files", "jpg", "png", "tif", "gif", "jpeg"));
+			
 			int r = jf.showOpenDialog(null);
-			FileNameExtensionFilter filter = new FileNameExtensionFilter("*.Images", "jpg","gif","png");
-          	jf.addChoosableFileFilter(filter);
-				
 			if(r == JFileChooser.APPROVE_OPTION) {
 				file = jf.getSelectedFile();
 				String path = file.getAbsolutePath();

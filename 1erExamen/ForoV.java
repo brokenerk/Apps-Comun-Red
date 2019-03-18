@@ -24,6 +24,7 @@ public class ForoV extends JFrame implements ActionListener {
 	ImageIcon avatar;
 	JTree tree;
 	DefaultTreeModel modeloTree;
+	DefaultMutableTreeNode root;
 	
 	public ForoV(Usuario usuario) {
 		//Obtenemos el usuario logeado (sesion)
@@ -89,7 +90,7 @@ public class ForoV extends JFrame implements ActionListener {
 		panelMostrar.setBorder(BorderFactory.createTitledBorder("Foro"));		
 		panelMostrar.setPreferredSize(new Dimension(650, 450));
 
-        DefaultMutableTreeNode root = new DefaultMutableTreeNode("Foro");
+        root = new DefaultMutableTreeNode("Foro");
         tree = new JTree(root);
         scrollMostrar = new JScrollPane(tree);
         tree.setRootVisible(false);
@@ -101,6 +102,7 @@ public class ForoV extends JFrame implements ActionListener {
 		//Cargamos los posts desde el servidor
 		modeloTree = (DefaultTreeModel)tree.getModel();
 		Cliente.actualizar(modeloTree);
+		expandAll(tree, new TreePath(root));
 
 		// -----------------------------------------------------------------------
 		// 					DAR CLICK EN LAS PUBLICACIONES PARA ABRIRLAS
@@ -147,6 +149,21 @@ public class ForoV extends JFrame implements ActionListener {
 		
 	}
 
+	// -----------------------------------------------------------------------
+	// 					MOSTRAR LOS NODOS DEL ARBOL EXPANDIDOS
+	// -----------------------------------------------------------------------
+	private void expandAll(JTree tree, TreePath parent) {
+	    TreeNode node = (TreeNode) parent.getLastPathComponent();
+	    if (node.getChildCount() >= 0) {
+	      for (Enumeration e = node.children(); e.hasMoreElements();) {
+	        TreeNode n = (TreeNode) e.nextElement();
+	        TreePath path = parent.pathByAddingChild(n);
+	        expandAll(tree, path);
+	      }
+	    }
+	    tree.expandPath(parent);
+	  }
+
 	//Abrir publicacion seleccionada
 	public void abrirPublicacion(int IdPublicacion){
 		//Enviamos la publicacion y el usuario
@@ -185,6 +202,7 @@ public class ForoV extends JFrame implements ActionListener {
 			// Es decir, actualiza el panel de foro, si no hay resultados, mostrar: NO EXISTEN TEMAS 
 			modeloTree = (DefaultTreeModel)tree.getModel();
 			Cliente.buscarPosts(modeloTree, tfBuscar.getText());
+			expandAll(tree, new TreePath(root));
 		}
 		else if(b == btnAgregar) {
 			// Despliega pantalla para AGREGAR NUEVO POST
@@ -196,7 +214,7 @@ public class ForoV extends JFrame implements ActionListener {
 			// Debe actualizar el foro, es decir volver a cargar
 			modeloTree = (DefaultTreeModel)tree.getModel();
 			Cliente.actualizar(modeloTree);
-
+			expandAll(tree, new TreePath(root));
 		}
 		else if(b == btnSalir) {
 			//Cerrar sesion, abrir login

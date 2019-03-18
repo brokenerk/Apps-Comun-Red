@@ -90,7 +90,7 @@ public class AgregarV extends JFrame implements ActionListener {
 		// -----------------------------------------
 		//  		BOTON AGREGAR Y REGRESAR
 		// -----------------------------------------
-		btnAgregar = new JButton("Agregar comentario");
+		btnAgregar = new JButton("Agregar publicacion");
 		btnAgregar.addActionListener(this);
 
 		btnRegresar = new JButton("Regresar");
@@ -146,6 +146,16 @@ public class AgregarV extends JFrame implements ActionListener {
             e.printStackTrace();
         }
     }
+
+    public void crearForo(){
+    	System.out.println("Regresando a Foro....");
+		ForoV f = new ForoV(usuario);
+		f.setTitle("Foro");
+		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		f.setSize(700, 720);
+		f.setVisible(true);
+		f.setLocationRelativeTo(null);
+    }
 	
 	public void actionPerformed(ActionEvent e) {
 		JButton b = (JButton) e.getSource();
@@ -164,6 +174,16 @@ public class AgregarV extends JFrame implements ActionListener {
 					else {
 						Cliente.enviarPublicacion(usuario.getNickname(), nombrePub, comentarioTA);
 					}
+					banderaImagen = 0;
+					// REGRESA AL INICIO
+					System.out.print("Regresando a ForoV...");
+					crearForo();
+					//Cerrar AgregarV
+					System.out.print("Cerrando AgregarV....");
+					this.setVisible(false);
+					System.out.println(" Cerrado.");
+					usuario = null;
+					this.dispose();
 				}
 				else {
 					JOptionPane.showMessageDialog(null, "Ingresa un comentario valido");
@@ -172,15 +192,6 @@ public class AgregarV extends JFrame implements ActionListener {
 			else {
 				JOptionPane.showMessageDialog(null, "Ingresa el nombre de la publicacion");
 			}
-
-			banderaImagen = 0;
-			// REGRESA AL INICIO
-			System.out.print("Cerrando AgregarV....");
-			this.setVisible(false);
-			System.out.println(" Cerrado.");
-			usuario = null;
-			publicacion = null;
-			this.dispose();
 		}
 		else if(b == btnBuscar) {
 			// BUSCA LA FOTO PARA AGREGARLA AL COMENTARIO
@@ -189,11 +200,13 @@ public class AgregarV extends JFrame implements ActionListener {
 		}
 		else if(b == btnRegresar) {
 			// REGRESA AL INICIO
+			System.out.print("Regresando a ForoV...");
+			crearForo();
+			//Cerrar AgregarV
 			System.out.print("Cerrando AgregarV....");
 			this.setVisible(false);
 			System.out.println(" Cerrado.");
 			usuario = null;
-			publicacion = null;
 			this.dispose();
 		}
 	}

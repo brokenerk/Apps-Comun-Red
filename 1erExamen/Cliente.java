@@ -275,7 +275,7 @@ public class Cliente {
 			}
 
 			if(encontrado == false){
-				JOptionPane.showMessageDialog(null, "No existen temas. Intente una nueva búsqueda", "Publicaciones no encontradas.", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null, "No existen temas. Intente una nueva busqueda", "Publicaciones no encontradas.", JOptionPane.ERROR_MESSAGE);
 			}
 
 			//Recargamos el JTree con los nuevos nodos

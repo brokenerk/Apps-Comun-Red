@@ -7,11 +7,12 @@ import javax.swing.ImageIcon;
 import java.util.*;
 import java.lang.reflect.Field;
 import javax.swing.table.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class PostV extends JFrame implements ActionListener {
 	JPanel panelInfo, panelComentario, panelAgregar, panelTexto, panelFoto, panelTotal;
 	JPanel[] pComentario, pTexto, pImagen;
-	JButton btnAgregar, btnBuscar, btnRegresar;
+	JButton btnAgregar, btnBuscar, btnRegresar, btnActualizar;
 	JLabel lfoto, lNombre, nombre, lId, id;
 	JLabel[] lNombreComentario;
 	JTextField tfBuscar;
@@ -26,10 +27,11 @@ public class PostV extends JFrame implements ActionListener {
 	Usuario usuario;
 	public static String sep = System.getProperty("file.separator");
 	File file;
-	int banderaImagen = 0;
+	int banderaImagen = 0, IdPublicacion;
 	
 	public PostV(int IdPublicacion, Usuario usuario) {
 		//Obtenemos la publicacion y la sesion usuario en cuestion
+		this.IdPublicacion = IdPublicacion;
 		this.publicacion = Cliente.descargarComentarios(IdPublicacion);
 		this.usuario = usuario;
 
@@ -184,29 +186,36 @@ public class PostV extends JFrame implements ActionListener {
 		btnBuscar = new JButton("Cargar Foto");
 		btnBuscar.addActionListener(this);
 
-		container.add(btnAgregar); container.add(btnRegresar); container.add(btnBuscar);
+		btnActualizar = new JButton("Actualizar");
+		btnActualizar.addActionListener(this);
+
+		container.add(btnAgregar); container.add(btnRegresar); container.add(btnBuscar); container.add(btnActualizar);
 	}
 
-	/*********************************************************************************************
-									CREARFORO
-	*********************************************************************************************/
-	public static void crearForoV(Usuario usuario) {
-		System.out.println("Enviando objeto usuario a Foro, abriendo Foro....");
-		ForoV f = new ForoV(usuario);
-		f.setTitle("Foro");
+	/***************************************************
+				ACTUALIZAR POST
+	****************************************************/
+	public void actualizarPost(){
+		PostV f = new PostV(IdPublicacion, usuario);
+		f.setTitle("Comentarios");
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		f.setSize(700, 720);
+		f.setSize(800, 725);
 		f.setVisible(true);
 		f.setLocationRelativeTo(null);
+		this.setVisible(false);
+		this.dispose();
 	}
-	
-	
+
 	/***************************************************
 				SELECCIONAR IMAGEN
 	****************************************************/
 	public void seleccionarImagenFC() {
 		try {
 			JFileChooser jf = new JFileChooser();
+			
+			//Solo imagenes
+			jf.setFileFilter(new FileNameExtensionFilter("Image Files", "jpg", "png", "tif", "gif", "jpeg"));
+			
 			int r = jf.showOpenDialog(null);
 			if(r == JFileChooser.APPROVE_OPTION) {
 				file = jf.getSelectedFile();
@@ -261,6 +270,9 @@ public class PostV extends JFrame implements ActionListener {
 				JOptionPane.showMessageDialog(null, "Ingresa un comentario valido");
 			}
 			banderaImagen = 0;
+
+			/*Cerramos y abrimos la publicacion para actualizar y ver los nuevos comentarios*/
+			actualizarPost();
 		}
 		else if(b == btnBuscar) {
 			/* BUSCA LA FOTO PARA AGREGARLA AL COMENTARIO 
@@ -268,14 +280,16 @@ public class PostV extends JFrame implements ActionListener {
 			seleccionarImagenFC();
 		}
 		else if(b == btnRegresar) {
-			System.out.print("Abriendo ForoV....");
-			crearForoV(usuario);
 			System.out.print("Cerrando PostV....");
 			this.setVisible(false);
 			System.out.println(" Cerrado.");
 			usuario = null;
 			publicacion = null;
 			this.dispose();
+		}
+		else if(b == btnActualizar){
+			/*Cerramos y abrimos la publicacion para actualizar y ver los nuevos comentarios*/
+			actualizarPost();
 		}
 	}
 }

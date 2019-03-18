@@ -4,4 +4,6 @@ javac Publicacion.java
 javac Cliente.java
 javac Login.java
 javac ForoV.java
+javac PostV.java
+javac AgregarV.java
 java Login

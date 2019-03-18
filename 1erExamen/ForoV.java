@@ -109,10 +109,12 @@ public class ForoV extends JFrame implements ActionListener {
 			public void valueChanged(TreeSelectionEvent evt) {
 				try{
 					DefaultMutableTreeNode seleccion = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
-					if (seleccion.isLeaf()) {
-						TreePath contenido = new TreePath(seleccion.getPath());
-						System.out.print("Abriendo PostV....");
-						abrirPublicacion(Cliente.stringToID("" + contenido.getLastPathComponent()));
+					if (seleccion != null) {
+						if(seleccion.isLeaf()){
+							TreePath contenido = new TreePath(seleccion.getPath());
+							System.out.print("Abriendo PostV....");
+							abrirPublicacion(Cliente.stringToID("" + contenido.getLastPathComponent()));
+						}
 					} 
 				}catch(Exception exc){
 					exc.printStackTrace();
@@ -150,15 +152,10 @@ public class ForoV extends JFrame implements ActionListener {
 		//Enviamos la publicacion y el usuario
 		PostV f = new PostV(IdPublicacion, usuario);
 		f.setTitle("Comentarios");
-		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		//f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.setSize(800, 725);
 		f.setVisible(true);
 		f.setLocationRelativeTo(null);
-		System.out.print("Cerrando ForoV....");
-		this.setVisible(false);
-		System.out.println(" Cerrado.");
-		usuario = null;
-		this.dispose();
 	}
 
 	// Se ocupa para cerrar sesion
@@ -174,15 +171,10 @@ public class ForoV extends JFrame implements ActionListener {
 	public void crearAgregar(Usuario usuario) {
 		AgregarV f = new AgregarV(usuario);
 		f.setTitle("Nuevo POST");
-		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		//f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.setSize(700, 325);
 		f.setVisible(true);
 		f.setLocationRelativeTo(null);
-		System.out.print("Cerrando ForoV....");
-		this.setVisible(false);
-		System.out.println(" Cerrado.");
-		usuario = null;
-		this.dispose();
 	}
 
 	public void actionPerformed(ActionEvent e) {
@@ -191,6 +183,8 @@ public class ForoV extends JFrame implements ActionListener {
 		if(b == btnBuscar) {
 			// Obtiene el texto del textField y muestra solo el tema que se pide
 			// Es decir, actualiza el panel de foro, si no hay resultados, mostrar: NO EXISTEN TEMAS 
+			modeloTree = (DefaultTreeModel)tree.getModel();
+			Cliente.buscarPosts(modeloTree, tfBuscar.getText());
 		}
 		else if(b == btnAgregar) {
 			// Despliega pantalla para AGREGAR NUEVO POST
@@ -200,7 +194,6 @@ public class ForoV extends JFrame implements ActionListener {
 		}
 		else if(b == btnActualizar) {
 			// Debe actualizar el foro, es decir volver a cargar
-			//tree.clearSelection();
 			modeloTree = (DefaultTreeModel)tree.getModel();
 			Cliente.actualizar(modeloTree);
 

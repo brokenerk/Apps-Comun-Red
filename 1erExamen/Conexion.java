@@ -224,7 +224,7 @@ public class Conexion{
 		    	cont = rsPublicacion.getInt(1);
 
 		    publicaciones = new Publicacion[cont];
-		    rsPublicacion = stmt.executeQuery("SELECT * FROM Publicacion;");
+		    rsPublicacion = stmt.executeQuery("SELECT * FROM Publicacion ORDER BY Fecha DESC;");
 
 		    while(rsPublicacion.next()){
 		    	int IdPublicacion = rsPublicacion.getInt("IdPublicacion");

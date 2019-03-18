@@ -37,13 +37,12 @@ public class AgregarV extends JFrame implements ActionListener {
 		// --------------------------------
 		// 		PANEL DE LA INFORMACION
 		// --------------------------------
-
 		panelInfo = new JPanel(new GridLayout(1, 2));
 		panelInfo.setPreferredSize(new Dimension(300, 20));
 
-		lNombre = new JLabel("NOMBRE DEL POST: ");
-		//nombre = new JLabel(alumno.getNombreCompleto());
-		tfnombre = new JTextField("AMOR");
+		lNombre = new JLabel("Nombre del Post: ");
+
+		tfnombre = new JTextField();
 		panelInfo.add(lNombre); panelInfo.add(tfnombre);
 
 		c.add(panelInfo);
@@ -51,9 +50,8 @@ public class AgregarV extends JFrame implements ActionListener {
 		// ----------------------------------------
 		// 			PANEL AGREGAR TEXTO
 		// ----------------------------------------
-
 		panelTexto = new JPanel(new GridLayout(1,1));
-		taAgregar = new JTextArea("Escribir comentario");
+		taAgregar = new JTextArea();
 		scrollAgregar = new JScrollPane(taAgregar);
 		scrollAgregar.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		panelTexto.setPreferredSize(new Dimension(100, 200));
@@ -65,7 +63,6 @@ public class AgregarV extends JFrame implements ActionListener {
 		// ----------------------------------------
 		// 			PANEL AGREGAR FOTO
 		// ----------------------------------------
-		
 		panelFoto = new JPanel(new GridLayout(1, 1));
 		panelFoto.setPreferredSize(new Dimension(300, 200));
 
@@ -79,9 +76,8 @@ public class AgregarV extends JFrame implements ActionListener {
 		// ----------------------------------------
 		// 	PANEL PARA AGREGAR UN NUEVO COMENTARIO
 		// ----------------------------------------
-		
 		panelAgregar = new JPanel(new GridLayout(1, 2));
-		panelAgregar.setBorder(BorderFactory.createTitledBorder("AGREGAR COMENTARIO"));		
+		panelAgregar.setBorder(BorderFactory.createTitledBorder("Agregar Comentario"));		
 
 		panelAgregar.setPreferredSize(new Dimension(670, 200));
 		panelAgregar.add(panelTexto); panelAgregar.add(panelFoto);
@@ -91,46 +87,22 @@ public class AgregarV extends JFrame implements ActionListener {
 		// -----------------------------------------
 		//  		BOTON AGREGAR Y REGRESAR
 		// -----------------------------------------
-
 		btnAgregar = new JButton("Agregar comentario");
 		btnAgregar.addActionListener(this);
 
 		btnRegresar = new JButton("Regresar");
 		btnRegresar.addActionListener(this);
 
-		btnBuscar = new JButton("Agregar Foto");
+		btnBuscar = new JButton("Cargar Foto");
 		btnBuscar.addActionListener(this);
 
 		c.add(btnAgregar); c.add(btnRegresar); c.add(btnBuscar);
 	}
 
-    // Se ocupa para cerrar sesion
-	public void crearLogin() {
-		Login f = new Login();
-		f.setTitle("Iniciar sesion");
-		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		f.setSize(400, 200);
-		f.setVisible(true);
-		f.setLocationRelativeTo(null);
-	}
-
-	/*********************************************************************************************
-									CREARFORO
-	*********************************************************************************************/
-	public static void crearForoV(Usuario usuario) {
-		System.out.println("Enviando objeto usuario a Foro, abriendo Foro....");
-		ForoV f = new ForoV(usuario);
-		f.setTitle("Foro");
-		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		f.setSize(700, 720);
-		f.setVisible(true);
-		f.setLocationRelativeTo(null);
-	}
-
 	/***************************************************
 				SELECCIONAR IMAGEN
 	****************************************************/
-	public void SeleccionarImagenFC() {
+	public void seleccionarImagenFC() {
 		try {
 			JFileChooser jf = new JFileChooser();
 			int r = jf.showOpenDialog(null);
@@ -200,9 +172,7 @@ public class AgregarV extends JFrame implements ActionListener {
 
 			banderaImagen = 0;
 			// REGRESA AL INICIO
-			System.out.print("Abriendo ForoV....");
-			crearForoV(usuario);
-			System.out.print("Cerrando PostV....");
+			System.out.print("Cerrando AgregarV....");
 			this.setVisible(false);
 			System.out.println(" Cerrado.");
 			usuario = null;
@@ -212,13 +182,11 @@ public class AgregarV extends JFrame implements ActionListener {
 		else if(b == btnBuscar) {
 			// BUSCA LA FOTO PARA AGREGARLA AL COMENTARIO
 			// SUBE LA FOTO AL SERVIDOR
-			SeleccionarImagenFC();
+			seleccionarImagenFC();
 		}
 		else if(b == btnRegresar) {
 			// REGRESA AL INICIO
-			System.out.print("Abriendo ForoV....");
-			crearForoV(usuario);
-			System.out.print("Cerrando PostV....");
+			System.out.print("Cerrando AgregarV....");
 			this.setVisible(false);
 			System.out.println(" Cerrado.");
 			usuario = null;

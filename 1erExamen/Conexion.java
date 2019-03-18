@@ -110,18 +110,19 @@ public class Conexion{
 		}
 		return publicacion;
 	}
-	public Comentario obtenerComentario() {
+	public Comentario obtenerComentario(Usuario usuario) {
 		Comentario comentario = null;
-		try{
+		try {
 			Statement stmt = con.createStatement();
-			ResultSet rsComentario = stmt.executeQuery("SELECT * FROM Comentario WHERE Nombre = '" + nombreC +"';");
+			ResultSet rsComentario = stmt.executeQuery("SELECT * FROM Comentario order by IdComentario desc limit 1");
 
-		    while(rsComentario.next()){
+		    while(rsComentario.next()) {
+		    	System.out.println("LA BD SI ENCONTRO UN RESULTADO");
 		    	int IdComentario = rsComentario.getInt("IdComentario");
-		    	String fecha = sdf.format(rsComentario.getDate("Fecha"));
 		    	String texto = rsComentario.getString("Texto");
-		    	int idUser = rsComentario.getString("IdUsuario");
-		    	comentario = new Comentario(IdComentario, fecha, texto, idUser);
+		    	int idUser = rsComentario.getInt("IdUsuario");
+		    	String fecha = sdf.format(rsComentario.getDate("Fecha"));
+		    	comentario = new Comentario(IdComentario, fecha, texto, usuario);
 		    }
 		    rsComentario.close();
 		    stmt.close();
@@ -130,12 +131,11 @@ public class Conexion{
 		}
 		return comentario;
 	}
-	public int insertarComentario(java.sql.Timestamp sqlTimestamp, String texto, String imagen, int idUsuario, int idPublicacion) {
+	public int insertarComentario(java.sql.Timestamp sqlTimestamp, String texto, int idUsuario, int idPublicacion) {
 		int bandera = 1;
 		try {
 			Statement stmt = con.createStatement();
-			String sql = "INSERT INTO Comentario(Fecha, Texto, Imagen, IdUsuario, IdPublicacion) VALUES('" + sqlTimestamp +"', '"+ texto +"','" + imagen + "','" + idUsuario +"','"+ idPublicacion +"');";
-			//INSERT INTO Comentario(Fecha, Texto, Imagen, IdUsuario, IdPublicacion) VALUES('2019-03-14 10:00:00', 'Prueba de texto', './fotos/1.png', 1, 1);
+			String sql = "INSERT INTO Comentario(Fecha, Texto, IdUsuario, IdPublicacion) VALUES('" + sqlTimestamp +"', '"+ texto +"','" + idUsuario +"','"+ idPublicacion +"');";
 			stmt.executeUpdate(sql);
 			con.commit();
 			stmt.close();
@@ -146,7 +146,21 @@ public class Conexion{
 		}
 		return bandera;
 	}
-
+	public int agregarImagen(int IdComentario, String imagen) {
+		int bandera = 1;
+		try {
+			Statement stmt = con.createStatement();
+			String sql = "UPDATE Comentario SET imagen ='"+ imagen+"' WHERE idComentario ="+IdComentario +"";
+			stmt.executeUpdate(sql);
+			con.commit();
+			stmt.close();
+		}
+		catch(Exception e) {
+			bandera = 0;
+			e.printStackTrace();
+		}
+		return bandera;
+	}
 	public Publicacion cargarComentarios(int IdPublicacion) {
 		Publicacion p = null;
 		try{

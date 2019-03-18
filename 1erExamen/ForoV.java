@@ -178,6 +178,11 @@ public class ForoV extends JFrame implements ActionListener {
 		f.setSize(700, 325);
 		f.setVisible(true);
 		f.setLocationRelativeTo(null);
+		System.out.print("Cerrando ForoV....");
+		this.setVisible(false);
+		System.out.println(" Cerrado.");
+		usuario = null;
+		this.dispose();
 	}
 
 	public void actionPerformed(ActionEvent e) {

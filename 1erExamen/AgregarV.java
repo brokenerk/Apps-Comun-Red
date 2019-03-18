@@ -199,7 +199,8 @@ public class AgregarV extends JFrame implements ActionListener {
 			}
 
 			banderaImagen = 0;
-			// Al termina regresa a la pagina principal
+			// REGRESA AL INICIO
+			System.out.print("Abriendo ForoV....");
 			crearForoV(usuario);
 			System.out.print("Cerrando PostV....");
 			this.setVisible(false);

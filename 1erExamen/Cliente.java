@@ -109,7 +109,7 @@ public class Cliente {
             e.printStackTrace();
         }
 	}
-	public static void enviarComentarioCompleto(int idUsuario, int idPublicacion, String comentario, File f, String pathOrigen) {
+	public static void enviarComentarioCompleto(String nickname_tmp, int idUsuario, int idPublicacion, String comentario, File f, String pathOrigen) {
 		try {
 			Socket cl = new Socket(host, pto);
 	        DataOutputStream dos = new DataOutputStream(cl.getOutputStream()); //OutputStream
@@ -129,6 +129,7 @@ public class Cliente {
             dos.writeLong(tam);	dos.flush();
 
 			dos.writeUTF(comentario); dos.flush();
+			dos.writeUTF(nickname_tmp); dos.flush();
 			dos.writeInt(idUsuario); dos.flush();
 			dos.writeInt(idPublicacion); dos.flush();
 

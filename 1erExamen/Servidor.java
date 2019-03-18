@@ -13,7 +13,7 @@ public class Servidor {
 	private static Conexion c;
 
 	/*********************************************************************************************
-								3. RECIBIR PUBLICACION COMPLETO
+							3. RECIBIR PUBLICACION COMPLETA
 	*********************************************************************************************/
 	// Valor de la bandera = 3
 	public static void recibirPublicacionCompleta(DataInputStream dis, String nombre) throws IOException {
@@ -23,55 +23,53 @@ public class Servidor {
 		String nickname_tmp = dis.readUTF();
 		int i, j;
 
-		// Obtengo la extension del archivo sin el nombre
+		// Obtengo la extension de la imagen sin el nombre
 		String imagen = "";
 		for(i = 0; i < nombre.length(); i++) {
 			if(nombre.charAt(i) == '.') {
-				for(j = i; j < nombre.length(); j++) {
+				for(j = i; j < nombre.length(); j++) 
 					imagen = imagen + nombre.charAt(j);
-				}
-			break;
+				break;
 			}
-		}
-		System.out.println("Nombre: " + imagen);
-		
-		// ********************************  
-   			
+		}		
+
+		// CREAR PUBLICACION Y COMENTARIO
+
     	java.util.Date javaDate = new java.util.Date();
 		long javaTime = javaDate.getTime();
 		java.sql.Timestamp sqlTimestamp = new java.sql.Timestamp(javaTime);
-		
-		System.out.println("La fecha es:: " + sqlTimestamp.toString());
-		System.out.println("Nombre de la publicacion:" + nombrePublicacion);
-    	System.out.println("Comentario:" + comentario);    
-		System.out.println("Nombre imagen:" + imagen); 
-		System.out.println("Nombre Usuario:" + nickname_tmp);   
 
-		int idUsuario, idPublicacion;
+		int idUsuario, idPublicacion, idComentario;
 		Usuario usuario;
 		Publicacion publicacion;
-		
+		Comentario comentarioC;
     	try {
     		c.conectarBD();
+    		// Crea la nueva publicacin
 	    	if(c.insertarPublicacion(nombrePublicacion, sqlTimestamp) == 1) {
-	    		// Va a poder insertar el comentarios
-	    		System.out.println("Se creo la nueva publicacion:" + nombrePublicacion);
+	    		System.out.println(" -----> Se creo la nueva publicacion:" + nombrePublicacion);
+	    		// Inserta el comentario
 	    		// Consulta el id del Usuario
 	    		usuario = c.obtenerIdUsuario(nickname_tmp);
 	    		idUsuario = usuario.getId();
-	    		c.cerrarConexion();
-	    		c.conectarBD();
+	    		// Obtiene el Id de la publicacion
 	    		publicacion = c.obtenerPublicacion(nombrePublicacion);
 	    		idPublicacion = publicacion.getId();
-	    		// Agrego el primer comentario de la Nueva Publicacion
-	    		if(c.insertarComentario(sqlTimestamp, comentario, null, idUsuario, idPublicacion) == 1) {
-	    			System.out.println("Se Agrego el comentario a la publicacion:" + nombrePublicacion);
-	    			// Agregamos imagen
-	    			imagen = rutaServer + idPublicacion + imagen;
-	    			
+	    		// Agrego el primer comentario de la nueva Publicacion sin la imagen
+	    		if(c.insertarComentario(sqlTimestamp, comentario, idUsuario, idPublicacion) == 1) {
+	    			System.out.println("-----> Se Agrego el comentario a la publicacion:" + nombrePublicacion);
+	    			// Obtengo el ultimo comentario
+	    			comentarioC = c.obtenerComentario(usuario);
+	    			if(comentarioC != null) {
+		    			idComentario = comentarioC.getId();
+		    			// Nuevo nombre de la imagen
+		    			imagen = rutaServer + idComentario + imagen;
+		    			if(c.agregarImagen(idComentario, imagen) == 1)
+		    				System.out.println("Se agrego la imagen:" + imagen);
+	    			}
 	    		}
 	    	}
-    	c.cerrarConexion();
+    		c.cerrarConexion();
     	}
     	catch(Exception e) {
     		e.printStackTrace();
@@ -110,72 +108,60 @@ public class Servidor {
 	
 		dis.close();
 		// ********************************  
-   			
+ 
     	java.util.Date javaDate = new java.util.Date();
 		long javaTime = javaDate.getTime();
 		java.sql.Timestamp sqlTimestamp = new java.sql.Timestamp(javaTime);
-		
-		System.out.println("La fecha es:: " + sqlTimestamp.toString());
-		System.out.println("Nombre de la publicacion:" + nombrePublicacion);
-    	System.out.println("Comentario:" + comentario);    
-		System.out.println("Nombre Usuario:" + nickname_tmp);   
 
-		int idUsuario, idPublicacion;
+		int idUsuario, idPublicacion, idComentario;
+		String imagen;
 		Usuario usuario;
 		Publicacion publicacion;
+		Comentario comentarioC;
 		
     	try {
     		c.conectarBD();
+    		// Crea la nueva publicacin
 	    	if(c.insertarPublicacion(nombrePublicacion, sqlTimestamp) == 1) {
-	    		// Va a poder insertar el comentarios
-	    		System.out.println("Se creo la nueva publicacion:" + nombrePublicacion);
+	    		System.out.println(" -----> Se creo la nueva publicacion:" + nombrePublicacion);
+	    		// Inserta el comentario
 	    		// Consulta el id del Usuario
 	    		usuario = c.obtenerIdUsuario(nickname_tmp);
 	    		idUsuario = usuario.getId();
-	    		c.cerrarConexion();
-	    		c.conectarBD();
+	    		// Obtiene el Id de la publicacion
 	    		publicacion = c.obtenerPublicacion(nombrePublicacion);
 	    		idPublicacion = publicacion.getId();
-
-	    		// Agrego el primer comentario de la Nueva Publicacion
-	    		String imagen = null;
-	    		if(c.insertarComentario(sqlTimestamp, comentario, imagen, idUsuario, idPublicacion) == 1) 
-	    			System.out.println("Se Agrego el comentario a la publicacion:" + nombrePublicacion);
+	    		// Agrego el primer comentario de la nueva Publicacion sin la imagen
+	    		if(c.insertarComentario(sqlTimestamp, comentario, idUsuario, idPublicacion) == 1) {
+	    			System.out.println("-----> Se Agrego el comentario a la publicacion:" + nombrePublicacion);
+	    		}
 	    	}
-    	c.cerrarConexion();
+    		c.cerrarConexion();
     	}
     	catch(Exception e) {
     		e.printStackTrace();
     	}  // Fin catch	
-	} // RecibirArchivos
+	} // RecibirPublicacionSinImagen
 
 	/*********************************************************************************************
-								5. RECIBIR COMENTARIO SIN IMAGEN
+							5. RECIBIR COMENTARIO SIN IMAGEN
 	*********************************************************************************************/
-	// Valor de la bandera = 4
+	// Valor de la bandera = 5
 	public static void recibirComentario(DataInputStream dis) throws IOException {
-		
 		String comentario = dis.readUTF();
 		int idUsuario = dis.readInt();
 		int idPublicacion = dis.readInt();
 		dis.close();
-		// ********************************  
-   			
+
     	java.util.Date javaDate = new java.util.Date();
 		long javaTime = javaDate.getTime();
 		java.sql.Timestamp sqlTimestamp = new java.sql.Timestamp(javaTime);
-		
-		System.out.println("La fecha es:: " + sqlTimestamp.toString());
-    	System.out.println("Comentario:" + comentario);    
-
+	
     	try {
     		c.conectarBD();
-	    
     		// Agrego el primer comentario de la Nueva Publicacion
-    		String imagen = null;
-    		if(c.insertarComentario(sqlTimestamp, comentario, imagen, idUsuario, idPublicacion) == 1) 
+    		if(c.insertarComentario(sqlTimestamp, comentario, idUsuario, idPublicacion) == 1) 
     			System.out.println("Se Agrego el comentario a la publicacion:" + idPublicacion);
- 
     		c.cerrarConexion();
     	}
     	catch(Exception e) {
@@ -186,10 +172,11 @@ public class Servidor {
 	/*********************************************************************************************
 								6. RECIBIR COMENTARIO COMPLETO
 	*********************************************************************************************/
-	// Valor de la bandera = 3
+	// Valor de la bandera = 6
 	public static void recibirComentarioCompleto(DataInputStream dis, String nombre) throws IOException {
 		long tam = dis.readLong();
 		String comentario = dis.readUTF();
+		String nickname_tmp = dis.readUTF();
 		int idUsuario = dis.readInt();
 		int idPublicacion = dis.readInt();
 		int i, j;
@@ -211,18 +198,26 @@ public class Servidor {
     	java.util.Date javaDate = new java.util.Date();
 		long javaTime = javaDate.getTime();
 		java.sql.Timestamp sqlTimestamp = new java.sql.Timestamp(javaTime);
-		
-		System.out.println("La fecha es:: " + sqlTimestamp.toString());
-    	System.out.println("Comentario:" + comentario);    
-		System.out.println("Nombre imagen:" + imagen); 
+
+		Usuario usuario;
+		Comentario comentarioC;
+		int idComentario;
 
     	try {
     		c.conectarBD();
-    		imagen = rutaServer + idPublicacion + imagen;
-    		// Agrego el primer comentario de la Nueva Publicacion
-    		if(c.insertarComentario(sqlTimestamp, comentario, imagen, idUsuario, idPublicacion) == 1) 
-    			System.out.println("Se Agrego el comentario a la publicacion:" + idPublicacion);
-    
+    		// Agrego el primer comentario a la publicacion sin la imagen
+    		if(c.insertarComentario(sqlTimestamp, comentario, idUsuario, idPublicacion) == 1) {
+    			// Obtengo el ultimo comentario
+    			usuario = c.obtenerIdUsuario(nickname_tmp);
+    			comentarioC = c.obtenerComentario(usuario);
+    			if(comentarioC != null) {
+	    			idComentario = comentarioC.getId();
+	    			// Nuevo nombre de la imagen
+	    			imagen = rutaServer + idComentario + imagen;
+	    			if(c.agregarImagen(idComentario, imagen) == 1)
+	    				System.out.println("Se agrego la imagen:" + imagen);
+    			}
+    		}
     		c.cerrarConexion();
     	}
     	catch(Exception e) {
@@ -355,7 +350,7 @@ public class Servidor {
 					obtenerComentarios(cl, dis);
 				}
 				else if(bandera == 3) {
-					// Envia la imagen al servidor
+					// Recibe una publicación completa
 					String nombre = dis.readUTF();
 					recibirPublicacionCompleta(dis, nombre);
 				}

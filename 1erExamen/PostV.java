@@ -247,15 +247,11 @@ public class PostV extends JFrame implements ActionListener {
 
 		if(b == btnAgregar) {
 			// AGREGA UN NUEVO COMENTARIO CON SU IMAGEN O SIN IMAGEN
-			// Se utilizar el objeto Usuario para saber quien hizo el comentario
-			// SI NO SE ELIGE IMAGEN, SE PONE LA DE DEFAULT O SIMPLEMENTE SE OCULTA
-			// AGREGA UN NUEVO COMENTARIO CON SU IMAGEN O SIN IMAGEN
-			// SI NO SE ELIGE IMAGEN, SE PONE LA DE DEFAULT O SIMPLEMENTE SE OCULTA
 			String comentarioTA = taAgregar.getText();
 			if((comentarioTA != null) && (comentarioTA.length() > 0)) {
 				if(banderaImagen == 1) {
 					String path = file.getAbsolutePath();
-					Cliente.enviarComentarioCompleto(usuario.getId(), publicacion.getId(), comentarioTA, file, path);
+					Cliente.enviarComentarioCompleto(usuario.getNickname(), usuario.getId(), publicacion.getId(), comentarioTA, file, path);
 				}
 				else {
 					Cliente.enviarComentario(usuario.getId(), publicacion.getId(), comentarioTA);

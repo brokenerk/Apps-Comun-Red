@@ -23,7 +23,7 @@ public class Cliente {
 				ENVIAR IMAGEN
 	****************************************************/
 
-	public static void EnviarPublicacionCompleta(String nombrePublicacion, String comentario, File f, String pathOrigen) {
+	public static void enviarPublicacionCompleta(String nickname_tmp, String nombrePublicacion, String comentario, File f, String pathOrigen) {
 		try {
 			Socket cl = new Socket(host, pto);
 	        DataOutputStream dos = new DataOutputStream(cl.getOutputStream()); //OutputStream
@@ -45,6 +45,7 @@ public class Cliente {
 
 			dos.writeUTF(nombrePublicacion); dos.flush();
 			dos.writeUTF(comentario); dos.flush();
+			dos.writeUTF(nickname_tmp); dos.flush();
 
             long enviados = 0;
             int pb = 0;
@@ -70,6 +71,90 @@ public class Cliente {
         }
 	} // Class Enviar Imagen
 
+	public static void enviarPublicacion(String nickname_tmp, String nombrePublicacion, String comentario) {
+		try {
+			Socket cl = new Socket(host, pto);
+	        DataOutputStream dos = new DataOutputStream(cl.getOutputStream()); //OutputStream
+
+            //La bandera tiene el valor de 4  = No enviar imagen
+            dos.writeInt(4); dos.flush();
+
+			dos.writeUTF(nombrePublicacion); dos.flush();
+			dos.writeUTF(comentario); dos.flush();
+			dos.writeUTF(nickname_tmp); dos.flush();
+            dos.close(); 
+            cl.close();
+	    } // Try
+	    catch(Exception e) {
+            e.printStackTrace();
+        }
+	} // Class Enviar Imagen
+
+	public static void enviarComentario(int idUsuario, int idPublicacion, String comentario) {
+		try {
+			Socket cl = new Socket(host, pto);
+	        DataOutputStream dos = new DataOutputStream(cl.getOutputStream()); //OutputStream
+
+            //La bandera tiene el valor de 5  = No enviar imagen solo comentario
+            dos.writeInt(5); dos.flush();
+
+			dos.writeUTF(comentario); dos.flush();
+			dos.writeInt(idUsuario); dos.flush();
+			dos.writeInt(idPublicacion); dos.flush();
+
+            dos.close(); 
+            cl.close();
+	    } // Try
+	    catch(Exception e) {
+            e.printStackTrace();
+        }
+	}
+	public static void enviarComentarioCompleto(int idUsuario, int idPublicacion, String comentario, File f, String pathOrigen) {
+		try {
+			Socket cl = new Socket(host, pto);
+	        DataOutputStream dos = new DataOutputStream(cl.getOutputStream()); //OutputStream
+
+    		String nombre = f.getName();
+    		
+            long tam = f.length();
+
+            System.out.println("\nSe envia el archivo " + pathOrigen + " con " + tam + " bytes");
+            DataInputStream dis = new DataInputStream(new FileInputStream(pathOrigen)); // InputStream
+
+            //La bandera tiene el valor de 6  = Enviar imagen
+            dos.writeInt(6); dos.flush();
+
+			//Se envia info de la imagen
+            dos.writeUTF(nombre); dos.flush();
+            dos.writeLong(tam);	dos.flush();
+
+			dos.writeUTF(comentario); dos.flush();
+			dos.writeInt(idUsuario); dos.flush();
+			dos.writeInt(idPublicacion); dos.flush();
+
+            long enviados = 0;
+            int pb = 0;
+            int n = 0, porciento = 0;
+            byte[] b = new byte[2000];
+
+            while(enviados < tam) {
+                n = dis.read(b);
+                dos.write(b, 0, n);
+                dos.flush();
+                enviados += n;
+                porciento = (int)((enviados * 100) / tam);
+                System.out.println("\r Enviando el " + porciento + "% --- " + enviados + "/" + tam + " bytes");
+            } // while
+
+            JOptionPane.showMessageDialog(null, "Se ha subido el archivo " + nombre + " con tamanio: " + tam);
+            dis.close(); 
+            dos.close(); 
+            cl.close();
+	    } // Try
+	    catch(Exception e) {
+            e.printStackTrace();
+        }
+	}
 
 	public static Publicacion descargarComentarios(int IdPublicacion) {
 		Publicacion p = null;

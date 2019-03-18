@@ -48,13 +48,97 @@ public class Conexion{
 		}
 	}
 
-	public int insertarPublicacion(String nombre, String fecha) {
+	public int insertarPublicacion(String nombre, java.sql.Timestamp sqlTimestamp) {
 		int bandera = 1;
 		try {
 			Statement stmt = con.createStatement();
-			String sql = "INSERT INTO Publicacion(Nombre, Fecha) VALUES(" + nombre +", "+ fecha +")";
-			//INSERT INTO Publicacion(Nombre, Fecha) VALUES("Perritos", "2019-03-14 10:00:00");
+			String sql = "INSERT INTO Publicacion(Nombre, Fecha) VALUES('" + nombre +"', '"+ sqlTimestamp +"');";
 			stmt.executeUpdate(sql);
+			con.commit();
+			stmt.close();
+		}
+		catch(Exception e) {
+			bandera = 0;
+			e.printStackTrace();
+		}
+		return bandera;
+	}
+	
+	public Usuario obtenerIdUsuario(String nickname_tmp){
+		Usuario usuario = null;
+		System.out.println("Buscando usuario en la BD.");
+		try{
+			Statement stmt = null;
+			stmt = con.createStatement();
+		    ResultSet rsUsuario = stmt.executeQuery(
+								"SELECT * " +
+								"FROM Usuario " +
+								"WHERE Nickname = '" + nickname_tmp + "';");
+
+		    if(rsUsuario.next()){
+		    	int IdUsuario = rsUsuario.getInt("IdUsuario");
+		    	String nickname = rsUsuario.getString("Nickname");
+		    	String password = rsUsuario.getString("Password");
+		    	String avatar = rsUsuario.getString("Avatar");
+		    	usuario = new Usuario(IdUsuario, nickname, password);
+		    	if(avatar != null)
+		    		usuario.setAvatar(avatar);
+		    }
+		    rsUsuario.close();
+		    stmt.close();
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return usuario;
+	}
+	public Publicacion obtenerPublicacion(String nombreP) {
+		Publicacion publicacion = null;
+		try{
+			Statement stmt = con.createStatement();
+			ResultSet rsPublicacion = stmt.executeQuery("SELECT * FROM Publicacion WHERE Nombre = '" + nombreP +"';");
+
+		    while(rsPublicacion.next()){
+		    	int IdPublicacion = rsPublicacion.getInt("IdPublicacion");
+		    	String fecha = sdf.format(rsPublicacion.getDate("Fecha"));
+		    	String nombre = rsPublicacion.getString("Nombre");
+		    	publicacion = new Publicacion(IdPublicacion, nombre, fecha);
+		    }
+		    rsPublicacion.close();
+		    stmt.close();
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return publicacion;
+	}
+	public Comentario obtenerComentario() {
+		Comentario comentario = null;
+		try{
+			Statement stmt = con.createStatement();
+			ResultSet rsComentario = stmt.executeQuery("SELECT * FROM Comentario WHERE Nombre = '" + nombreC +"';");
+
+		    while(rsComentario.next()){
+		    	int IdComentario = rsComentario.getInt("IdComentario");
+		    	String fecha = sdf.format(rsComentario.getDate("Fecha"));
+		    	String texto = rsComentario.getString("Texto");
+		    	int idUser = rsComentario.getString("IdUsuario");
+		    	comentario = new Comentario(IdComentario, fecha, texto, idUser);
+		    }
+		    rsComentario.close();
+		    stmt.close();
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return comentario;
+	}
+	public int insertarComentario(java.sql.Timestamp sqlTimestamp, String texto, String imagen, int idUsuario, int idPublicacion) {
+		int bandera = 1;
+		try {
+			Statement stmt = con.createStatement();
+			String sql = "INSERT INTO Comentario(Fecha, Texto, Imagen, IdUsuario, IdPublicacion) VALUES('" + sqlTimestamp +"', '"+ texto +"','" + imagen + "','" + idUsuario +"','"+ idPublicacion +"');";
+			//INSERT INTO Comentario(Fecha, Texto, Imagen, IdUsuario, IdPublicacion) VALUES('2019-03-14 10:00:00', 'Prueba de texto', './fotos/1.png', 1, 1);
+			stmt.executeUpdate(sql);
+			con.commit();
+			stmt.close();
 		}
 		catch(Exception e) {
 			bandera = 0;
@@ -177,7 +261,7 @@ public class Conexion{
 	}
 
 	public static void main(String[] args){
-		Conexion c = new Conexion("com.mysql.jdbc.Driver", "jdbc:mysql://localhost:3306/", "Foro", "root", "root");
+		Conexion c = new Conexion("com.mysql.jdbc.Driver", "jdbc:mysql://localhost:3306/", "foro", "root", "root");
    		c.conectarBD();
    		c.cargarComentarios(1);
 		c.cerrarConexion();

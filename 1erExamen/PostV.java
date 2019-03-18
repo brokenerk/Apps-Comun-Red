@@ -25,8 +25,8 @@ public class PostV extends JFrame implements ActionListener {
 	Publicacion publicacion;
 	Usuario usuario;
 	public static String sep = System.getProperty("file.separator");
-
-	public static int banderaImagen = 0;
+	File file;
+	int banderaImagen = 0;
 	
 	public PostV(int IdPublicacion, Usuario usuario) {
 		//Obtenemos la publicacion y la sesion usuario en cuestion
@@ -204,14 +204,38 @@ public class PostV extends JFrame implements ActionListener {
 	/***************************************************
 				SELECCIONAR IMAGEN
 	****************************************************/
-	public void SeleccionarImagen() {
+	public void seleccionarImagenFC() {
 		try {
 			JFileChooser jf = new JFileChooser();
 			int r = jf.showOpenDialog(null);
-
 			if(r == JFileChooser.APPROVE_OPTION) {
-				File file = jf.getSelectedFile();
-				
+				file = jf.getSelectedFile();
+				String path = file.getAbsolutePath();
+				System.out.println("La ruta es: " + path);
+
+				// Convertir el archivo a Bytes para poder mostrarlo
+			    byte[] archivoBytes = null;
+			    long tamanoArch = file.length(); // File size
+			    archivoBytes = new byte[(int) tamanoArch];
+			    try {
+			      // Lee el archivo
+			      FileInputStream docu = new FileInputStream(file);
+			      // Inserta en un nuevo arreglo
+			      int numBytes = docu.read(archivoBytes);
+			      System.out.print("El archivo tiene " + numBytes + " de bytes.");
+			      docu.close(); // Close
+			    } 
+			    catch (FileNotFoundException e) {
+			      System.out.print("No se ha encontrado el archivo.");
+			    } 
+			    catch (IOException e) {
+			      System.out.print("No se ha podido leer el archivo.");
+			    }
+			    // Creamos una imagen
+				ImageIcon icon = new ImageIcon(archivoBytes);
+				// Se muestra en el panel
+				lfoto.setIcon(new ImageIcon(icon.getImage().getScaledInstance(175, 175, Image.SCALE_SMOOTH)));
+				banderaImagen = 1;
 			}
         }
         catch(Exception e) {
@@ -225,12 +249,27 @@ public class PostV extends JFrame implements ActionListener {
 			// AGREGA UN NUEVO COMENTARIO CON SU IMAGEN O SIN IMAGEN
 			// Se utilizar el objeto Usuario para saber quien hizo el comentario
 			// SI NO SE ELIGE IMAGEN, SE PONE LA DE DEFAULT O SIMPLEMENTE SE OCULTA
-			
+			// AGREGA UN NUEVO COMENTARIO CON SU IMAGEN O SIN IMAGEN
+			// SI NO SE ELIGE IMAGEN, SE PONE LA DE DEFAULT O SIMPLEMENTE SE OCULTA
+			String comentarioTA = taAgregar.getText();
+			if((comentarioTA != null) && (comentarioTA.length() > 0)) {
+				if(banderaImagen == 1) {
+					String path = file.getAbsolutePath();
+					Cliente.enviarComentarioCompleto(usuario.getId(), publicacion.getId(), comentarioTA, file, path);
+				}
+				else {
+					Cliente.enviarComentario(usuario.getId(), publicacion.getId(), comentarioTA);
+				}
+			}
+			else {
+				JOptionPane.showMessageDialog(null, "Ingresa un comentario valido");
+			}
+			banderaImagen = 0;
 		}
 		else if(b == btnBuscar) {
 			/* BUSCA LA FOTO PARA AGREGARLA AL COMENTARIO 
 			// SUBE LA FOTO AL SERVIDOR (y al mismo tiempo guarda la ruta en la BD)*/
-			SeleccionarImagen();
+			seleccionarImagenFC();
 		}
 		else if(b == btnRegresar) {
 			System.out.print("Abriendo ForoV....");

@@ -184,10 +184,10 @@ public class AgregarV extends JFrame implements ActionListener {
 				if((comentarioTA != null) && (comentarioTA.length() > 0)) {
 					if(banderaImagen == 1) {
 						String path = file.getAbsolutePath();
-						Cliente.EnviarPublicacionCompleta(nombrePub, comentarioTA, file, path);
+						Cliente.enviarPublicacionCompleta(usuario.getNickname(), nombrePub, comentarioTA, file, path);
 					}
 					else {
-						//Cliente.enviarPublicacion(nombrePub, comentarioTA);
+						Cliente.enviarPublicacion(usuario.getNickname(), nombrePub, comentarioTA);
 					}
 				}
 				else {

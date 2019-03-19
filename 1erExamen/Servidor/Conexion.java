@@ -135,7 +135,7 @@ public class Conexion{
 		int bandera = 1;
 		try {
 			Statement stmt = con.createStatement();
-			String sql = "INSERT INTO Comentario(Fecha, Texto, IdUsuario, IdPublicacion) VALUES('" + sqlTimestamp +"', '"+ texto +"','" + idUsuario +"','"+ idPublicacion +"');";
+			String sql = "INSERT INTO Comentario(Fecha, Texto, IdUsuario, IdPublicacion) VALUES('" + sqlTimestamp + "', '" + texto + "','" + idUsuario + "','" + idPublicacion + "');";
 			stmt.executeUpdate(sql);
 			con.commit();
 			stmt.close();
@@ -148,9 +148,10 @@ public class Conexion{
 	}
 	public int agregarImagen(int IdComentario, String imagen) {
 		int bandera = 1;
+		System.out.println(imagen);
 		try {
 			Statement stmt = con.createStatement();
-			String sql = "UPDATE Comentario SET imagen ='"+ imagen+"' WHERE idComentario ="+IdComentario +"";
+			String sql = "UPDATE Comentario SET imagen = '" + imagen + "' WHERE idComentario = " + IdComentario + ";";
 			stmt.executeUpdate(sql);
 			con.commit();
 			stmt.close();

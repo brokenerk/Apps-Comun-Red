@@ -125,7 +125,7 @@ public class PostV extends JFrame implements ActionListener {
 
 			//Revisamos si se agrego o no una imagen en el comentario
 			if(img == null)
-				limagen[i].setIcon(new ImageIcon(new javax.swing.ImageIcon(getClass().getResource("./fotos/default.png")).getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH)));
+				limagen[i].setIcon(new ImageIcon(new javax.swing.ImageIcon(getClass().getResource("default.png")).getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH)));
 			else
 				limagen[i].setIcon(new ImageIcon(img.getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH)));
 
@@ -166,7 +166,7 @@ public class PostV extends JFrame implements ActionListener {
 
 		// Agregamos al panel FOTO la imagen default
 		lfoto = new JLabel(imagen);
-		lfoto.setIcon(new ImageIcon(new javax.swing.ImageIcon(getClass().getResource("./fotos/default.png")).getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH)));
+		lfoto.setIcon(new ImageIcon(new javax.swing.ImageIcon(getClass().getResource("default.png")).getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH)));
 		panelFoto.add(lfoto); 
 
 		// ----------------------------------------

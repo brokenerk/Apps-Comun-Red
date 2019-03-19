@@ -64,6 +64,7 @@ public class Servidor {
 		    			idComentario = comentarioC.getId();
 		    			// Nuevo nombre de la imagen
 		    			imagen = rutaServer + idComentario + imagen;
+		    			System.out.println(imagen);
 		    			if(c.agregarImagen(idComentario, imagen) == 1)
 		    				System.out.println("Se agrego la imagen:" + imagen);
 	    			}

@@ -72,7 +72,7 @@ public class AgregarV extends JFrame implements ActionListener {
 		// Agregamos al panel FOTO la imagen default
 		lfoto = new JLabel(imagen);
 		//lfoto.setIcon(new ImageIcon(alumno.getFoto().getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH)));
-		lfoto.setIcon(new ImageIcon(new javax.swing.ImageIcon(getClass().getResource("./fotos/default.png")).getImage().getScaledInstance(175, 175, Image.SCALE_SMOOTH)));
+		lfoto.setIcon(new ImageIcon(new javax.swing.ImageIcon(getClass().getResource("default.png")).getImage().getScaledInstance(175, 175, Image.SCALE_SMOOTH)));
 		
 		panelFoto.add(lfoto); 
 

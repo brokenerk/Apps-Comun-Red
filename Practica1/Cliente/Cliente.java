@@ -5,7 +5,7 @@ import javax.swing.JOptionPane;
 
 /*Funciones del cliente que haran las peticiones que se requieran al servidor*/
 public class Cliente {
-	private static int pto = 4321;
+	private static int pto = 4444;
 	private static String host = "127.0.0.1";
 	private static String rutaDirectorios = "";
 	public static String sep = System.getProperty("file.separator");

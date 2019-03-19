@@ -3,7 +3,7 @@ import java.net.*;
 import java.io.*;
 
 public class Cliente {
-	private static int pto = 4321;
+	private static int pto = 4444;
 	private static String host = "127.0.0.1";
 	public static Grupo[] grupos = null;
 

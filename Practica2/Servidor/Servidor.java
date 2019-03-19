@@ -147,7 +147,7 @@ public class Servidor {
 
 		System.out.println("Catalogos creados.");
 		try {
-			ServerSocket s = new ServerSocket(4321);
+			ServerSocket s = new ServerSocket(4444);
 			s.setReuseAddress(true);
 			System.out.println("Servidor Mini SAES iniciado, esperando alumnos/clientes...");
 

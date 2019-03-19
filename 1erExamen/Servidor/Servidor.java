@@ -325,7 +325,7 @@ public class Servidor {
 
 	public static void main(String[] args) {
 		try {
-			ServerSocket s = new ServerSocket(4321);
+			ServerSocket s = new ServerSocket(4444);
 			s.setReuseAddress(true);
 			c = new Conexion("com.mysql.jdbc.Driver", "jdbc:mysql://localhost:3306/", "Foro", "root", "root");
 			System.out.println("Servidor Foro iniciado, esperando clientes...");

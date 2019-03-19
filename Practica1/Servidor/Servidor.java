@@ -228,7 +228,7 @@ public class Servidor {
 
 	public static void main(String[] args) {
 		try {
-			ServerSocket s = new ServerSocket(4321);
+			ServerSocket s = new ServerSocket(4444);
 			s.setReuseAddress(true);
 			System.out.println("Servidor de archivos iniciado, esperando cliente...");
 

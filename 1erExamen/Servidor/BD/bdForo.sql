@@ -8,20 +8,20 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 
 -- -----------------------------------------------------
--- Schema foro
+-- Schema Foro
 -- -----------------------------------------------------
 
 -- -----------------------------------------------------
--- Schema foro
+-- Schema Foro
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `foro` DEFAULT CHARACTER SET utf8 ;
+CREATE SCHEMA IF NOT EXISTS `Foro` DEFAULT CHARACTER SET utf8 ;
 SHOW WARNINGS;
-USE `foro` ;
+USE `Foro` ;
 
 -- -----------------------------------------------------
--- Table `foro`.`Usuario`
+-- Table `Foro`.`Usuario`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `foro`.`Usuario` (
+CREATE TABLE IF NOT EXISTS `Foro`.`Usuario` (
   `IdUsuario` INT NOT NULL AUTO_INCREMENT,
   `Nickname` VARCHAR(45) NOT NULL,
   `Password` VARCHAR(45) NOT NULL,
@@ -32,9 +32,9 @@ ENGINE = InnoDB;
 SHOW WARNINGS;
 
 -- -----------------------------------------------------
--- Table `foro`.`Publicacion`
+-- Table `Foro`.`Publicacion`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `foro`.`Publicacion` (
+CREATE TABLE IF NOT EXISTS `Foro`.`Publicacion` (
   `IdPublicacion` INT NOT NULL AUTO_INCREMENT,
   `Nombre` VARCHAR(60) NOT NULL,
   `Fecha` DATETIME NOT NULL,
@@ -44,9 +44,9 @@ ENGINE = InnoDB;
 SHOW WARNINGS;
 
 -- -----------------------------------------------------
--- Table `foro`.`Comentario`
+-- Table `Foro`.`Comentario`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `foro`.`Comentario` (
+CREATE TABLE IF NOT EXISTS `Foro`.`Comentario` (
   `IdComentario` INT NOT NULL AUTO_INCREMENT,
   `Fecha` DATETIME NOT NULL,
   `Texto` VARCHAR(3000) NOT NULL,
@@ -58,12 +58,12 @@ CREATE TABLE IF NOT EXISTS `foro`.`Comentario` (
   INDEX `fk_idPublicacion_idx` (`IdPublicacion` ASC),
   CONSTRAINT `fk_idUsuario`
     FOREIGN KEY (`IdUsuario`)
-    REFERENCES `foro`.`Usuario` (`IdUsuario`)
+    REFERENCES `Foro`.`Usuario` (`IdUsuario`)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
   CONSTRAINT `fk_idPublicacion`
     FOREIGN KEY (`IdPublicacion`)
-    REFERENCES `foro`.`Publicacion` (`IdPublicacion`)
+    REFERENCES `Foro`.`Publicacion` (`IdPublicacion`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB;

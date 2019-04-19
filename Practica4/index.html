@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-type" content="text/html;" />
+		<link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+		<title>Servidor Web</title>
+	</head>
+	
+	<body>
+		<h2><a href="resources.html">Recursos disponibles</a></h2>
+		<h2>Formulario GET</h2>
+		<!-- form ACTION="mailto:dirección_de_email" METHOD="POST" ENCtype="TEXT/PLAIN" -->
+		<form action = "http://localhost:8000" method = "GET" name="formGET">
+			Nombre: <br>
+			<input type = "text" name = "Apellido"><br>
+
+			Dirección: <br>
+			<input type = "text" name = "Direccion"><br>
+
+			Teléfono: <br>
+			<input type = "text" name = "Telefono"><br>
+
+			Comentarios:<br>
+			<textarea name = "comentario" rows="7" cols="40"></textarea>
+			<br>
+
+			<input type = "submit" value="Enviar datos">
+			<input type = "reset" value="Borrar datos">
+		</form>
+
+		<br><br>
+		<h2>Formulario POST</h2>
+		<!-- form ACTION="mailto:dirección_de_email" METHOD="POST" ENCtype="TEXT/PLAIN" -->
+		<form action = "http://localhost:8000" method = "POST" name="formPost">
+			Nombre: <br>
+			<input type = "text" name = "Apellido"><br>
+
+			Dirección: <br>
+			<input type = "text" name = "Direccion"><br>
+
+			Teléfono: <br>
+			<input type = "text" name = "Telefono"><br>
+
+			Comentarios:<br>
+			<textarea name = "comentario" rows="7" cols="40"></textarea>
+			<br>
+
+			<input type = "submit" value="Enviar datos">
+			<input type = "reset" value="Borrar datos">
+		</form>
+	</body>
+</html>

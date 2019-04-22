@@ -5,21 +5,23 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class ServidorWeb {
-    
+	
     public static void main(String[] args) {
-    	int pto = 8000, tamPool;
+    	int pto, tamPool;
 
         try {
         	Scanner sc = new Scanner(System.in);
+        	System.out.print("Puerto: ");
+			pto = sc.nextInt();
 			System.out.print("Tamanio del pool de conexiones: ");
 			tamPool = sc.nextInt();
 
         	//Pool de Conexiones
         	ExecutorService pool = Executors.newFixedThreadPool(tamPool);
-	        System.out.println("Iniciando Servidor.......");
+	        System.out.println("Iniciando Servidor.... Pool de Conexiones = " + tamPool);
 
 	        ServerSocket s = new ServerSocket(pto);
-	        System.out.println("Servidor iniciado: --- OK");
+	        System.out.println("Servidor iniciado: http://localhost:" + pto + "/ --- OK");
 	        System.out.println("Esperando a Cliente....");
 
 	        for( ; ; ) { 

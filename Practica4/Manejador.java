@@ -4,22 +4,22 @@ import java.util.*;
 
 public class Manejador extends Thread {
     protected Socket cl;
-    protected DataInputStream dis;
+    protected BufferedReader br;
     protected DataOutputStream dos;
-    protected String fileName;
     protected Mime mime;
 
     public Manejador(Socket cl) throws Exception {
         this.cl = cl;
-        this.dis = new DataInputStream(this.cl.getInputStream());
+        this.br = new BufferedReader(new InputStreamReader(this.cl.getInputStream()));
         this.dos = new DataOutputStream(this.cl.getOutputStream());
         this.mime = new Mime();
     }
 
+    @Override
     public void run() {
         try {
-            String line = dis.readLine();
-            //System.out.println(line);
+            String line = br.readLine();
+            
             if(line == null)
             {
                 String vacia = "<html><head><title>Servidor WEB</title><body bgcolor='#AACCFF'>Linea Vacia</body></html>";
@@ -31,78 +31,103 @@ public class Manejador extends Thread {
                 System.out.println("Por el puerto: " + cl.getPort());
                 System.out.println("Datos: " + line + "\r\n\r\n");
 
-                if(line.indexOf("?") == -1) {
-                    //Solicita un archivo
-                    getArch(line);
+                //Metodo GET
+                if(line.toUpperCase().startsWith("GET")) {
+                	if(line.indexOf("?") == -1) {
+	                    //Solicita un archivo
+	                    int i = line.indexOf("/");
+				        int f = line.indexOf(" ", i);
+				        String fileName = line.substring(i + 1, f);
 
-                    if(fileName.compareTo("") == 0)
-                        SendA("index.html");
-                    else
-                        SendA(fileName);
+	                    if(fileName.compareTo("") == 0)
+	                        fileName = "index.html";
 
-                    System.out.println(fileName);
-                }
-                else if(line.toUpperCase().startsWith("GET")) {
-                    //Envia parametros desde un formulario
-                    StringTokenizer tokens = new StringTokenizer(line, "?");
-                    String req_a = tokens.nextToken();
-                    String req = tokens.nextToken();
+	                    enviarRecurso(fileName);
+	                    System.out.println(fileName);
+	                }
+	                else{
+	                    //Envia parametros desde un formulario
+	                    StringTokenizer tokens = new StringTokenizer(line, "?");
+	                    String req_a = tokens.nextToken();
+	                    String req = tokens.nextToken();
 
-                    System.out.println("Token1: " + req_a + "\r\n\r\n");
-                    System.out.println("Token2: " + req + "\r\n\r\n");
+	                    System.out.println("Token1: " + req_a + "\r\n\r\n");
+	                    System.out.println("Token2: " + req + "\r\n\r\n");
 
-                    String html = "HTTP/1.0 200 Okay\n\n" +
-                                  "<html><head><title>SERVIDOR WEB\n" +
-                                  "</title></head><body bgcolor='#AACCFF'><center><h1><br>Parametros Obtenidos..</br></h1>\n" +
-                                  "<h3><b>" + req + "</b></h3>\n" +
-                                  "</center></body></html>";
+	                    //Respuesta GET, devolvemos un HTML con los parametros del formulario
+	                    String html = "HTTP/1.1 200 OK\n" +
+	                    			  "Date: " + new Date() + " \n" +
+		              				  "Server: Axel Server/1.0 \n" +
+		              				  "Content-Type: text/html \n\n" +
 
-                    //Devolvemos un HTML con los parametros
-                    dos.write(html.getBytes());
-                    dos.flush();
+									  "<html><head><title>Metodo GET\n" +
+	                                  "</title></head><body bgcolor='#AACCFF'><center><h1><br>Parametros obtenidos por medio de GET.</br></h1>\n" +
+	                                  "<h3><b>" + req + "</b></h3>\n" +
+	                                  "</center></body></html>";
+
+	                    dos.write(html.getBytes());
+	                    dos.flush();
+	                    System.out.println("Respuesta: \n" + html);
+	                }
                 }
                 else {
-                    String noImplementado = "HTTP/1.0 501 Not Implemented\n\n";
-                    dos.write(noImplementado.getBytes());
+                	//Metodos no implementados en el servidor
+                    String error501 = "HTTP/1.1 501 Not Implemented\n" +
+                    				  "Date: " + new Date() + " \n" +
+		              				  "Server: Axel Server/1.0 \n" +
+		              				  "Content-Type: text/html \n\n" +
+
+	        						  "<html><head><meta charset='UTF-8'><title>Error 501</title></head>" +
+	        						  "<body><h1>Error 501: No implementado.</h1>" +
+	        						  "<p>El método HTTP o funcionalidad solicitada no está implementada en el servidor.</p>" +
+	        						  "</body></html>";
+                    dos.write(error501.getBytes());
                     dos.flush();
+                    System.out.println("Respuesta: \n" + error501);
                 }
             }
-
-            dis.close();
+            br.close();
             dos.close();
-            cl.close();   
+            cl.close();
         }
         catch(Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void getArch(String line) {
-        int i, f;
-        if(line.toUpperCase().startsWith("GET")) {
-            i = line.indexOf("/");
-            f = line.indexOf(" ", i);
-            fileName = line.substring(i + 1, f);
-        }
-    }
-
-    public void SendA(String arg) {
+    public void enviarRecurso(String arg) {
         try {
-            DataInputStream dis2 = new DataInputStream(new FileInputStream(arg));
-            int tam = dis2.available();
+        	File f = new File(arg);
+        	String sb = "HTTP/1.1 200 OK\n";
+
+        	if(!f.exists()){
+        		arg = "404.html"; //Recurso no encontrado
+        		sb = "HTTP/1.1 404 Not Found\n";
+        	}
+        	else if(f.isDirectory()){
+        		arg = "403.html"; //Recurso privado
+        		sb = "HTTP/1.1 403 Forbidden\n";
+        	}
+
+    		DataInputStream dis2 = new DataInputStream(new FileInputStream(arg)); 
+    		int tam = dis2.available();
 
             int pos = arg.indexOf(".");
             String extension = arg.substring(pos + 1, arg.length());
 
-            String sb = "HTTP/1.0 200 ok\n" +
-                        "Server: Axel Server/1.0 \n" +
-                        "Date: " + new Date() + " \n" +
-                        "Content-Type: " + mime.get(extension) + " \n" + //Distintos tipos MIME para archivos
-                        "Content-Length: " + tam + " \n\n";
+            //Enviamos las cabeceras de la respuesta HTTP
+            sb = sb + "Date: " + new Date() + " \n" +
+		              "Server: Axel Server/1.0 \n" +
+		              //Distintos tipos MIME para distintos tipos de archivos
+		              "Content-Type: " + mime.get(extension) + " \n" + 
+		              "Content-Length: " + tam + " \n\n";
 
             dos.write(sb.getBytes());
             dos.flush();
 
+            System.out.println("Respuesta: \n" + sb);
+
+            //Respuesta GET, enviamos el archivo solicitado
             byte[] b = new byte[1024];
             long enviados = 0;
             int n = 0;
@@ -113,12 +138,13 @@ public class Manejador extends Thread {
                 dos.flush();
                 enviados += n;
             }
-
-            dis2.close();
+            dis2.close(); 	
+            
         }
         catch(Exception e) {
-            System.out.println(e.getMessage());
-            e.printStackTrace();
+        	String error = e.getMessage();
+            System.out.println(error);
+            //e.printStackTrace();
         }
     }
 }

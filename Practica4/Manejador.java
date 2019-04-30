@@ -17,6 +17,12 @@ public class Manejador extends Thread {
 
     @Override
     public void run() {
+
+    	String headers = "HTTP/1.1 200 OK\n" +
+            			 "Date: " + new Date() + " \n" +
+          				 "Server: Axel Server/1.0 \n" +
+          				 "Content-Type: text/html \n\n";
+
         try {
             String line = br.readLine();
             
@@ -55,11 +61,7 @@ public class Manejador extends Thread {
 	                    System.out.println("Token2: " + req + "\r\n\r\n");
 
 	                    //Respuesta GET, devolvemos un HTML con los parametros del formulario
-	                    String html = "HTTP/1.1 200 OK\n" +
-	                    			  "Date: " + new Date() + " \n" +
-		              				  "Server: Axel Server/1.0 \n" +
-		              				  "Content-Type: text/html \n\n" +
-
+	                    String html = headers +
 									  "<html><head><title>Metodo GET\n" +
 	                                  "</title></head><body bgcolor='#AACCFF'><center><h1><br>Parametros obtenidos por medio de GET.</br></h1>\n" +
 	                                  "<h3><b>" + req + "</b></h3>\n" +
@@ -67,8 +69,14 @@ public class Manejador extends Thread {
 
 	                    dos.write(html.getBytes());
 	                    dos.flush();
-	                    System.out.println("Respuesta: \n" + html);
+	                    System.out.println("Respuesta GET: \n" + html);
 	                }
+                }
+                else if(line.toUpperCase().startsWith("HEAD")) {
+                	//Respuesta HEAD, devolvemos unicamente las cabeceras
+                	dos.write(headers.getBytes());
+                	dos.flush();
+                	System.out.println("Respuesta HEAD: \n" + headers);       
                 }
                 else {
                 	//Metodos no implementados en el servidor
@@ -83,7 +91,7 @@ public class Manejador extends Thread {
 	        						  "</body></html>";
                     dos.write(error501.getBytes());
                     dos.flush();
-                    System.out.println("Respuesta: \n" + error501);
+                    System.out.println("Respuesta ERROR 501: \n" + error501);
                 }
             }
             br.close();
@@ -112,6 +120,7 @@ public class Manejador extends Thread {
     		DataInputStream dis2 = new DataInputStream(new FileInputStream(arg)); 
     		int tam = dis2.available();
 
+    		//Obtenemos extension para saber el tipo de recurso
             int pos = arg.indexOf(".");
             String extension = arg.substring(pos + 1, arg.length());
 
@@ -125,7 +134,7 @@ public class Manejador extends Thread {
             dos.write(sb.getBytes());
             dos.flush();
 
-            System.out.println("Respuesta: \n" + sb);
+            System.out.println("Respuesta GET: \n" + sb);
 
             //Respuesta GET, enviamos el archivo solicitado
             byte[] b = new byte[1024];
@@ -142,9 +151,9 @@ public class Manejador extends Thread {
             
         }
         catch(Exception e) {
-        	String error = e.getMessage();
-            System.out.println(error);
-            //e.printStackTrace();
+        	//String error = e.getMessage();
+            //System.out.println(error);
+            e.printStackTrace();
         }
     }
 }

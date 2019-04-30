@@ -1,0 +1,15 @@
+in	 out
+-----------------
+|	|	|	|	|
+-----------------
+1024 bytes
+
+PipedOutputStream pout = new PipedOutputStream();
+ObjectOutputStream oos = new ObjectOutputStream(pout);
+Object o = new Object();
+oos.writeObject(o);
+oos.flush();
+
+PipedInputStream pin = PipedInputStream(pout);
+ObjectInputStream ois = new ObjectInputStream(pin);
+Objeto o1 = (Objeto) ois.readObject();

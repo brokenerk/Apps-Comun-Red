@@ -15,68 +15,171 @@ public class Manejador extends Thread {
         this.mime = new Mime();
     }
 
+    public void enviarRecurso(String arg, int bandera) {
+        try {
+        	File f = new File(arg);
+        	String sb = "HTTP/1.1 200 OK\n";
+
+        	if(!f.exists()) {
+        		arg = "404.html"; //Recurso no encontrado
+        		sb = "HTTP/1.1 404 Not Found\n";
+        	}
+        	else if(f.isDirectory()) {
+        		arg = "403.html"; //Recurso privado
+        		sb = "HTTP/1.1 403 Forbidden\n";
+        	}
+
+    		DataInputStream dis2 = new DataInputStream(new FileInputStream(arg)); 
+    		int tam = dis2.available();
+
+    		//Obtenemos extension para saber el tipo de recurso
+            int pos = arg.indexOf(".");
+            String extension = arg.substring(pos + 1, arg.length());
+
+            //Enviamos las cabeceras de la respuesta HTTP - METODO HEAD
+            sb = sb + "Date: " + new Date() + " \n" +
+		              "Server: Axel Server/1.0 \n" +
+		              //Distintos tipos MIME para distintos tipos de archivos
+		              "Content-Type: " + mime.get(extension) + " \n" + 
+		              "Content-Length: " + tam + " \n\n";
+
+            dos.write(sb.getBytes());
+            dos.flush();
+            String metodo = "HEAD";
+
+            if (bandera == 1) {
+	            metodo = "GET";
+	            //Respuesta GET, enviamos el archivo solicitado
+	            byte[] b = new byte[1024];
+	            long enviados = 0;
+	            int n = 0;
+	            
+	            while(enviados < tam) {
+	                n = dis2.read(b);
+	                dos.write(b, 0, n);
+	                dos.flush();
+	                enviados += n;
+	            }
+            }
+
+            System.out.println("Respuesta " + metodo + ": \n" + sb);
+            dis2.close(); 	
+        }
+        catch(Exception e) {
+            System.out.println(e.getMessage());
+            //e.printStackTrace();
+        }
+    }
+
+    public String obtenerNombreRecurso(String line){
+    	//Obtiene el nombre del producto de la peticion HTTP
+        int i = line.indexOf("/");
+        int f = line.indexOf(" ", i);
+        String resourceName = line.substring(i + 1, f);
+
+        //Si es vacio, entonces se trata del index
+        if(resourceName.compareTo("") == 0)
+            resourceName = "index.html";
+
+        return resourceName;
+    }
+
+    public String obtenerParametros(String line, String headers) {
+    	//Line: GET /?Nombre=&Direccion=&Telefono=&Comentarios= HTTP/1.1
+    	//Separamos los parametros de "GET"
+    	StringTokenizer tokens = new StringTokenizer(line, "?");
+        String request = tokens.nextToken();
+        request = tokens.nextToken();
+
+        //Separamos los parametros de "HTTP/1.1"
+        StringTokenizer tokens2 = new StringTokenizer(request, " ");
+        String request2 = tokens2.nextToken();
+
+        System.out.println(request2);
+        //Separamos los parametros junto a su valor uno del otro
+        StringTokenizer paramsTokens = new StringTokenizer(request2, "&");
+
+        String html = headers +
+					  "<html><head><meta charset='UTF-8'><title>Metodo GET\n" +
+                      "</title></head><body bgcolor='#AACCFF'><center><h2>Parametros obtenidos por medio de GET</h2><br>\n" +
+                      "<table border='2'><tr><th>Parametro</th><th>Valor</th></tr>";
+
+      	//Se recorren todos los parametros, mientras existan
+        while(paramsTokens.hasMoreTokens()){
+        	String parametros = paramsTokens.nextToken();
+        	//Separamos el nombre del parametro de su valor
+        	StringTokenizer paramValue = new StringTokenizer(parametros, "=");
+        	String param = ""; //Nombre del parametro
+        	String value = ""; //Valor del parametro
+
+        	//Hay que revisar si existen o si se enviaron parametros vacios
+        	if(paramValue.hasMoreTokens())
+        		param = paramValue.nextToken();
+
+        	if(paramValue.hasMoreTokens())
+        		value = paramValue.nextToken();
+
+        	html = html + "<tr><td><b>" + param + "</b></td><td>" + value + "</td></tr>\n";
+        }
+
+        html = html + "</table></center></body></html>";
+        return html;
+    }
+
     @Override
     public void run() {
-
+    	//Cabeceras de respuestas HTTP
     	String headers = "HTTP/1.1 200 OK\n" +
             			 "Date: " + new Date() + " \n" +
           				 "Server: Axel Server/1.0 \n" +
           				 "Content-Type: text/html \n\n";
 
         try {
-            String line = br.readLine();
-            
-            if(line == null)
-            {
+            String line = br.readLine(); //Lee primera linea
+
+            //Linea vacia
+            if(line == null) {
                 String vacia = "<html><head><title>Servidor WEB</title><body bgcolor='#AACCFF'>Linea Vacia</body></html>";
                 dos.write(vacia.getBytes());
                 dos.flush();
             }
-            else{
+            else {
                 System.out.println("\nCliente Conectado desde: " + cl.getInetAddress());
                 System.out.println("Por el puerto: " + cl.getPort());
                 System.out.println("Datos: " + line + "\r\n\r\n");
 
                 //Metodo GET
                 if(line.toUpperCase().startsWith("GET")) {
+
                 	if(line.indexOf("?") == -1) {
 	                    //Solicita un archivo
-	                    int i = line.indexOf("/");
-				        int f = line.indexOf(" ", i);
-				        String fileName = line.substring(i + 1, f);
-
-	                    if(fileName.compareTo("") == 0)
-	                        fileName = "index.html";
-
-	                    enviarRecurso(fileName);
-	                    System.out.println(fileName);
+				        String fileName = obtenerNombreRecurso(line);
+				        //Bandera GET = 1, HEAD = 0
+	                    enviarRecurso(fileName, 1);
 	                }
-	                else{
+	                else {
 	                    //Envia parametros desde un formulario
-	                    StringTokenizer tokens = new StringTokenizer(line, "?");
-	                    String req_a = tokens.nextToken();
-	                    String req = tokens.nextToken();
-
-	                    System.out.println("Token1: " + req_a + "\r\n\r\n");
-	                    System.out.println("Token2: " + req + "\r\n\r\n");
-
+	                    String respuesta = obtenerParametros(line, headers);
 	                    //Respuesta GET, devolvemos un HTML con los parametros del formulario
-	                    String html = headers +
-									  "<html><head><title>Metodo GET\n" +
-	                                  "</title></head><body bgcolor='#AACCFF'><center><h1><br>Parametros obtenidos por medio de GET.</br></h1>\n" +
-	                                  "<h3><b>" + req + "</b></h3>\n" +
-	                                  "</center></body></html>";
-
-	                    dos.write(html.getBytes());
+	                    dos.write(respuesta.getBytes());
 	                    dos.flush();
-	                    System.out.println("Respuesta GET: \n" + html);
+	                    System.out.println("Respuesta GET: \n" + respuesta);
 	                }
-                }
+                } //Metodo HEAD
                 else if(line.toUpperCase().startsWith("HEAD")) {
-                	//Respuesta HEAD, devolvemos unicamente las cabeceras
-                	dos.write(headers.getBytes());
-                	dos.flush();
-                	System.out.println("Respuesta HEAD: \n" + headers);       
+
+                	if(line.indexOf("?") == -1) {
+                		//Solicita archivo, unicamente enviamos tipo mime y longitud
+                		String fileName = obtenerNombreRecurso(line);
+                		//Bandera GET = 1, HEAD = 0
+	                    enviarRecurso(fileName, 0);
+                	}
+                	else {
+                		//Respuesta HEAD, devolvemos unicamente las cabeceras HTTP
+                		dos.write(headers.getBytes());
+	                	dos.flush();
+	                	System.out.println("Respuesta HEAD: \n" + headers);       
+                	}
                 }
                 else {
                 	//Metodos no implementados en el servidor
@@ -89,6 +192,7 @@ public class Manejador extends Thread {
 	        						  "<body><h1>Error 501: No implementado.</h1>" +
 	        						  "<p>El método HTTP o funcionalidad solicitada no está implementada en el servidor.</p>" +
 	        						  "</body></html>";
+
                     dos.write(error501.getBytes());
                     dos.flush();
                     System.out.println("Respuesta ERROR 501: \n" + error501);
@@ -99,60 +203,6 @@ public class Manejador extends Thread {
             cl.close();
         }
         catch(Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void enviarRecurso(String arg) {
-        try {
-        	File f = new File(arg);
-        	String sb = "HTTP/1.1 200 OK\n";
-
-        	if(!f.exists()){
-        		arg = "404.html"; //Recurso no encontrado
-        		sb = "HTTP/1.1 404 Not Found\n";
-        	}
-        	else if(f.isDirectory()){
-        		arg = "403.html"; //Recurso privado
-        		sb = "HTTP/1.1 403 Forbidden\n";
-        	}
-
-    		DataInputStream dis2 = new DataInputStream(new FileInputStream(arg)); 
-    		int tam = dis2.available();
-
-    		//Obtenemos extension para saber el tipo de recurso
-            int pos = arg.indexOf(".");
-            String extension = arg.substring(pos + 1, arg.length());
-
-            //Enviamos las cabeceras de la respuesta HTTP
-            sb = sb + "Date: " + new Date() + " \n" +
-		              "Server: Axel Server/1.0 \n" +
-		              //Distintos tipos MIME para distintos tipos de archivos
-		              "Content-Type: " + mime.get(extension) + " \n" + 
-		              "Content-Length: " + tam + " \n\n";
-
-            dos.write(sb.getBytes());
-            dos.flush();
-
-            System.out.println("Respuesta GET: \n" + sb);
-
-            //Respuesta GET, enviamos el archivo solicitado
-            byte[] b = new byte[1024];
-            long enviados = 0;
-            int n = 0;
-            
-            while(enviados < tam) {
-                n = dis2.read(b);
-                dos.write(b, 0, n);
-                dos.flush();
-                enviados += n;
-            }
-            dis2.close(); 	
-            
-        }
-        catch(Exception e) {
-        	//String error = e.getMessage();
-            //System.out.println(error);
             e.printStackTrace();
         }
     }

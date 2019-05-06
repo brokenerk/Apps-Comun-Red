@@ -1,9 +1,9 @@
 import java.util.*;
 
-public class Mime{
+public class Mime {
 	public static HashMap<String, String> mimeTypes;
 
-	public Mime(){
+	public Mime() {
 		mimeTypes = new HashMap<>();
 		mimeTypes.put("doc", "application/msword");
 		mimeTypes.put("pdf", "application/pdf");
@@ -20,7 +20,7 @@ public class Mime{
 		mimeTypes.put("mp4", "video/mp4");
 	}
 
-	public String get(String extension){
+	public String get(String extension) {
 		if(mimeTypes.containsKey(extension))
 			return mimeTypes.get(extension);
 		else

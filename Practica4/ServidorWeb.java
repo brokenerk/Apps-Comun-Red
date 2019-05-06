@@ -16,9 +16,9 @@ public class ServidorWeb {
 			System.out.print("Tamanio del pool de conexiones: ");
 			tamPool = sc.nextInt();
 
-        	//Pool de Conexiones
+        	// Pool de Conexiones
         	ExecutorService pool = Executors.newFixedThreadPool(tamPool);
-	        System.out.println("Iniciando Servidor.... Pool de Conexiones = " + tamPool);
+	        System.out.println("\n\n -----> Iniciando Servidor.... Pool de Conexiones = " + tamPool);
 
 	        ServerSocket s = new ServerSocket(pto);
 	        System.out.println("Servidor iniciado: http://localhost:" + pto + "/ --- OK");

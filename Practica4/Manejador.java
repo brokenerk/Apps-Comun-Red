@@ -190,9 +190,22 @@ public class Manejador extends Thread {
                 }
                 else if(line.toUpperCase().startsWith("DELETE")) {
                     System.out.println(line);
-                    line = obtenerNombreRecurso(line);
-                    System.out.println(line);
-                    File f = new File(arg);
+                    DataInputStream dis = new DataInputStream(cl.getInputStream()); // InputStream
+					String nombre = dis.readUTF();
+
+					while(nombre != null) {
+						nombre = dis.readUTF();
+					}
+					System.out.println(nombre);
+					// for(int i = 0; i < numArchivos; i++) {
+					// 	String archivoRecibido = dis.readUTF();
+					// }// for
+
+					dis.close();
+					
+                    // line = obtenerNombreRecurso(line);
+                    // System.out.println(line);
+                    // File f = new File(arg);
                     
                     // if(!f.exists()) {
                     //     arg = "404.html"; // Recurso no encontrado

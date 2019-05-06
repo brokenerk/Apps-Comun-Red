@@ -86,6 +86,7 @@ public class Manejador extends Thread {
     public String obtenerParametros(String line, String headers) {
     	// Line: GET /?Nombre=&Direccion=&Telefono=&Comentarios= HTTP/1.1
     	// Separamos los parametros de "GET"
+        System.out.println(line);
     	StringTokenizer tokens = new StringTokenizer(line, "?");
         String request = tokens.nextToken();
         request = tokens.nextToken();
@@ -176,11 +177,32 @@ public class Manejador extends Thread {
                 	}
                 } // Metodo POST
                 else if(line.toUpperCase().startsWith("POST")) {
-                    for(int j = 0; j < 14; j++) {
-                        line = br.readLine(); // Lee primera linea
-                        System.out.println(line);
+                    // for(int j = 0; j < 14; j++) {
+                    //     line = br.readLine(); // Lee primera linea
+                    //     System.out.println(line);
+                    // }
+                    String lastLine = "";
+                    while((line = br.readLine()) != null) {
+                        lastLine = line;
                     }
+
+                    System.out.println(lastLine);
+                }
+                else if(line.toUpperCase().startsWith("DELETE")) {
+                    System.out.println(line);
+                    line = obtenerNombreRecurso(line);
+                    System.out.println(line);
+                    File f = new File(arg);
                     
+                    // if(!f.exists()) {
+                    //     arg = "404.html"; // Recurso no encontrado
+                    //     sb = "HTTP/1.1 404 Not Found\n";
+                    // }
+                    // else if(f.isDirectory()) {
+                    //     arg = "403.html"; // Recurso privado
+                    //     sb = "HTTP/1.1 403 Forbidden\n";
+                    // }
+
                 }
                 else {
                 	//Metodos no implementados en el servidor

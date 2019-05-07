@@ -1,18 +1,21 @@
 import java.net.*;
 import java.io.*;
 import java.util.*;
+import java.util.Base64;
 
 public class Manejador extends Thread {
     protected Socket cl;
     protected BufferedReader br;
     protected DataOutputStream dos;
     protected Mime mime;
-
+    protected DataInputStream in;
+    
     public Manejador(Socket cl) throws Exception {
         this.cl = cl;
         this.br = new BufferedReader(new InputStreamReader(this.cl.getInputStream()));
         this.dos = new DataOutputStream(this.cl.getOutputStream());
         this.mime = new Mime();
+        this.in = new DataInputStream(this.cl.getInputStream());
     }
 
     public void enviarRecurso(String arg, int bandera) {
@@ -177,45 +180,66 @@ public class Manejador extends Thread {
                 	}
                 } // Metodo POST
                 else if(line.toUpperCase().startsWith("POST")) {
-                    // for(int j = 0; j < 14; j++) {
-                    //     line = br.readLine(); // Lee primera linea
-                    //     System.out.println(line);
-                    // }
-                    String lastLine = "";
-                    while((line = br.readLine()) != null) {
-                        lastLine = line;
-                    }
+                    // count the available bytes form the input stream
+                     int count = in.available();
+                     
+                     // create buffer
+                     byte[] bs = new byte[count];
+                     // read data into buffer
+                     in.read(bs);
+                     
+                     // for each byte in the buffer
+                     for (byte b:bs) {
+                     
+                        // convert byte into character
+                        char c = (char)b;
+                        
+                        // print the character
+                        System.out.print(c+" ");
+                     }
 
-                    System.out.println(lastLine);
                 }
                 else if(line.toUpperCase().startsWith("DELETE")) {
-                    System.out.println(line);
-                    DataInputStream dis = new DataInputStream(cl.getInputStream()); // InputStream
-					String nombre = dis.readUTF();
+                    System.out.println(line);                    
+					String sep = System.getProperty("file.separator");
+                    String arg = obtenerNombreRecurso(line);
 
-					while(nombre != null) {
-						nombre = dis.readUTF();
-					}
-					System.out.println(nombre);
-					// for(int i = 0; i < numArchivos; i++) {
-					// 	String archivoRecibido = dis.readUTF();
-					// }// for
+                    System.out.println(arg);
+                    File f = new File(arg);
+                    if(f.exists()) {
+                        if (f.delete()) {
+                            System.out.println("------> Archivo eliminado exitosamente");
+                            String error501 = "HTTP/1.1 502 Archivo eliminado\n" +
+                                      "Date: " + new Date() + " \n" +
+                                      "Server: EnrikeAbi Server/1.0 \n" +
+                                      "Content-Type: text/html \n\n" +
 
-					dis.close();
-					
-                    // line = obtenerNombreRecurso(line);
-                    // System.out.println(line);
-                    // File f = new File(arg);
-                    
-                    // if(!f.exists()) {
-                    //     arg = "404.html"; // Recurso no encontrado
-                    //     sb = "HTTP/1.1 404 Not Found\n";
-                    // }
-                    // else if(f.isDirectory()) {
-                    //     arg = "403.html"; // Recurso privado
-                    //     sb = "HTTP/1.1 403 Forbidden\n";
-                    // }
+                                      "<html><head><meta charset='UTF-8'><title>Archivo eliminado</title></head>" +
+                                      "<body><h1>Archivo: eliminado exitosamente.</h1>" +
+                                      "<p>El archivo ha sido eliminado del servidor.</p>" +
+                                      "</body></html>";
 
+                            dos.write(error501.getBytes());
+                            dos.flush();
+                            System.out.println("Respuesta ERROR 502: \n" + error501);
+                        }
+                        else {
+                            System.out.println("El archivo no pudó ser borrado");
+                            String error501 = "HTTP/1.1 404 Archivo no encontrado\n" +
+                                      "Date: " + new Date() + " \n" +
+                                      "Server: EnrikeAbi Server/1.0 \n" +
+                                      "Content-Type: text/html \n\n" +
+
+                                      "<html><head><meta charset='UTF-8'><title>404 Not found</title></head>" +
+                                      "<body><h1>404 Not found</h1>" +
+                                      "<p>Archivo no encontrado.</p>" +
+                                      "</body></html>";
+
+                            dos.write(error501.getBytes());
+                            dos.flush();
+                            System.out.println("Respuesta ERROR 502: \n" + error501);
+                        }
+                    }
                 }
                 else {
                 	//Metodos no implementados en el servidor

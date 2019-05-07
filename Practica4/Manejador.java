@@ -184,7 +184,7 @@ public class Manejador extends Thread {
           				 "Server: EnrikeAbi Server/1.0 \n" +
           				 "Content-Type: text/html \n\n";
         try {
-            String line = dis.readLine(); // Lee primera linea
+            String line = dis.readLine(); // Lee primera linea DEPRECIADO !!!!
             // Linea vacia
             if(line == null) {
                 String vacia = "<html><head><title>Servidor WEB</title><body bgcolor='#AACCFF'>Linea Vacia</body></html>";
@@ -249,13 +249,10 @@ public class Manejador extends Thread {
                     dos.write(respuesta.getBytes());
                     dos.flush();
                     System.out.println("Respuesta POST: \n" + respuesta);
-                }
-                else if(line.toUpperCase().startsWith("DELETE")) {
-                    System.out.println(line);                    
+                } // Metodo DELETE
+                else if(line.toUpperCase().startsWith("DELETE")) {      
                     String fileName = obtenerNombreRecurso(line);
-
                     eliminarRecurso(fileName, headers);
-
                 }
                 else {
                 	//Metodos no implementados en el servidor

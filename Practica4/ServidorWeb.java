@@ -7,10 +7,12 @@ import java.util.concurrent.Executors;
 public class ServidorWeb {
 	
     public static void main(String[] args) {
-    	int pto = 8000, tamPool;
+    	int pto, tamPool;
 
         try {
         	Scanner sc = new Scanner(System.in);
+        	System.out.print("Puerto: ");
+			pto = sc.nextInt();
 			System.out.print("Tamanio del pool de conexiones: ");
 			tamPool = sc.nextInt();
 

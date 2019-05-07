@@ -5,17 +5,59 @@ import java.util.Base64;
 
 public class Manejador extends Thread {
     protected Socket cl;
-    protected BufferedReader br;
     protected DataOutputStream dos;
     protected Mime mime;
-    protected DataInputStream in;
+    protected DataInputStream dis;
     
     public Manejador(Socket cl) throws Exception {
         this.cl = cl;
-        this.br = new BufferedReader(new InputStreamReader(this.cl.getInputStream()));
         this.dos = new DataOutputStream(this.cl.getOutputStream());
         this.mime = new Mime();
-        this.in = new DataInputStream(this.cl.getInputStream());
+        this.dis = new DataInputStream(this.cl.getInputStream());
+    }
+
+    public void eliminarRecurso(String arg, String headers){
+        try {
+            System.out.println(arg);
+            File f = new File(arg);
+
+            if(f.exists()) {
+                if (f.delete()) {
+                    System.out.println("------> Archivo " + arg + " eliminado exitosamente\n");
+
+                    String deleteOK = headers +
+                                      "<html><head><meta charset='UTF-8'><title>202 OK Recurso eliminado</title></head>" +
+                                      "<body><h1>202 OK Recurso eliminado exitosamente.</h1>" +
+                                      "<p>El recurso " + arg + " ha sido eliminado permanentemente del servidor." + 
+                                      "Ya no se podra acceder más a él.</p>" +
+                                      "</body></html>";
+
+                    dos.write(deleteOK.getBytes());
+                    dos.flush();
+                    System.out.println("Respuesta DELETE: \n" + deleteOK);
+                }
+                else {
+                    System.out.println("El archivo " + arg + " no pudo ser borrado\n");
+
+                    String error404 = "HTTP/1.1 404 Not Found\n" +
+                                      "Date: " + new Date() + " \n" +
+                                      "Server: EnrikeAbi Server/1.0 \n" +
+                                      "Content-Type: text/html \n\n" +
+
+                                      "<html><head><meta charset='UTF-8'><title>404 Not found</title></head>" +
+                                      "<body><h1>404 Not found</h1>" +
+                                      "<p>Archivo " + arg + " no encontrado.</p>" +
+                                      "</body></html>";
+
+                    dos.write(error404.getBytes());
+                    dos.flush();
+                    System.out.println("Respuesta DELETE - ERROR 404: \n" + error404);
+                }
+            }
+        }
+        catch(Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     public void enviarRecurso(String arg, int bandera) {
@@ -74,7 +116,7 @@ public class Manejador extends Thread {
     }
 
     public String obtenerNombreRecurso(String line) {
-    	// Obtiene el nombre del producto de la peticion HTTP
+    	// Obtiene el nombre del recurso de la peticion HTTP
         int i = line.indexOf("/");
         int f = line.indexOf(" ", i);
         String resourceName = line.substring(i + 1, f);
@@ -86,25 +128,31 @@ public class Manejador extends Thread {
         return resourceName;
     }
 
-    public String obtenerParametros(String line, String headers) {
-    	// Line: GET /?Nombre=&Direccion=&Telefono=&Comentarios= HTTP/1.1
-    	// Separamos los parametros de "GET"
-        System.out.println(line);
-    	StringTokenizer tokens = new StringTokenizer(line, "?");
-        String request = tokens.nextToken();
-        request = tokens.nextToken();
+    public String obtenerParametros(String line, String headers, int bandera) {
+        String metodo = "POST";
+        String request2 = line;
 
-        // Separamos los parametros de "HTTP/1.1"
-        StringTokenizer tokens2 = new StringTokenizer(request, " ");
-        String request2 = tokens2.nextToken();
+        if(bandera == 0) {
+            metodo = "GET";
+        	// Line: GET /?Nombre=&Direccion=&Telefono=&Comentarios= HTTP/1.1
+        	// Separamos los parametros de "GET"
+            System.out.println(line);
+        	StringTokenizer tokens = new StringTokenizer(line, "?");
+            String request = tokens.nextToken();
+            request = tokens.nextToken();
+
+            // Separamos los parametros de "HTTP/1.1"
+            StringTokenizer tokens2 = new StringTokenizer(request, " ");
+            request2 = tokens2.nextToken();
+        }
 
         System.out.println(request2);
         // Separamos los parametros junto a su valor uno del otro
         StringTokenizer paramsTokens = new StringTokenizer(request2, "&");
 
         String html = headers +
-					  "<html><head><meta charset='UTF-8'><title>Metodo GET\n" +
-                      "</title></head><body bgcolor='#AACCFF'><center><h2>Parametros obtenidos por medio de GET</h2><br>\n" +
+					  "<html><head><meta charset='UTF-8'><title>Metodo " + metodo + "\n" +
+                      "</title></head><body bgcolor='#AACCFF'><center><h2>Parametros obtenidos por medio de " + metodo + "</h2><br>\n" +
                       "<table border='2'><tr><th>Parametro</th><th>Valor</th></tr>";
 
       	// Se recorren todos los parametros, mientras existan
@@ -136,7 +184,7 @@ public class Manejador extends Thread {
           				 "Server: EnrikeAbi Server/1.0 \n" +
           				 "Content-Type: text/html \n\n";
         try {
-            String line = br.readLine(); // Lee primera linea
+            String line = dis.readLine(); // Lee primera linea
             // Linea vacia
             if(line == null) {
                 String vacia = "<html><head><title>Servidor WEB</title><body bgcolor='#AACCFF'>Linea Vacia</body></html>";
@@ -153,12 +201,13 @@ public class Manejador extends Thread {
                 	if(line.indexOf("?") == -1) {
 	                    // Solicita un archivo
 				        String fileName = obtenerNombreRecurso(line);
-				        // Bandera HEAD = 0, GET = 1, POST = 2
+				        // Bandera HEAD = 0, GET = 1
 	                    enviarRecurso(fileName, 1);
 	                }
 	                else {
 	                    // Envia parametros desde un formulario
-	                    String respuesta = obtenerParametros(line, headers);
+                        // Bandera GET = 0, POST = 1
+	                    String respuesta = obtenerParametros(line, headers, 0);
 	                    // Respuesta GET, devolvemos un HTML con los parametros del formulario
 	                    dos.write(respuesta.getBytes());
 	                    dos.flush();
@@ -169,7 +218,7 @@ public class Manejador extends Thread {
                 	if(line.indexOf("?") == -1) {
                 		// Solicita archivo, unicamente enviamos tipo mime y longitud
                 		String fileName = obtenerNombreRecurso(line);
-                		// Bandera HEAD = 0, GET = 1, POST = 2
+                		// Bandera HEAD = 0, GET = 1
                         enviarRecurso(fileName, 0);
                 	}
                 	else {
@@ -180,66 +229,33 @@ public class Manejador extends Thread {
                 	}
                 } // Metodo POST
                 else if(line.toUpperCase().startsWith("POST")) {
-                    // count the available bytes form the input stream
-                     int count = in.available();
-                     
-                     // create buffer
-                     byte[] bs = new byte[count];
-                     // read data into buffer
-                     in.read(bs);
-                     
-                     // for each byte in the buffer
-                     for (byte b:bs) {
-                     
-                        // convert byte into character
-                        char c = (char)b;
-                        
-                        // print the character
-                        System.out.print(c+" ");
-                     }
+                    // Leemos el flujo de entrada
+                    int tam = dis.available();
+                    byte[] b = new byte[tam];
 
+                    dis.read(b);
+                    //Creamos un string con los bytes leidos
+                    String request = new String(b, 0, tam);
+                   
+                    // Separamos los parametros del resto de los encabezados HTTP
+                    String[] reqLineas = request.split("\n");
+                    //Ultima linea del request
+                    int ult = reqLineas.length - 1;
+
+                    // Bandera GET = 0, POST = 1
+                    String respuesta = obtenerParametros(reqLineas[ult], headers, 1);
+
+                    // Respuesta POST, devolvemos un HTML con los parametros del formulario
+                    dos.write(respuesta.getBytes());
+                    dos.flush();
+                    System.out.println("Respuesta POST: \n" + respuesta);
                 }
                 else if(line.toUpperCase().startsWith("DELETE")) {
                     System.out.println(line);                    
-					String sep = System.getProperty("file.separator");
-                    String arg = obtenerNombreRecurso(line);
+                    String fileName = obtenerNombreRecurso(line);
 
-                    System.out.println(arg);
-                    File f = new File(arg);
-                    if(f.exists()) {
-                        if (f.delete()) {
-                            System.out.println("------> Archivo eliminado exitosamente");
-                            String error501 = "HTTP/1.1 502 Archivo eliminado\n" +
-                                      "Date: " + new Date() + " \n" +
-                                      "Server: EnrikeAbi Server/1.0 \n" +
-                                      "Content-Type: text/html \n\n" +
+                    eliminarRecurso(fileName, headers);
 
-                                      "<html><head><meta charset='UTF-8'><title>Archivo eliminado</title></head>" +
-                                      "<body><h1>Archivo: eliminado exitosamente.</h1>" +
-                                      "<p>El archivo ha sido eliminado del servidor.</p>" +
-                                      "</body></html>";
-
-                            dos.write(error501.getBytes());
-                            dos.flush();
-                            System.out.println("Respuesta ERROR 502: \n" + error501);
-                        }
-                        else {
-                            System.out.println("El archivo no pudó ser borrado");
-                            String error501 = "HTTP/1.1 404 Archivo no encontrado\n" +
-                                      "Date: " + new Date() + " \n" +
-                                      "Server: EnrikeAbi Server/1.0 \n" +
-                                      "Content-Type: text/html \n\n" +
-
-                                      "<html><head><meta charset='UTF-8'><title>404 Not found</title></head>" +
-                                      "<body><h1>404 Not found</h1>" +
-                                      "<p>Archivo no encontrado.</p>" +
-                                      "</body></html>";
-
-                            dos.write(error501.getBytes());
-                            dos.flush();
-                            System.out.println("Respuesta ERROR 502: \n" + error501);
-                        }
-                    }
                 }
                 else {
                 	//Metodos no implementados en el servidor
@@ -258,7 +274,7 @@ public class Manejador extends Thread {
                     System.out.println("Respuesta ERROR 501: \n" + error501);
                 }
             }
-            br.close();
+            dis.close();
             dos.close();
             cl.close();
         }

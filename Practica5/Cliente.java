@@ -1,5 +1,6 @@
 import java.net.*;
 import java.io.*;
+import java.util.*;
 
 public class Cliente
 {
@@ -7,52 +8,64 @@ public class Cliente
 	{
 		try
 		{
+			Controlador ctrl = new Controlador();
 			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-			String host = "127.0.0.1";
-			int pto = 4000; //Servidor Controlador
 
-			Socket cl = new Socket(host, pto);
-			System.out.println("Conexion establecida, escribe una palabra...");
+			System.out.println("Nombre del servidor: "); //servidor1, servidor2
+			String servidorActual = br.readLine();
 
-			PrintWriter pw = new PrintWriter(new OutputStreamWriter(cl.getOutputStream()));
-			BufferedReader br2 = new BufferedReader(new InputStreamReader(cl.getInputStream()));
+			String hostActual = ctrl.obtenerHostServidor(servidorActual);
+			int ptoActual = ctrl.obtenerPtoServidor(servidorActual);
 
+			Socket cl = new Socket(hostActual, ptoActual);
+			System.out.println("\nConexion establecida al " + servidorActual);
+			System.out.println("Host: " + hostActual + ". Puerto: " + ptoActual);
+
+			DataOutputStream dos = new DataOutputStream(cl.getOutputStream()); //OutputStream
+			DataInputStream dis = new DataInputStream(cl.getInputStream()); // InputStream
+
+			System.out.println("\nPalabra: ");
 			String palabra = br.readLine();
-			pw.println(palabra);
-			pw.flush();
-
-			String servidor = br2.readLine();
-			System.out.println("Ubicacion " + palabra + ": " + servidor);
-
 			br.close();
-			br2.close();
-			pw.close();
+
+			dos.writeUTF(palabra);
+			dos.flush();
+
+			String respuesta = dis.readUTF();
+
+			dos.close();
+			dis.close();
 			cl.close();
 
-			int nvoPto = -1;
+			String definicion = respuesta;
 
-			if(servidor.equals("servidor1")) {
-				nvoPto = 4001;
+			if(respuesta.equals("")){
+				String servidorRemoto = ctrl.obtenerServidor(palabra);
+				String hostRemoto = ctrl.obtenerHostServidor(servidorRemoto);
+				int ptoRemoto = ctrl.obtenerPtoServidor(servidorRemoto);
+
+				Socket cl2 = new Socket(hostRemoto, ptoRemoto);
+				System.out.println("\nDefinicion no encontrada. Conectando al " + servidorRemoto);
+				System.out.println("Host: " + hostRemoto + ". Puerto: " + ptoRemoto);
+
+				DataOutputStream dos2 = new DataOutputStream(cl2.getOutputStream()); //OutputStream
+				DataInputStream dis2 = new DataInputStream(cl2.getInputStream()); // InputStream
+
+				dos2.writeUTF(palabra);
+				dos2.flush();
+
+				definicion = dis2.readUTF();
+
+				dos2.close();
+				dis2.close();
+				cl2.close();
 			}
-			else if(servidor.equals("servidor2")) { 
-				nvoPto = 4002;
-			}
 
-			Socket cl2 = new Socket(host, nvoPto);
-			System.out.println("Conectandose al " + servidor);
+			System.out.println("\n\n" + palabra + ": " + definicion);
 
-			PrintWriter pw2 = new PrintWriter(new OutputStreamWriter(cl2.getOutputStream()));
-			BufferedReader br3 = new BufferedReader(new InputStreamReader(cl2.getInputStream()));
+			
 
-			pw2.println(palabra);
-			pw2.flush();
-
-			String definicion = br3.readLine();
-			System.out.println("Defincion " + palabra + ": " + definicion);
-
-			br3.close();
-			pw2.close();
-			cl2.close();
+			
 
 		}catch(Exception e){
 			e.printStackTrace();

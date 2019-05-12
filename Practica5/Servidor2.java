@@ -6,10 +6,14 @@ public class Servidor2
 {
 	protected static HashMap<String, String> diccionario = new HashMap<>();
 
+	public static void agregarDefinicion(String palabra, String definicion){
+		diccionario.put(palabra, definicion);
+	}
+
 	public static void main(String[] args)
 	{
-		diccionario.put("Aguila", "Ave rapaz falconiforme, de aproximadamente 2 m de envergadura, con vista muy aguda");
-		diccionario.put("Raiz", "Órgano de las plantas que crece hacia el interior de la tierra, por el que se fijan al suelo y absorben las sustancias necesarias para su crecimiento");
+		diccionario.put("Aguila", "Ave rapaz falconiforme, de aproximadamente 2 m de envergadura, con vista muy aguda.");
+		diccionario.put("Raiz", "Organo de las plantas que crece hacia el interior de la tierra, por el que se fijan al suelo y absorben las sustancias necesarias para su crecimiento.");
 
 		try
 		{
@@ -22,15 +26,21 @@ public class Servidor2
 				Socket cl = s.accept();
 				System.out.println("Cliente conectado desde " + cl.getInetAddress() + " " + cl.getPort());
 				
-				PrintWriter pw = new PrintWriter(new OutputStreamWriter(cl.getOutputStream()));
-				BufferedReader br = new BufferedReader(new InputStreamReader(cl.getInputStream()));
+				DataOutputStream dos = new DataOutputStream(cl.getOutputStream()); //OutputStream
+				DataInputStream dis = new DataInputStream(cl.getInputStream()); // InputStream
 
-				String palabra = br.readLine();
-				pw.println(diccionario.get(palabra));
-				pw.flush();
+				String palabra = dis.readUTF();
 
-				br.close();
-				pw.close();
+				String respuesta = "";
+
+				if(diccionario.containsKey(palabra))
+					respuesta = diccionario.get(palabra);
+
+				dos.writeUTF(respuesta);
+				dos.flush();
+				
+				dis.close();
+				dos.close();
 				cl.close();
 				
 			}//for

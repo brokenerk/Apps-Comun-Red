@@ -4,12 +4,16 @@ import java.util.*;
 
 public class Servidor1
 {
-	protected static HashMap<String, String> diccionario = new HashMap<>();
+	private static HashMap<String, String> diccionario = new HashMap<>();
+
+	public static void agregarDefinicion(String palabra, String definicion){
+		diccionario.put(palabra, definicion);
+	}
 
 	public static void main(String[] args)
 	{
-		diccionario.put("Conejo", "Mamífero de cuerpo alargado y arqueado de unos 40 cm de longitud, pelo suave y espeso, orejas largas, cola corta y patas traseras más desarrolladas que las delanteras");
-		diccionario.put("Iguana", "Reptil escamoso americano que puede alcanzar hasta 1,80 m de longitud, con la lengua no protráctil y los dientes sobre la superficie interna de las mandíbulas");
+		diccionario.put("Conejo", "Mamifero de cuerpo alargado y arqueado de unos 40 cm de longitud, pelo suave y espeso, orejas largas, cola corta y patas traseras mas desarrolladas que las delanteras.");
+		diccionario.put("Iguana", "Reptil escamoso americano que puede alcanzar hasta 1,80 m de longitud, con la lengua no protractil y los dientes sobre la superficie interna de las mandibulas.");
 
 		try
 		{
@@ -22,15 +26,21 @@ public class Servidor1
 				Socket cl = s.accept();
 				System.out.println("Cliente conectado desde " + cl.getInetAddress() + " " + cl.getPort());
 				
-				PrintWriter pw = new PrintWriter(new OutputStreamWriter(cl.getOutputStream()));
-				BufferedReader br = new BufferedReader(new InputStreamReader(cl.getInputStream()));
+				DataOutputStream dos = new DataOutputStream(cl.getOutputStream()); //OutputStream
+				DataInputStream dis = new DataInputStream(cl.getInputStream()); // InputStream
 
-				String palabra = br.readLine();
-				pw.println(diccionario.get(palabra));
-				pw.flush();
+				String palabra = dis.readUTF();
 
-				br.close();
-				pw.close();
+				String respuesta = "";
+
+				if(diccionario.containsKey(palabra))
+					respuesta = diccionario.get(palabra);
+
+				dos.writeUTF(respuesta);
+				dos.flush();
+				
+				dis.close();
+				dos.close();
 				cl.close();
 				
 			}//for

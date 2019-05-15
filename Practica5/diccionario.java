@@ -8,15 +8,16 @@ import java.util.*;
 import java.lang.reflect.Field;
 import javax.swing.table.*;
 
-public class diccionario extends JFrame implements ActionListener {
+public class Diccionario extends JFrame implements ActionListener {
 	JPanel panelServidor, panelPalabra, panelDefinicion, panelBotones;
 	JButton btnServidor, btnBuscar, btnAgregar, btnVer;
 	JLabel lServidor, lPalabra, lDefinicion;
 	JTextField fPalabra;
-	JScrollPane scrollDefinicion, scrollMostrar;
-	JComboBox combo;
+	JScrollPane scroll;
+	JComboBox<String> combo;
+	JTextArea mostrarDef;
 
-	public diccionario() {
+	public Diccionario() {
 		Container c = getContentPane();
 		c.setLayout(new FlowLayout());
 
@@ -26,17 +27,17 @@ public class diccionario extends JFrame implements ActionListener {
 
 		// Agregamos al panel SERVIDOR, sus componentes
 		panelServidor = new JPanel(new GridLayout(1, 3));
-		panelServidor.setPreferredSize(new Dimension(100, 200));
+		panelServidor.setPreferredSize(new Dimension(550, 50));
+		panelServidor.setBorder(BorderFactory.createTitledBorder("Elegir :"));		
 
 		lServidor = new JLabel("Servidor");
-		// Creacion del JComboBox y añadir los items.
-		combo = new JComboBox();
-		combo.addItem("Servidor 1");
-		combo.addItem("Servidor 2");
-		combo.addItem("Servidor 3");
+		combo = new JComboBox<String>();
+		combo.addItem("1");
+		combo.addItem("2");
+		combo.addItem("3");
 
 		btnServidor = new JButton("Ok");
-		btnServidor.setPreferredSize(new Dimension(100, 35));
+		btnServidor.setPreferredSize(new Dimension(35, 35));
 		btnServidor.addActionListener(this);
 		
 		panelServidor.add(lServidor); panelServidor.add(combo);
@@ -48,7 +49,8 @@ public class diccionario extends JFrame implements ActionListener {
 		// -----------------------------------------------------------------------
 
 		panelPalabra = new JPanel(new GridLayout(1, 3));
-		panelPalabra.setPreferredSize(new Dimension(100, 200));
+		panelPalabra.setPreferredSize(new Dimension(550, 50));
+		panelPalabra.setBorder(BorderFactory.createTitledBorder("Elegir "));		
 
 		// Agregamos al panel PALABRA, sus componentes
 		lPalabra = new JLabel("Palabra");
@@ -60,101 +62,64 @@ public class diccionario extends JFrame implements ActionListener {
 
 		panelPalabra.add(lPalabra); panelPalabra.add(fPalabra);
 		panelPalabra.add(btnBuscar);
-
-
-		// -----------------------------------------------------------------------
-		// 								PANEL PALABRA
-		// -----------------------------------------------------------------------
-
-
-
-/*
-		// Agregamos al panel DATOS la información del usuario
-		panelDatos = new JPanel(new GridLayout(2, 2));
-		panelDatos.setBorder(BorderFactory.createTitledBorder("DATOS PERSONALES"));		
-		panelDatos.setPreferredSize(new Dimension(300, 100));
-
-		lBoleta = new JLabel("Boleta: ");
-		boleta = new JLabel("" + alumno.getBoleta());
-		lNombre = new JLabel("Nombre: ");
-		nombre = new JLabel(alumno.getNombreCompleto());
-		panelDatos.add(lBoleta); panelDatos.add(boleta);
-		panelDatos.add(lNombre); panelDatos.add(nombre);
+		c.add(panelPalabra);
 
 		// -----------------------------------------------------------------------
-		// 				PANEL QUE INTEGRA FOTO Y DATOS PERSONALES
+		// 							PANEL DEFINICION
 		// -----------------------------------------------------------------------
-		
-		panelInfo = new JPanel(new GridLayout(1, 2));
-		panelInfo.setPreferredSize(new Dimension(650, 100));
-		panelInfo.add(panelFoto); panelInfo.add(panelDatos);
+		panelDefinicion = new JPanel(new GridLayout(1, 1));
+		panelDefinicion.setPreferredSize(new Dimension(550, 400));
+		panelDefinicion.setBorder(BorderFactory.createTitledBorder("Definicion"));		
 
-		c.add(panelInfo);
-		
+        // Componentes de PANEL definicion
+        mostrarDef = new JTextArea(16, 58);
+        mostrarDef.setEditable(false); // set textArea non-editable
+        scroll = new JScrollPane(mostrarDef);
+        scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+
+        //Add Textarea in to middle panel
+        panelDefinicion.add(scroll);
+
+        c.add(panelDefinicion);
+
+        // -----------------------------------------------------------------------
+		// 							BOTONES
 		// -----------------------------------------------------------------------
-		// 				PANEL PARA MOSTRAR EL GRUPO QUE SE SELECCIONO
-		// -----------------------------------------------------------------------
-		
-		panelMostrar = new JPanel(new GridLayout(1, 3));
-		panelMostrar.setBorder(BorderFactory.createTitledBorder("HORARIO DEL GRUPO SELECCIONADO"));		
-		panelMostrar.setPreferredSize(new Dimension(650, 200));
+       
+        btnAgregar = new JButton("Agregar");
+        btnAgregar.setPreferredSize(new Dimension(100, 35));
+		btnAgregar.addActionListener(this);
 
-		String[] titulos = {"GRUPO", "MATERIA", "PROFESOR", "CALIFICACION"};
-		scrollMostrar = new JScrollPane();
-		DefaultTableModel modeloMostrar = new DefaultTableModel(null, titulos);
-		tablaMostrar = new JTable(modeloMostrar); 
-		scrollMostrar.setViewportView(tablaMostrar);
-		int i, j;
-	
+        btnVer = new JButton("Ver todo");
+        btnVer.setPreferredSize(new Dimension(100, 35));
+		btnVer.addActionListener(this);
 
-		// *************** HACER QUE SE VEA EL HORARIO ***************
-
-		// Hace que se permita ver el horario de un grupo seleccionado
-		Horario h = alumno.getHorario();
-		Grupo[] grupos = h.getGrupos();
-		Materia[] materias = h.getMaterias();
-		String[] profs = h.getProfesores();
-		int[] califs = h.getCalifs();
-		
-		DefaultTableModel modelo = (DefaultTableModel) tablaMostrar.getModel();
-		modelo.setRowCount(0);
-
-		for(i = 0; i < materias.length; i++) {
-			System.out.println("Despliego materia del grupo: " + grupos[i].getId());
-			Grupo g = Cliente.grupos[grupos[i].getId()];
-			String nombreGrupo = g.getNombre();
-			String[] filaA = {nombreGrupo, materias[i].getNombre(), profs[i], " " +califs[i]};		
-			modelo.addRow(filaA);
-		}
-		System.out.println("Grupo desplegado actualizado.");
-
-		panelMostrar.add(scrollMostrar);
-		c.add(panelMostrar);
-
-		// -----------------------------------------------------------------------
-		// 					BOTON DE AGREGAR SELECCION AL HORARIO
-		// -----------------------------------------------------------------------
-		
-		btnRegresar = new JButton("Regresar");
-		btnRegresar.setPreferredSize(new Dimension(100, 35));
-		btnRegresar.addActionListener(this);
-		c.add(btnRegresar);
-*/
+		c.add(btnAgregar);
+		c.add(btnVer);
 	}
 	public void actionPerformed(ActionEvent e) {
 		JButton b = (JButton) e.getSource();
 		if(b == btnBuscar) {
-			System.out.println(" Cerrado.");
+			// Buscar palabra elegida
+		}
+		else if(b == btnVer) {
+			// Ver todas las palabras
+		}
+		else if(b == btnAgregar) {
+			// Agregar palabra nueva
+		}
+		else if(b == btnServidor) {
+			// Asignar servidor elegido
 		}
 	}
 
 	// Crear ventana de MiniMenu
-	public static void diccionario() {
-		diccionario menu = new diccionario();
-		menu.setTitle("DICCIONARIO");
-		menu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		menu.setSize(500, 200);
-		menu.setVisible(true);
-		menu.setLocationRelativeTo(null);
+	public static void main(String s[]) {
+		Diccionario f = new Diccionario();
+		f.setTitle("DICCIONARIO");
+		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		f.setSize(600, 600);
+		f.setVisible(true);
+		f.setLocationRelativeTo(null);
 	}
 }

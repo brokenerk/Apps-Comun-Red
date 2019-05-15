@@ -3,12 +3,11 @@ import java.net.*;
 import java.io.*;
 import java.util.*;
 
-public class Controlador
-{
-	private static HashMap<String, String> ubicacion;
-	private static HashMap<String, String[]> servidores;
+public class Controlador {
+	private HashMap<String, String> ubicacion;
+	private HashMap<String, String[]> servidores;
 
-	public Controlador(){
+	public Controlador() {
 		ubicacion = new HashMap<>();
 		ubicacion.put("Conejo", "servidor1");
 		ubicacion.put("Iguana", "servidor1");
@@ -25,22 +24,26 @@ public class Controlador
 		servidores.put("servidor2", servidor2);	
 	}
 
-	public static void agregarPalabra(String palabra, String servidor){
+	public HashMap<String, String[]> getServidores() {
+		return servidores;
+	}
+
+	public void agregarPalabra(String palabra, String servidor) {
 		ubicacion.put(palabra, servidor);
 	}
 
-	public static String obtenerServidor(String palabra) {
+	public String obtenerServidor(String palabra) {
 		if(ubicacion.containsKey(palabra))
 			return ubicacion.get(palabra);
 		else
 			return "";
 	}
 
-	public static String obtenerHostServidor(String servidor){
+	public String obtenerHostServidor(String servidor) {
 		return servidores.get(servidor)[0];
 	}
 
-	public static int obtenerPtoServidor(String servidor){
+	public int obtenerPtoServidor(String servidor) {
 		return Integer.parseInt(servidores.get(servidor)[1]);
 	}
 }

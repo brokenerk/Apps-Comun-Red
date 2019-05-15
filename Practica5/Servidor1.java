@@ -2,49 +2,70 @@ import java.net.*;
 import java.io.*;
 import java.util.*;
 
-public class Servidor1
-{
+public class Servidor1 {
 	private static HashMap<String, String> diccionario = new HashMap<>();
 
-	public static void agregarDefinicion(String palabra, String definicion){
+    // -----------------------------------------------------------------------
+	// 							AGREGAR NUEVA DEFINICION
+	// -----------------------------------------------------------------------
+	public static void agregarDefinicion(String palabra, String definicion) {
 		diccionario.put(palabra, definicion);
 	}
 
-	public static void main(String[] args)
-	{
+	// -----------------------------------------------------------------------
+	// 							BUSCAR DEFINICION
+	// -----------------------------------------------------------------------
+	public static void buscarDefinicion(String palabra, DataOutputStream dos) {
+		String respuesta = "";
+		System.out.println("Buscando definicion para: " + palabra);
+
+		if(diccionario.containsKey(palabra))
+			respuesta = diccionario.get(palabra);
+
+		try {
+			System.out.println("Definicion encontrada: " + respuesta);
+			dos.writeUTF(respuesta);
+			dos.flush();
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	// -----------------------------------------------------------------------
+	// 							MAIN
+	// -----------------------------------------------------------------------
+	public static void main(String[] args) {
 		diccionario.put("Conejo", "Mamifero de cuerpo alargado y arqueado de unos 40 cm de longitud, pelo suave y espeso, orejas largas, cola corta y patas traseras mas desarrolladas que las delanteras.");
 		diccionario.put("Iguana", "Reptil escamoso americano que puede alcanzar hasta 1,80 m de longitud, con la lengua no protractil y los dientes sobre la superficie interna de las mandibulas.");
 
-		try
-		{
+		try {
 			ServerSocket s = new ServerSocket(4001);
 			s.setReuseAddress(true);
 			System.out.println("Servidor1 iniciado, esperando cliente...");
 
-			for( ; ; )
-			{
+			for( ; ; ) {
 				Socket cl = s.accept();
-				System.out.println("Cliente conectado desde " + cl.getInetAddress() + " " + cl.getPort());
+				System.out.println("\nCliente conectado desde " + cl.getInetAddress() + " " + cl.getPort());
 				
 				DataOutputStream dos = new DataOutputStream(cl.getOutputStream()); //OutputStream
 				DataInputStream dis = new DataInputStream(cl.getInputStream()); // InputStream
 
-				String palabra = dis.readUTF();
+				int bandera = dis.readInt();
 
-				String respuesta = "";
+				if(bandera == 0) {
+					//Buscar definicion
+					String palabra = dis.readUTF();
+					buscarDefinicion(palabra, dos);
+				}
+				else if(bandera == 1) {
+					//Agregar definiciones
+				}
 
-				if(diccionario.containsKey(palabra))
-					respuesta = diccionario.get(palabra);
-
-				dos.writeUTF(respuesta);
-				dos.flush();
-				
 				dis.close();
 				dos.close();
-				cl.close();
-				
+				cl.close();	
 			}//for
-		}catch(Exception e){
+		} catch(Exception e) {
 			e.printStackTrace();
 		}
 	}

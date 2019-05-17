@@ -28,6 +28,10 @@ public class Controlador {
 		return servidores;
 	}
 
+	public boolean existePalabra(String palabra){
+		return ubicacion.containsKey(palabra);
+	}
+
 	public void agregarPalabra(String palabra, String servidor) {
 		ubicacion.put(palabra, servidor);
 	}

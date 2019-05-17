@@ -53,12 +53,15 @@ public class Servidor1 {
 				int bandera = dis.readInt();
 
 				if(bandera == 0) {
-					//Buscar definicion
+					// Buscar definicion
 					String palabra = dis.readUTF();
 					buscarDefinicion(palabra, dos);
 				}
 				else if(bandera == 1) {
-					//Agregar definiciones
+					// Agregar definiciones
+					String palabra = dis.readUTF();
+					String definicion = dis.readUTF();
+					agregarDefinicion(palabra, definicion);
 				}
 
 				dis.close();

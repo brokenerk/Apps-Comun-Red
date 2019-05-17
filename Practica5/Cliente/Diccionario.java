@@ -124,6 +124,15 @@ public class Diccionario extends JFrame implements ActionListener {
 		}
 		else if(b == btnAgregar) {
 			// Agregar palabra nueva
+			String palabra = tfPalabra.getText();
+			// No existe la palabra
+			if(Cliente.buscarPalabra(palabra).equals("No encontrada")){
+				Cliente.agregarPalabra(palabra, taDefinicion.getText());
+				JOptionPane.showMessageDialog(null, "Se agrego la palabra " +  palabra + " correctamente");
+			}
+			else {
+				JOptionPane.showMessageDialog(null, "La palabra ya ha sido registrada en algun servidor.", "La palabra ya existe", JOptionPane.ERROR_MESSAGE);
+			}
 		}
 		else if(b == btnServidor) {
 			// Asignar servidor elegido

@@ -113,4 +113,37 @@ public class Cliente {
 
 		return definicion;
 	}
+	// -----------------------------------------------------------------------
+	// 							AGREGAR PALABRA
+	// -----------------------------------------------------------------------
+	public static String agregarPalabra(String palabra, String definicion){
+		try {
+			Socket cl = new Socket(hostActual, ptoActual);
+			System.out.println("\nConexion establecida al " + servidorActual);
+
+			DataOutputStream dos = new DataOutputStream(cl.getOutputStream()); //OutputStream
+			DataInputStream dis = new DataInputStream(cl.getInputStream()); // InputStream
+
+			// Bandera = 1 - Agregar palabra
+			dos.writeInt(1);
+
+			System.out.println("Enviando palabra: " + palabra);
+			// Enviar palabra y la agrega 
+			dos.writeUTF(palabra);
+			dos.flush();
+
+			System.out.println("Enviando definicion: " + definicion);
+			// Enviar palabra y la agrega 
+			dos.writeUTF(definicion);
+			dos.flush();
+
+			dos.close();
+			dis.close();
+			cl.close();
+		} catch(Exception e){
+			e.printStackTrace();
+		}//catch
+
+		return definicion;
+	}
 }

@@ -7,7 +7,7 @@ public class Diccionario extends JFrame implements ActionListener {
 	private static final long serialVersionUID = 1L;
 
 	JPanel panelServidor, panelPalabra, panelDefinicion, panelBotones;
-	JButton btnServidor, btnBuscar, btnAgregar, btnVer;
+	JButton btnServidor, btnBuscar, btnAgregar, btnVer, btnLimpiar;
 	JLabel lServidor, lPalabra, lDefinicion;
 	JTextField tfPalabra;
 	JScrollPane scroll;
@@ -101,9 +101,15 @@ public class Diccionario extends JFrame implements ActionListener {
         btnVer.setPreferredSize(new Dimension(100, 35));
 		btnVer.addActionListener(this);
 
+		btnLimpiar = new JButton("Limpiar");
+        btnLimpiar.setPreferredSize(new Dimension(100, 35));
+		btnLimpiar.addActionListener(this);
+
 		c.add(btnAgregar);
 		c.add(btnVer);
+		c.add(btnLimpiar);
 	}
+
 	public void actionPerformed(ActionEvent e) {
 		JButton b = (JButton) e.getSource();
 		if(b == btnBuscar) {
@@ -125,14 +131,16 @@ public class Diccionario extends JFrame implements ActionListener {
 		else if(b == btnAgregar) {
 			// Agregar palabra nueva
 			String palabra = tfPalabra.getText();
+			String definicion = taDefinicion.getText();
+
 			// No existe la palabra
-			if(Cliente.buscarPalabra(palabra).equals("No encontrada")){
-				Cliente.agregarPalabra(palabra, taDefinicion.getText());
+			if(Cliente.agregarPalabra(palabra, definicion))
 				JOptionPane.showMessageDialog(null, "Se agrego la palabra " +  palabra + " correctamente");
-			}
-			else {
+			else 
 				JOptionPane.showMessageDialog(null, "La palabra ya ha sido registrada en algun servidor.", "La palabra ya existe", JOptionPane.ERROR_MESSAGE);
-			}
+			
+			tfPalabra.setText("");
+			taDefinicion.setText("");
 		}
 		else if(b == btnServidor) {
 			// Asignar servidor elegido
@@ -140,12 +148,16 @@ public class Diccionario extends JFrame implements ActionListener {
 			btnBuscar.setEnabled(true);
 			Cliente.asignarServidor(combo.getSelectedIndex());
 		}
+		else if(b == btnLimpiar) {
+			tfPalabra.setText("");
+			taDefinicion.setText("");
+		}
 	}
 
 	// Crear ventana de MiniMenu
 	public static void main(String s[]) {
 		Diccionario f = new Diccionario();
-		f.setTitle("DICCIONARIO");
+		f.setTitle("Diccionario Distribuido");
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.setSize(600, 600);
 		f.setVisible(true);

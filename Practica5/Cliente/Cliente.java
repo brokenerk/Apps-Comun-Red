@@ -110,40 +110,47 @@ public class Cliente {
 		} catch(Exception e){
 			e.printStackTrace();
 		}//catch
-
 		return definicion;
 	}
+
 	// -----------------------------------------------------------------------
 	// 							AGREGAR PALABRA
 	// -----------------------------------------------------------------------
-	public static String agregarPalabra(String palabra, String definicion){
+	public static boolean agregarPalabra(String palabra, String definicion){
+		boolean success = false;
+
 		try {
-			Socket cl = new Socket(hostActual, ptoActual);
-			System.out.println("\nConexion establecida al " + servidorActual);
+			if(ctrl.existePalabra(palabra) == false) {
+				Socket cl = new Socket(hostActual, ptoActual);
+				System.out.println("\nConexion establecida al " + servidorActual);
 
-			DataOutputStream dos = new DataOutputStream(cl.getOutputStream()); //OutputStream
-			DataInputStream dis = new DataInputStream(cl.getInputStream()); // InputStream
+				DataOutputStream dos = new DataOutputStream(cl.getOutputStream()); //OutputStream
+				DataInputStream dis = new DataInputStream(cl.getInputStream()); // InputStream
 
-			// Bandera = 1 - Agregar palabra
-			dos.writeInt(1);
+				// Bandera = 1 - Agregar palabra
+				dos.writeInt(1);
 
-			System.out.println("Enviando palabra: " + palabra);
-			// Enviar palabra y la agrega 
-			dos.writeUTF(palabra);
-			dos.flush();
+				System.out.println("Enviando palabra: " + palabra);
+				// Enviar palabra y la agrega 
+				dos.writeUTF(palabra);
+				dos.flush();
 
-			System.out.println("Enviando definicion: " + definicion);
-			// Enviar palabra y la agrega 
-			dos.writeUTF(definicion);
-			dos.flush();
+				System.out.println("Enviando definicion: " + definicion);
+				// Enviar definicion
+				dos.writeUTF(definicion);
+				dos.flush();
 
-			dos.close();
-			dis.close();
-			cl.close();
-		} catch(Exception e){
+				dos.close();
+				dis.close();
+				cl.close();
+
+				//Registrando palabra en el Controlador 
+				ctrl.agregarPalabra(palabra, servidorActual);
+				success = true;
+			}
+		} catch(Exception e) {
 			e.printStackTrace();
 		}//catch
-
-		return definicion;
+		return success;
 	}
 }

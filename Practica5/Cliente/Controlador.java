@@ -9,11 +9,31 @@ public class Controlador {
 
 	public Controlador() {
 		ubicacion = new HashMap<>();
-		ubicacion.put("Conejo", "servidor1");
-		ubicacion.put("Iguana", "servidor1");
+		diccionario.put("Conejo", "servidor1");
+		diccionario.put("Iguana", "servidor1");
+		diccionario.put("Rana", "servidor1");
+		diccionario.put("Dibujo", "servidor1");
+		diccionario.put("Estrella", "servidor1");
+		diccionario.put("Comida", "servidor1");
+		diccionario.put("Familia", "servidor1");
+		diccionario.put("Conversar", "servidor1");
+		diccionario.put("Computadora", "servidor1");
+		diccionario.put("Sombra", "servidor1");
+		diccionario.put("Navegador", "servidor1");
+
 
 		ubicacion.put("Aguila", "servidor2");
 		ubicacion.put("Raiz", "servidor2");
+		ubicacion.put("Saltar", "servidor2");
+		ubicacion.put("Ropa", "servidor2");
+		ubicacion.put("Dia", "servidor2");
+		ubicacion.put("Amor", "servidor2");
+		ubicacion.put("Color", "servidor2");
+		ubicacion.put("Libro", "servidor2");
+		ubicacion.put("Lenguaje", "servidor2");
+		ubicacion.put("Lapiz", "servidor2");
+		ubicacion.put("Pais", "servidor2");
+		ubicacion.put("Orejas", "servidor2");
 
 		servidores = new HashMap<>();
 

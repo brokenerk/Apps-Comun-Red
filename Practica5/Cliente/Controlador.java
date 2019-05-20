@@ -51,7 +51,7 @@ public class Controlador {
 		return ubicacion.keySet().toArray(new String[0]);
 	}
 
-	public boolean existePalabra(String palabra){
+	public boolean existePalabra(String palabra) {
 		return ubicacion.containsKey(palabra);
 	}
 

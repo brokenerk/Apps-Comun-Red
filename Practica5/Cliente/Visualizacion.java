@@ -70,5 +70,8 @@ public class Visualizacion extends JFrame implements ActionListener {
 			Cliente.consultarDesdeVisualizacion(palabras.getSelectedValue());
 			cerrarVisualizacion();
 		}
+		else if(b == BtnRegresar){
+			cerrarVisualizacion();
+		}
 	}
 }

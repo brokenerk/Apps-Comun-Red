@@ -42,9 +42,8 @@ public class Diccionario extends JFrame implements ActionListener {
 
 		Cliente.cargarServidores();
 
-		for(int i = 0; i < Cliente.nombresServidores.length; i++){
-			combo.addItem("Host: " + Cliente.infoServidor[i][0] + ". Puerto: " + Cliente.infoServidor[i][1]);
-		}
+		for(int i = 0; i < Cliente.nombresServidores.length; i++)
+			combo.addItem("Pto: " + Cliente.infoServidor[i][1] + ". Host: " + Cliente.infoServidor[i][0]);
 
 		// -----------------------------------------------------------------------
 		// 								PANEL PALABRA
@@ -90,7 +89,6 @@ public class Diccionario extends JFrame implements ActionListener {
         // -----------------------------------------------------------------------
 		// 							BOTONES
 		// -----------------------------------------------------------------------
-
         btnAgregar = new JButton("Agregar");
         btnAgregar.setPreferredSize(new Dimension(100, 35));
 		btnAgregar.addActionListener(this);
@@ -110,10 +108,10 @@ public class Diccionario extends JFrame implements ActionListener {
 		c.add(btnLimpiar);
 	}
 
-	public void abrirVisualizacion(){
+	public void abrirVisualizacion() {
 		Visualizacion v = new Visualizacion();
 		v.setTitle("Visualizacion Diccionario");
-		v.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		v.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		v.setSize(600, 600);
 		v.setVisible(true);
 		v.setLocationRelativeTo(null);
@@ -126,10 +124,9 @@ public class Diccionario extends JFrame implements ActionListener {
 			String palabra = tfPalabra.getText();
 			String definicion = Cliente.buscarPalabra(palabra);
 
-			if(definicion.equals("No encontrada")){
+			if(definicion.equals("No encontrada"))
 				JOptionPane.showMessageDialog(null, "La palabra no esta registrada en ninguno de los servidores.", "Definicion no encontrada.", JOptionPane.ERROR_MESSAGE);
-			}
-			else{
+			else {
 				taDefinicion.setText("");
 				taDefinicion.setText(definicion);
 			}

@@ -35,7 +35,6 @@ public class Servidor2 {
 	// 							MAIN
 	// -----------------------------------------------------------------------
 	public static void main(String[] args) {
-		
 		// Definiciones
 		diccionario.put("Aguila", "Ave rapaz falconiforme, de aproximadamente 2 m de envergadura, con vista muy aguda.");
 		diccionario.put("Raiz", "Organo de las plantas que crece hacia el interior de la tierra, por el que se fijan al suelo y absorben las sustancias necesarias para su crecimiento.");

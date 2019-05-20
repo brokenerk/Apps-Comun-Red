@@ -15,12 +15,11 @@ public class Cliente {
 	// -----------------------------------------------------------------------
 	// 							VISUALIZAR DICCIONARIO
 	// -----------------------------------------------------------------------
-	public static void visualizarDiccionario(){
+	public static void visualizarDiccionario() {
 		String[] palabras = ctrl.getPalabras();
 
-		for(int i = 0; i < palabras.length; i++){
+		for(int i = 0; i < palabras.length; i++)
 			Visualizacion.modelo.addElement(palabras[i]);
-		}
 	}
 
 	// -----------------------------------------------------------------------
@@ -49,7 +48,7 @@ public class Cliente {
 	// -----------------------------------------------------------------------
 	// 							BUSCAR PALABRA
 	// -----------------------------------------------------------------------
-	public static String buscarPalabra(String palabra){
+	public static String buscarPalabra(String palabra) {
 		String definicion = "";
 		try {
 			Socket cl = new Socket(hostActual, ptoActual);
@@ -77,7 +76,7 @@ public class Cliente {
 			System.out.println("Definicion recibida: " + definicion);
 
 			//La definicion es vacia, por lo tanto hay que buscar en otro servidor
-			if(respuesta.equals("")){
+			if(respuesta.equals("")) {
 				//Intentamos hallar el servidor
 				String servidorRemoto = ctrl.obtenerServidor(palabra);
 
@@ -127,7 +126,7 @@ public class Cliente {
 	// -----------------------------------------------------------------------
 	// 							CONSULTAR DESDE VISUALIZACION
 	// -----------------------------------------------------------------------
-	public static void consultarDesdeVisualizacion(String palabra){
+	public static void consultarDesdeVisualizacion(String palabra) {
 		String definicion = buscarPalabra(palabra);
 
 		Diccionario.tfPalabra.setText("");
@@ -140,7 +139,7 @@ public class Cliente {
 	// -----------------------------------------------------------------------
 	// 							AGREGAR PALABRA
 	// -----------------------------------------------------------------------
-	public static boolean agregarPalabra(String palabra, String definicion){
+	public static boolean agregarPalabra(String palabra, String definicion) {
 		boolean success = false;
 
 		try {

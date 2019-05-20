@@ -35,8 +35,18 @@ public class Servidor1 {
 	// 							MAIN
 	// -----------------------------------------------------------------------
 	public static void main(String[] args) {
+		// Definiciones
 		diccionario.put("Conejo", "Mamifero de cuerpo alargado y arqueado de unos 40 cm de longitud, pelo suave y espeso, orejas largas, cola corta y patas traseras mas desarrolladas que las delanteras.");
 		diccionario.put("Iguana", "Reptil escamoso americano que puede alcanzar hasta 1,80 m de longitud, con la lengua no protractil y los dientes sobre la superficie interna de las mandibulas.");
+		diccionario.put("Rana", "Anfibio sin cola, de piel lisa y brillante, tronco rechoncho, cabeza grande y ojos saltones, con las extremidades posteriores muy desarrolladas para saltar.");
+		diccionario.put("Dibujo", "Forma que resulta de combinarse las lineas, figuras y otros elementos que adornan una cosa o que son constitutivos de ella.");
+		diccionario.put("Estrella", "Astro o cuerpo celeste que brilla con luz propia en el firmamento.");
+		diccionario.put("Comida", "Sustancia sólida que se come y sirve de alimento.");
+		diccionario.put("Familia", "Grupo de personas formado por una pareja (normalmente unida por lazos legales o religiosos), que convive y tiene un proyecto de vida en comun, y sus hijos, cuando los tienen.");
+		diccionario.put("Conversar", "Hablar [una persona] con otra sobre algo alternando los turnos de palabra.");
+		diccionario.put("Computadora", "Maquina electronica capaz de almacenar informacion y tratarla automaticamente mediante operaciones matematicas y logicas controladas por programas informaticos.");
+		diccionario.put("Sombra", "Imagen oscura que proyecta un cuerpo opaco sobre una superficie al interceptar los rayos de luz.");
+		diccionario.put("Navegador", "Programa que permite navegar por internet u otra red informatica de comunicaciones.");
 
 		try {
 			ServerSocket s = new ServerSocket(4001);

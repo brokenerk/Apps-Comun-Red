@@ -39,16 +39,16 @@ public class Servidor2 {
 		// Definiciones
 		diccionario.put("Aguila", "Ave rapaz falconiforme, de aproximadamente 2 m de envergadura, con vista muy aguda.");
 		diccionario.put("Raiz", "Organo de las plantas que crece hacia el interior de la tierra, por el que se fijan al suelo y absorben las sustancias necesarias para su crecimiento.");
-		ubicacion.put("Saltar", "Elevarse del suelo u otra superficie con impulso para caer en el mismo lugar o en otro.");
-		ubicacion.put("Ropa", "Nombre generico de cualquier pieza de tela confeccionada que viste a una persona, un objeto o un lugar.");
-		ubicacion.put("Dia", "Tiempo que emplea la Tierra en dar una vuelta sobre si misma, equivalente a 24 horas, y que se utiliza como unidad de tiempo; se cuenta normalmente desde las doce de la noche hasta veinticuatro horas despues.");
-		ubicacion.put("Amor", "Sentimiento de vivo afecto e inclinacion hacia una persona o cosa a la que se le desea todo lo bueno.");
-		ubicacion.put("Color", "Impresion que producen en la retina los rayos de luz reflejados y absorbidos por un cuerpo, segun la longitud de onda de estos rayos.");
-		ubicacion.put("Libro", "Conjunto de hojas de papel, pergamino, vitela, etc., manuscritas o impresas, unidas por uno de sus lados y normalmente encuadernadas, formando un solo volumen.");
-		ubicacion.put("Lenguaje", "Capacidad propia del ser humano para expresar pensamientos y sentimientos por medio de la palabra.");
-		ubicacion.put("Lapiz", "Utensilio para escribir, dibujar o pintar que consiste en una barra delgada y larga generalmente de madera, con una mina cilindrica fina de grafito u otra sustancia mineral en el interior que sobresale por uno de los extremos de esta barra cuando esta afilado.");
-		ubicacion.put("Pais", "Comunidad social con una organizacion politica comun y un territorio.");
-		ubicacion.put("Orejas", "Parte externa del oido del hombre y otros mamiferos, formada por un repliegue cutaneo sostenido por una lamina cartilaginosa.");
+		diccionario.put("Saltar", "Elevarse del suelo u otra superficie con impulso para caer en el mismo lugar o en otro.");
+		diccionario.put("Ropa", "Nombre generico de cualquier pieza de tela confeccionada que viste a una persona, un objeto o un lugar.");
+		diccionario.put("Dia", "Tiempo que emplea la Tierra en dar una vuelta sobre si misma, equivalente a 24 horas, y que se utiliza como unidad de tiempo; se cuenta normalmente desde las doce de la noche hasta veinticuatro horas despues.");
+		diccionario.put("Amor", "Sentimiento de vivo afecto e inclinacion hacia una persona o cosa a la que se le desea todo lo bueno.");
+		diccionario.put("Color", "Impresion que producen en la retina los rayos de luz reflejados y absorbidos por un cuerpo, segun la longitud de onda de estos rayos.");
+		diccionario.put("Libro", "Conjunto de hojas de papel, pergamino, vitela, etc., manuscritas o impresas, unidas por uno de sus lados y normalmente encuadernadas, formando un solo volumen.");
+		diccionario.put("Lenguaje", "Capacidad propia del ser humano para expresar pensamientos y sentimientos por medio de la palabra.");
+		diccionario.put("Lapiz", "Utensilio para escribir, dibujar o pintar que consiste en una barra delgada y larga generalmente de madera, con una mina cilindrica fina de grafito u otra sustancia mineral en el interior que sobresale por uno de los extremos de esta barra cuando esta afilado.");
+		diccionario.put("Pais", "Comunidad social con una organizacion politica comun y un territorio.");
+		diccionario.put("Oreja", "Parte externa del oido del hombre y otros mamiferos, formada por un repliegue cutaneo sostenido por una lamina cartilaginosa.");
 		
 		try {
 			ServerSocket s = new ServerSocket(4002);

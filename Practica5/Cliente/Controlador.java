@@ -4,23 +4,22 @@ import java.io.*;
 import java.util.*;
 
 public class Controlador {
-	private HashMap<String, String> ubicacion;
+	private TreeMap<String, String> ubicacion;
 	private HashMap<String, String[]> servidores;
 
 	public Controlador() {
-		ubicacion = new HashMap<>();
-		diccionario.put("Conejo", "servidor1");
-		diccionario.put("Iguana", "servidor1");
-		diccionario.put("Rana", "servidor1");
-		diccionario.put("Dibujo", "servidor1");
-		diccionario.put("Estrella", "servidor1");
-		diccionario.put("Comida", "servidor1");
-		diccionario.put("Familia", "servidor1");
-		diccionario.put("Conversar", "servidor1");
-		diccionario.put("Computadora", "servidor1");
-		diccionario.put("Sombra", "servidor1");
-		diccionario.put("Navegador", "servidor1");
-
+		ubicacion = new TreeMap<>();
+		ubicacion.put("Conejo", "servidor1");
+		ubicacion.put("Iguana", "servidor1");
+		ubicacion.put("Rana", "servidor1");
+		ubicacion.put("Dibujo", "servidor1");
+		ubicacion.put("Estrella", "servidor1");
+		ubicacion.put("Comida", "servidor1");
+		ubicacion.put("Familia", "servidor1");
+		ubicacion.put("Conversar", "servidor1");
+		ubicacion.put("Computadora", "servidor1");
+		ubicacion.put("Sombra", "servidor1");
+		ubicacion.put("Navegador", "servidor1");
 
 		ubicacion.put("Aguila", "servidor2");
 		ubicacion.put("Raiz", "servidor2");
@@ -33,7 +32,7 @@ public class Controlador {
 		ubicacion.put("Lenguaje", "servidor2");
 		ubicacion.put("Lapiz", "servidor2");
 		ubicacion.put("Pais", "servidor2");
-		ubicacion.put("Orejas", "servidor2");
+		ubicacion.put("Oreja", "servidor2");
 
 		servidores = new HashMap<>();
 
@@ -46,6 +45,10 @@ public class Controlador {
 
 	public HashMap<String, String[]> getServidores() {
 		return servidores;
+	}
+
+	public String[] getPalabras() {
+		return ubicacion.keySet().toArray(new String[0]);
 	}
 
 	public boolean existePalabra(String palabra){

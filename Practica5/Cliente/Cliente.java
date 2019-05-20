@@ -13,6 +13,17 @@ public class Cliente {
 	public static String[][] infoServidor;
 
 	// -----------------------------------------------------------------------
+	// 							VISUALIZAR DICCIONARIO
+	// -----------------------------------------------------------------------
+	public static void visualizarDiccionario(){
+		String[] palabras = ctrl.getPalabras();
+
+		for(int i = 0; i < palabras.length; i++){
+			Visualizacion.modelo.addElement(palabras[i]);
+		}
+	}
+
+	// -----------------------------------------------------------------------
 	// 							CARGAR INFO SERVIDORES
 	// -----------------------------------------------------------------------
 	public static void cargarServidores() {
@@ -111,6 +122,19 @@ public class Cliente {
 			e.printStackTrace();
 		}//catch
 		return definicion;
+	}
+
+	// -----------------------------------------------------------------------
+	// 							CONSULTAR DESDE VISUALIZACION
+	// -----------------------------------------------------------------------
+	public static void consultarDesdeVisualizacion(String palabra){
+		String definicion = buscarPalabra(palabra);
+
+		Diccionario.tfPalabra.setText("");
+		Diccionario.tfPalabra.setText(palabra);
+
+		Diccionario.taDefinicion.setText("");
+		Diccionario.taDefinicion.setText(definicion);
 	}
 
 	// -----------------------------------------------------------------------

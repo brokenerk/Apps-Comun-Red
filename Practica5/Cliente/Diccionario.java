@@ -9,11 +9,10 @@ public class Diccionario extends JFrame implements ActionListener {
 	JPanel panelServidor, panelPalabra, panelDefinicion, panelBotones;
 	JButton btnServidor, btnBuscar, btnAgregar, btnVer, btnLimpiar;
 	JLabel lServidor, lPalabra, lDefinicion;
-	JTextField tfPalabra;
+	public static JTextField tfPalabra;
 	JScrollPane scroll;
 	JComboBox<String> combo;
-	JTextArea taDefinicion;
-
+	public static JTextArea taDefinicion;
 
 	public Diccionario() {
 		Container c = getContentPane();
@@ -100,6 +99,7 @@ public class Diccionario extends JFrame implements ActionListener {
         btnVer = new JButton("Ver todo");
         btnVer.setPreferredSize(new Dimension(100, 35));
 		btnVer.addActionListener(this);
+		btnVer.setEnabled(false);
 
 		btnLimpiar = new JButton("Limpiar");
         btnLimpiar.setPreferredSize(new Dimension(100, 35));
@@ -108,6 +108,15 @@ public class Diccionario extends JFrame implements ActionListener {
 		c.add(btnAgregar);
 		c.add(btnVer);
 		c.add(btnLimpiar);
+	}
+
+	public void abrirVisualizacion(){
+		Visualizacion v = new Visualizacion();
+		v.setTitle("Visualizacion Diccionario");
+		v.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		v.setSize(600, 600);
+		v.setVisible(true);
+		v.setLocationRelativeTo(null);
 	}
 
 	public void actionPerformed(ActionEvent e) {
@@ -127,6 +136,7 @@ public class Diccionario extends JFrame implements ActionListener {
 		}
 		else if(b == btnVer) {
 			// Ver todas las palabras
+			abrirVisualizacion();
 		}
 		else if(b == btnAgregar) {
 			// Agregar palabra nueva
@@ -146,6 +156,7 @@ public class Diccionario extends JFrame implements ActionListener {
 			// Asignar servidor elegido
 			btnAgregar.setEnabled(true);
 			btnBuscar.setEnabled(true);
+			btnVer.setEnabled(true);
 			Cliente.asignarServidor(combo.getSelectedIndex());
 		}
 		else if(b == btnLimpiar) {

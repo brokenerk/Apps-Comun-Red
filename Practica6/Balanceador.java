@@ -7,11 +7,11 @@ import java.util.*;
 
 public class Balanceador implements Runnable{
 	//Datos red
-	private int port = 1234;
+	private int port = 6543;
 	private String host = "127.0.0.1";
 
-	private int TIMEOUT = 10000;
-	private int tam = 4096;
+	private int TIMEOUT = 35000; //35 segundos
+	private int tam = 1024;//1Kb
 
 	private static int nPorts = 4;
 	private static int[] ports = new int[nPorts];
@@ -56,6 +56,7 @@ public class Balanceador implements Runnable{
 						canal.configureBlocking(false); // No bloqueante
 						canal.register(sel, SelectionKey.OP_READ);
 						System.out.println("Cliente conectado desde " + canal.socket().getInetAddress() + ":" + canal.socket().getPort());
+						continue;
 					}
 					else if(key.isReadable()) {
 						//Lectura
@@ -72,6 +73,7 @@ public class Balanceador implements Runnable{
 
 						while((n = canal.read(buffer)) > 0) {
 							buffer.flip();
+							//Peticion HTTP del cliente
 							System.out.print(new String(buffer.array(), 0, n));
 							dos.write(buffer.array(), 0, n);
 							buffer.clear();
@@ -79,6 +81,7 @@ public class Balanceador implements Runnable{
 
 						pending.put(canal, cl);
 						key.interestOps(SelectionKey.OP_WRITE);
+						continue;
 					}
 					else if(key.isWritable()) {
 						//Escritura
@@ -102,6 +105,7 @@ public class Balanceador implements Runnable{
 
 						key.interestOps(SelectionKey.OP_READ);
 						System.out.println("Fin envio de datos al cliente " + canal.socket().getInetAddress() + ":" + canal.socket().getPort());
+						continue;
 					}
 				}
 			} catch(Exception e) {
